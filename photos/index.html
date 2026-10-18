@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Фотостол</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&family=Caveat:wght@500;600&display=swap"
+    />
+    <link rel="stylesheet" href="hark.css" />
+    <link rel="stylesheet" href="hark-hero.css" />
+    <style>
+      html, body { height: 100%; margin: 0; overflow: hidden; overscroll-behavior: none; }
+      body { background: #b9bcb6; }
+      .x-hand { font-family: "Caveat", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive; }
+
+      .x-scene { position: fixed; inset: 0; overflow: hidden; font-family: var(--sans); user-select: none; -webkit-user-select: none; touch-action: none; }
+
+      /* the floor beneath the glass, out of focus */
+      .x-floor { position: absolute; inset: -40px; filter: blur(9px) saturate(.9);
+        background:
+          radial-gradient(ellipse 60% 50% at 30% 30%, rgba(255,250,240,.55), transparent 70%),
+          radial-gradient(ellipse 70% 60% at 80% 85%, rgba(60,55,50,.35), transparent 70%),
+          repeating-linear-gradient(90deg, #a9a49b 0 2px, #bdb7ac 2px 160px, #b3ada2 160px 162px, #c4beb3 162px 320px),
+          #b8b2a7; }
+      /* shadow the table frame throws on the floor */
+      .x-floorshadow { position: absolute; inset: 9vmin 7vmin 5vmin 9vmin; border-radius: 48px; background: rgba(30,40,38,.28); filter: blur(34px); }
+
+      .x-table { position: absolute; inset: max(3vmin, 14px); border-radius: var(--r-xl); overflow: hidden;
+        background:
+          linear-gradient(125deg, rgba(255,255,255,.38) 0%, rgba(255,255,255,0) 22%, rgba(255,255,255,0) 58%, rgba(255,255,255,.16) 66%, rgba(255,255,255,0) 74%),
+          linear-gradient(160deg, rgba(196,236,226,.42), rgba(150,205,195,.30) 55%, rgba(120,180,175,.38));
+        -webkit-backdrop-filter: blur(2px) saturate(1.15); backdrop-filter: blur(2px) saturate(1.15);
+        box-shadow:
+          inset 0 0 0 1px rgba(255,255,255,.65),
+          inset 0 2px 1px rgba(255,255,255,.85),
+          inset 0 0 0 7px rgba(170,225,212,.35),
+          inset 0 0 0 8px rgba(255,255,255,.35),
+          inset 0 -14px 28px rgba(20,80,70,.18),
+          inset 0 14px 30px rgba(255,255,255,.18),
+          0 0 0 1px rgba(80,140,130,.35),
+          0 0 24px rgba(190,245,230,.45),
+          0 30px 60px rgba(20,40,36,.22); }
+      /* faint caustic light */
+      .x-table::before { content: ""; position: absolute; inset: -20%; pointer-events: none; mix-blend-mode: soft-light; opacity: .9;
+        background:
+          radial-gradient(ellipse 18% 9% at 20% 30%, rgba(255,255,255,.9), transparent 70%),
+          radial-gradient(ellipse 12% 22% at 70% 25%, rgba(255,255,255,.7), transparent 70%),
+          radial-gradient(ellipse 25% 10% at 55% 70%, rgba(255,255,255,.8), transparent 70%),
+          radial-gradient(ellipse 10% 16% at 30% 80%, rgba(255,255,255,.6), transparent 70%),
+          radial-gradient(ellipse 14% 8% at 85% 60%, rgba(255,255,255,.7), transparent 70%);
+        animation: x-caustic 18s ease-in-out infinite alternate; }
+      /* a long soft reflection */
+      .x-table::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+        background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.22) 38%, rgba(255,255,255,.05) 44%, transparent 50%); }
+      @keyframes x-caustic { from { transform: translate(0,0) rotate(0deg) scale(1); } to { transform: translate(3%, -2%) rotate(4deg) scale(1.06); } }
+
+      .x-title { position: absolute; top: calc(max(3vmin, 14px) + 18px); left: calc(max(3vmin, 14px) + 22px); z-index: 2; pointer-events: none; color: rgba(20,45,42,.82); }
+      .x-title h1 { margin: 0; font: var(--type-heading); font-weight: var(--weight-medium); letter-spacing: -.01em; }
+      .x-title p { margin: 2px 0 0; font: var(--type-small); color: #1c2f2c; }
+
+      .x-controls { position: absolute; right: calc(max(3vmin, 14px) + 16px); bottom: calc(max(3vmin, 14px) + 16px); z-index: 99990; display: flex; gap: 8px; padding: 6px; border-radius: var(--r-pill);
+        background: rgba(255,255,255,.42); -webkit-backdrop-filter: blur(var(--hark-blur, 16px)); backdrop-filter: blur(var(--hark-blur, 16px));
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,.6), 0 6px 20px rgba(20,50,45,.15); }
+      .x-controls button { min-height: var(--tap); padding: 0 16px; border: 0; border-radius: var(--r-pill); background: transparent; color: rgba(15,40,37,.9); font: var(--type-label); cursor: pointer; transition: background var(--dur-quick) var(--ease-out); }
+      .x-controls button:hover { background: rgba(255,255,255,.6); }
+      .x-controls button:focus-visible { outline: 2px solid rgba(15,40,37,.6); outline-offset: 2px; }
+
+      .x-print { position: absolute; left: 0; top: 0; width: var(--pw); cursor: grab; touch-action: none; will-change: transform; }
+      .x-print.is-drag { cursor: grabbing; }
+      .x-card { background: #fdfcf8; padding: calc(var(--pw) * .055) calc(var(--pw) * .055) 0; border-radius: 2px;
+        box-shadow: 0 1px 1px rgba(0,0,0,.18), 0 3px 6px rgba(10,40,35,.18), 18px 26px 22px -6px rgba(10,30,28,.16);
+        transition: box-shadow .25s var(--ease-out); }
+      .x-print.is-drag .x-card { box-shadow: 0 2px 4px rgba(0,0,0,.12), 0 18px 30px rgba(10,40,35,.22), 40px 60px 50px -10px rgba(10,30,28,.18); }
+      .x-card img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; pointer-events: none; -webkit-user-drag: none; filter: contrast(1.02) saturate(1.03); }
+      .x-card figcaption { height: calc(var(--pw) * .2); display: flex; align-items: center; justify-content: center; font-size: calc(var(--pw) * .1); line-height: 1; color: #2a3a4a; white-space: nowrap; overflow: hidden; }
+
+      :root { --pw: clamp(120px, 19vmax, 230px); }
+      @media (max-width: 600px) { :root { --pw: clamp(110px, 36vw, 150px); } .x-title h1 { font: var(--type-label); font-weight: var(--weight-medium); font-size: 17px; } .x-controls button { padding: 0 12px; } }
+
+      .x-lightbox { position: fixed; inset: 0; z-index: 100000; display: flex; align-items: center; justify-content: center; background: rgba(8,14,14,.72); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); opacity: 0; pointer-events: none; transition: opacity .3s var(--ease-out); }
+      .x-lightbox.is-open { opacity: 1; pointer-events: auto; }
+      .x-lightbox figure { margin: 0; display: flex; flex-direction: column; align-items: center; transform: scale(.94); transition: transform .35s var(--ease-out); }
+      .x-lightbox.is-open figure { transform: scale(1); }
+      .x-lightbox img { display: block; max-width: min(88vw, 1400px); max-height: 78vh; border-radius: 4px; border: 10px solid #fdfcf8; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+      .x-lightbox figcaption { margin-top: 14px; font-size: 32px; color: #f4f1ea; }
+      .x-lb-btn { position: absolute; width: var(--tap); height: var(--tap); border: 0; border-radius: var(--r-pill); background: #1d2626; color: #fff; font: 22px/1 var(--sans); cursor: pointer; display: grid; place-items: center; box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); transition: background var(--dur-quick) var(--ease-out); }
+      .x-lb-btn:hover { background: #324040; }
+      .x-lb-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+      .x-lb-close { top: 18px; right: 18px; font-size: 28px; }
+      .x-lb-prev { left: 18px; top: 50%; transform: translateY(-50%); }
+      .x-lb-next { right: 18px; top: 50%; transform: translateY(-50%); }
+      @media (max-width: 600px) { .x-lb-prev, .x-lb-next { top: auto; bottom: 22px; transform: none; } .x-lightbox figcaption { font-size: 26px; } }
+      @media (prefers-reduced-motion: reduce) { .x-table::before { animation: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="page" id="top">
+      <main class="x-scene" id="scene">
+        <div class="x-floor" aria-hidden="true"></div>
+        <div class="x-floorshadow" aria-hidden="true"></div>
+        <div class="x-table" id="table"></div>
+        <div class="x-title">
+          <h1>Мой фотостол</h1>
+          <p>перетаскивай снимки</p>
+        </div>
+        <div class="x-controls">
+          <button type="button" id="shuffle">Перемешать</button>
+          <button type="button" id="stack">Собрать в стопку</button>
+        </div>
+      </main>
+
+      <div class="x-lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Снимок" aria-hidden="true">
+        <figure>
+          <img id="lb-img" alt="" />
+          <figcaption class="x-hand" id="lb-cap"></figcaption>
+        </figure>
+        <button class="x-lb-btn x-lb-close" type="button" id="lb-close" aria-label="Закрыть">×</button>
+        <button class="x-lb-btn x-lb-prev" type="button" id="lb-prev" aria-label="Предыдущий">‹</button>
+        <button class="x-lb-btn x-lb-next" type="button" id="lb-next" aria-label="Следующий">›</button>
+      </div>
+
+      <!-- Плёнка: каждый снимок из списка PHOTOS ниже, чтобы файл попал в страницу -->
+      <div id="film" hidden>
+        <img data-photo="demo-heli.jpg" src="demo-heli.jpg" alt="" />
+        <img data-photo="demo-ghent.jpg" src="demo-ghent.jpg" alt="" />
+        <img data-photo="demo-aurora.jpg" src="demo-aurora.jpg" alt="" />
+        <img data-photo="demo-cats.jpg" src="demo-cats.jpg" alt="" />
+      </div>
+    </div>
+    <script src="hark.js"></script>
+    <script>
+      // ── Снимки: добавьте {src, caption} сюда (и такой же <img data-photo> в #film выше) ──
+      const PHOTOS = [
+        { src: "demo-heli.jpg", caption: "Над Арктикой" },
+        { src: "demo-ghent.jpg", caption: "Гент вечером" },
+        { src: "demo-aurora.jpg", caption: "Северное сияние" },
+        { src: "demo-cats.jpg", caption: "Мы ❤" },
+      ];
+
+      (function () {
+        const table = document.getElementById("table");
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const rand = (a, b) => a + Math.random() * (b - a);
+        const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+        let zTop = 10;
+
+        function photoSrc(name) {
+          const film = Array.from(document.querySelectorAll("#film img")).find((i) => i.dataset.photo === name);
+          return film ? film.src : name;
+        }
+
+        const prints = PHOTOS.map((ph, i) => {
+          const el = document.createElement("div");
+          el.className = "x-print";
+          el.setAttribute("role", "button");
+          el.setAttribute("tabindex", "0");
+          el.setAttribute("aria-label", ph.caption + " — открыть");
+          const fig = document.createElement("figure");
+          fig.className = "x-card";
+          fig.style.margin = "0";
+          const film = Array.from(document.querySelectorAll("#film img")).find((im) => im.dataset.photo === ph.src);
+          const img = film ? film.cloneNode() : document.createElement("img");
+          if (!film) img.src = ph.src;
+          img.removeAttribute("data-photo");
+          img.alt = ph.caption;
+          img.draggable = false;
+          const cap = document.createElement("figcaption");
+          cap.className = "x-hand";
+          cap.textContent = ph.caption;
+          fig.append(img, cap);
+          el.append(fig);
+          el.style.visibility = "hidden";
+          table.append(el);
+          return { el, card: fig, i, x: 0, y: 0, r: 0, vx: 0, vy: 0, tilt: 0, tv: 0, s: 1, sv: 0, drag: false, tween: null, pointers: new Map() };
+        });
+
+        const W = () => table.clientWidth, H = () => table.clientHeight;
+        const pw = (p) => p.el.offsetWidth, ph = (p) => p.el.offsetHeight;
+
+        function bounds(p) {
+          const mx = pw(p) * 0.35, my = ph(p) * 0.35;
+          return { x0: mx, x1: W() - mx, y0: my, y1: H() - my };
+        }
+
+        function scatterTargets() {
+          // loose grid with jitter: spread out, small overlaps
+          const n = prints.length, w = W(), h = H();
+          const cols = Math.ceil(Math.sqrt(n * (w / h)));
+          const rows = Math.ceil(n / cols);
+          const cells = [];
+          for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) cells.push([c, r]);
+          cells.sort(() => Math.random() - 0.5);
+          return prints.map((p, k) => {
+            const [c, r] = cells[k];
+            const cw = w / cols, ch = h / rows;
+            const b = bounds(p);
+            return {
+              x: clamp((c + 0.5) * cw + rand(-cw * 0.22, cw * 0.22), b.x0 + pw(p) * 0.15, b.x1 - pw(p) * 0.15),
+              y: clamp((r + 0.5) * ch + rand(-ch * 0.2, ch * 0.2), b.y0 + ph(p) * 0.15, b.y1 - ph(p) * 0.15),
+              r: rand(-15, 15),
+            };
+          });
+        }
+
+        function raise(p) { p.el.style.zIndex = ++zTop; }
+
+        function render(p) {
+          const tx = p.x - pw(p) / 2, ty = p.y - ph(p) / 2;
+          p.el.style.transform = `translate3d(${tx}px, ${ty}px, 0) rotate(${p.r + p.tilt}deg) scale(${p.s})`;
+        }
+
+        const easeOutBack = (t) => { const c1 = 1.4, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); };
+
+        function tweenTo(p, to, dur, delay) {
+          p.tween = { fx: p.x, fy: p.y, fr: p.r, tx: to.x, ty: to.y, tr: to.r, t0: performance.now() + (delay || 0), dur: reduce ? 1 : dur };
+          p.vx = p.vy = 0;
+        }
+
+        function step(now) {
+          for (const p of prints) {
+            if (p.tween) {
+              const t = clamp((now - p.tween.t0) / p.tween.dur, 0, 1);
+              const e = easeOutBack(t);
+              p.x = p.tween.fx + (p.tween.tx - p.tween.fx) * e;
+              p.y = p.tween.fy + (p.tween.ty - p.tween.fy) * e;
+              p.r = p.tween.fr + (p.tween.tr - p.tween.fr) * e;
+              if (t >= 1) p.tween = null;
+            } else if (!p.drag) {
+              if (Math.abs(p.vx) + Math.abs(p.vy) > 0.02) {
+                p.x += p.vx; p.y += p.vy;
+                p.vx *= 0.9; p.vy *= 0.9;
+                const b = bounds(p);
+                if (p.x < b.x0) { p.x = b.x0; p.vx = -p.vx * 0.4; }
+                if (p.x > b.x1) { p.x = b.x1; p.vx = -p.vx * 0.4; }
+                if (p.y < b.y0) { p.y = b.y0; p.vy = -p.vy * 0.4; }
+                if (p.y > b.y1) { p.y = b.y1; p.vy = -p.vy * 0.4; }
+              }
+            } else {
+              p.vx *= 0.82; p.vy *= 0.82;
+            }
+            const tiltT = p.drag ? clamp(p.vx * 0.5, -7, 7) : 0;
+            p.tv += (tiltT - p.tilt) * 0.14; p.tv *= 0.78; p.tilt += p.tv;
+            const sT = p.drag ? 1.08 : 1;
+            p.sv += (sT - p.s) * 0.2; p.sv *= 0.68; p.s += p.sv;
+            render(p);
+          }
+          requestAnimationFrame(step);
+        }
+
+        // ── pointer interaction ──
+        prints.forEach((p) => {
+          const el = p.el;
+          let start = null, moved = false, gesture = null;
+
+          el.addEventListener("pointerdown", (e) => {
+            if (e.button && e.button !== 0) return;
+            e.preventDefault();
+            el.setPointerCapture(e.pointerId);
+            p.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+            p.tween = null;
+            p.justDragged = false;
+            raise(p);
+            if (p.pointers.size === 1) {
+              const rect = table.getBoundingClientRect();
+              start = { cx: e.clientX, cy: e.clientY, ox: e.clientX - rect.left - p.x, oy: e.clientY - rect.top - p.y, lx: e.clientX, ly: e.clientY };
+              moved = false;
+              p.drag = true; p.vx = p.vy = 0;
+              el.classList.add("is-drag");
+            } else if (p.pointers.size === 2) {
+              const [a, b] = [...p.pointers.values()];
+              gesture = { a0: Math.atan2(b.y - a.y, b.x - a.x), r0: p.r };
+              moved = true;
+            }
+          });
+
+          el.addEventListener("pointermove", (e) => {
+            if (!p.pointers.has(e.pointerId)) return;
+            p.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+            if (gesture && p.pointers.size >= 2) {
+              const [a, b] = [...p.pointers.values()];
+              const ang = Math.atan2(b.y - a.y, b.x - a.x);
+              p.r = gesture.r0 + ((ang - gesture.a0) * 180) / Math.PI;
+              return;
+            }
+            if (!start) return;
+            if (Math.hypot(e.clientX - start.cx, e.clientY - start.cy) > 5) moved = true;
+            const rect = table.getBoundingClientRect();
+            const b = bounds(p);
+            p.x = clamp(e.clientX - rect.left - start.ox, b.x0, b.x1);
+            p.y = clamp(e.clientY - rect.top - start.oy, b.y0, b.y1);
+            const dx = e.clientX - start.lx, dy = e.clientY - start.ly;
+            p.vx = clamp(p.vx * 0.5 + dx * 0.5, -40, 40);
+            p.vy = clamp(p.vy * 0.5 + dy * 0.5, -40, 40);
+            start.lx = e.clientX; start.ly = e.clientY;
+          });
+
+          const end = (e) => {
+            if (!p.pointers.has(e.pointerId)) return;
+            p.pointers.delete(e.pointerId);
+            if (p.pointers.size > 0) { gesture = null; return; }
+            gesture = null;
+            p.justDragged = moved || e.type !== "pointerup";
+            p.drag = false;
+            el.classList.remove("is-drag");
+            // settle: a little wobble from the release speed
+            p.tv += clamp(p.vx * 0.35, -6, 6);
+            p.r += clamp(p.vx * 0.15, -4, 4);
+            start = null;
+            if (!p.justDragged) { p.vx = p.vy = 0; }
+          };
+          el.addEventListener("click", () => {
+            if (p.justDragged) { p.justDragged = false; return; }
+            openLightbox(p.i);
+          });
+          el.addEventListener("pointerup", end);
+          el.addEventListener("pointercancel", end);
+
+          el.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            p.tween = null;
+            p.r += clamp(e.deltaY, -60, 60) * 0.06;
+            raise(p);
+          }, { passive: false });
+
+          el.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLightbox(p.i); }
+          });
+        });
+
+        // ── controls ──
+        function shuffle() {
+          const t = scatterTargets();
+          const order = prints.slice().sort(() => Math.random() - 0.5);
+          order.forEach((p) => raise(p));
+          prints.forEach((p, k) => tweenTo(p, t[k], 900, order.indexOf(p) * 70));
+        }
+        function stack() {
+          const cx = W() / 2, cy = H() / 2;
+          prints.forEach((p, k) => {
+            raise(p);
+            tweenTo(p, { x: cx + rand(-6, 6), y: cy + rand(-6, 6), r: rand(-6, 6) }, 800, k * 80);
+          });
+        }
+        document.getElementById("shuffle").addEventListener("click", shuffle);
+        document.getElementById("stack").addEventListener("click", stack);
+
+        // ── first load: prints fall onto the table one by one ──
+        function drop() {
+          const t = scatterTargets();
+          prints.forEach((p, k) => {
+            p.x = t[k].x; p.y = t[k].y; p.r = t[k].r;
+            raise(p);
+            render(p);
+            p.el.style.visibility = "visible";
+            if (!reduce) {
+              p.card.animate(
+                [
+                  { transform: "translateY(-40px) scale(1.55)", opacity: 0, offset: 0 },
+                  { transform: "translateY(0) scale(.95)", opacity: 1, offset: 0.62 },
+                  { transform: "translateY(0) scale(1.025)", offset: 0.82 },
+                  { transform: "translateY(0) scale(1)" },
+                ],
+                { duration: 720, delay: 250 + k * 280, easing: "cubic-bezier(.3,.7,.4,1)", fill: "backwards" }
+              );
+            }
+          });
+          requestAnimationFrame(step);
+        }
+
+        let lastW = 0, lastH = 0;
+        window.addEventListener("resize", () => {
+          const w = W(), h = H();
+          prints.forEach((p) => {
+            if (lastW) { p.x *= w / lastW; p.y *= h / lastH; }
+            const b = bounds(p);
+            p.x = clamp(p.x, b.x0, b.x1); p.y = clamp(p.y, b.y0, b.y1);
+            if (p.tween) { p.tween.tx *= w / lastW; p.tween.ty *= h / lastH; }
+          });
+          lastW = w; lastH = h;
+        });
+
+        // ── lightbox ──
+        const lb = document.getElementById("lightbox");
+        const lbImg = document.getElementById("lb-img");
+        const lbCap = document.getElementById("lb-cap");
+        let current = -1, lastFocus = null;
+
+        function show(i) {
+          current = (i + PHOTOS.length) % PHOTOS.length;
+          lbImg.src = photoSrc(PHOTOS[current].src);
+          lbImg.alt = PHOTOS[current].caption;
+          lbCap.textContent = PHOTOS[current].caption;
+        }
+        function openLightbox(i) {
+          lastFocus = document.activeElement;
+          show(i);
+          lb.classList.add("is-open");
+          lb.setAttribute("aria-hidden", "false");
+          document.getElementById("lb-close").focus();
+        }
+        function closeLightbox() {
+          lb.classList.remove("is-open");
+          lb.setAttribute("aria-hidden", "true");
+          current = -1;
+          if (lastFocus && lastFocus.focus) lastFocus.focus();
+        }
+        document.getElementById("lb-close").addEventListener("click", closeLightbox);
+        document.getElementById("lb-prev").addEventListener("click", () => show(current - 1));
+        document.getElementById("lb-next").addEventListener("click", () => show(current + 1));
+        lb.addEventListener("click", (e) => { if (e.target === lb || e.target.tagName === "FIGURE") closeLightbox(); });
+        document.addEventListener("keydown", (e) => {
+          if (current < 0) return;
+          if (e.key === "Escape") closeLightbox();
+          else if (e.key === "ArrowLeft") show(current - 1);
+          else if (e.key === "ArrowRight") show(current + 1);
+        });
+
+        function init() { lastW = W(); lastH = H(); drop(); }
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(init); else init();
+      })();
+    </script>
+  </body>
+</html>
