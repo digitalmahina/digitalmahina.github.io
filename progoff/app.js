@@ -260,7 +260,7 @@
     if(DP)return partnerPage(DP);
     var ps=partners(),h='<div><h1>Диалоги</h1><p class="sub">Разговор со своей жизнью: человек, дело, тело, событие, общество, внутренняя мудрость</p></div>';
     h+=ps.length?'<div class="stack">'+ps.map(function(p){var n=ents('dialog').filter(function(d){return d.partner===p.id}).length;
-      return '<div class="card soft" data-p="'+p.id+'"><div class="row"><b>'+esc(p.title)+'</b><span class="sub">'+PT[p.ptype]+'</span></div><p class="sub">Диалогов: '+n+'</p></div>'}).join('')+'</div>':'<p class="empty">Пока нет собеседников. Начни с того, с кем или с чем важно поговорить.</p>';
+      return '<div class="card soft" style="cursor:pointer" data-p="'+p.id+'"><div class="row"><b>'+esc(p.title)+'</b><span class="sub">'+PT[p.ptype]+'</span></div><div class="row"><span class="sub">Диалогов: '+n+'</span><span class="sub">Открыть ›</span></div></div>'}).join('')+'</div>':'<p class="empty">Пока нет собеседников. Начни с того, с кем или с чем важно поговорить.</p>';
     h+='<button class="ghost" id="ap">Добавить собеседника</button>';
     screen.innerHTML=h;$('#ap').onclick=partnerEditor;
     screen.querySelectorAll('[data-p]').forEach(function(c){c.onclick=function(){DP=c.getAttribute('data-p');dialogs()}});
