@@ -254,9 +254,45 @@
       .x-state h2 { font: var(--type-heading); }
       .x-skel { height: 14px; border-radius: 7px; background: var(--fill-tertiary); }
 
-      .x-rpbody { overflow-y: auto; scrollbar-width: thin; flex: 1 1 auto; align-content: start; }
+      /* right column: document sidebar */
+      .x-rdr { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; margin-right: -6px; padding-right: 6px; }
+      .x-rdr > * { flex: none; }
+      .x-sbtitle { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+      .x-sbhead { grid-template-columns: 84px minmax(0, 1fr); gap: 14px !important; align-items: start; }
+      .x-cover { position: relative; aspect-ratio: 3 / 4; display: flex; flex-direction: column; gap: 6px; padding: 10px 9px 9px; border: 1px solid var(--stroke-primary); border-radius: 6px; background: var(--fill-primary-on); box-shadow: 0 1px 4px var(--stroke-secondary); clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); overflow: hidden; }
+      .x-cover::after { content: ""; position: absolute; top: 0; right: 0; width: 16px; height: 16px; background: linear-gradient(225deg, var(--fill-tertiary) 50%, var(--stroke-primary) 50%, var(--stroke-primary) calc(50% + 1px), transparent calc(50% + 1px)); }
+      .x-cover__kind { font: var(--type-caption); font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-secondary); line-height: 1.2; }
+      .x-cover__code { font: var(--weight-bold) 15px/1.15 var(--sans); color: var(--text-primary); overflow-wrap: anywhere; }
+      .x-cover__lines { flex: 1; min-height: 14px; background: repeating-linear-gradient(to bottom, var(--stroke-primary) 0 1px, transparent 1px 6px); opacity: 0.8; }
+      .x-cover__year { font: var(--type-caption); color: var(--text-secondary); border-top: 2px solid var(--fill-primary); padding-top: 4px; }
+      .x-upd { display: grid; gap: 8px; min-width: 0; }
+      .x-upd dl { display: grid; gap: 6px; margin: 0; }
+      .x-upd dt { font: var(--type-caption); color: var(--text-secondary); }
+      .x-upd dd { margin: 1px 0 0; font: var(--type-small); }
+      .x-upd .chip { margin: 0; }
+      .x-upd .btn { cursor: pointer; }
+      .x-upd .btn[aria-pressed="true"] { background: var(--fill-primary); color: var(--text-primary-on); border-color: transparent; }
+      .x-sbhead > .fineprint { grid-column: 1 / -1; }
+      .x-rpbody { display: grid; gap: 10px; align-content: start; min-width: 0; }
+      .x-rpbody h3 { font: var(--type-label); }
       .x-rdr .x-tabs { width: 100%; }
-      .x-rdr .x-tabs button { flex: 1; padding: 8px 10px; }
+      .x-rdr .x-tabs button { flex: 1; padding: 7px 8px; }
+      .x-topic { display: grid; gap: 4px; }
+      .x-topic .x-subbtn { padding: 0; font: var(--type-small); font-weight: var(--weight-medium); text-align: left; }
+      .x-topic small { display: flex; flex-wrap: wrap; gap: 2px 8px; font: var(--type-caption); color: var(--text-secondary); }
+      .x-topic .dot { margin: 2px 0 0; }
+      .x-more { justify-self: start; border: 0; background: none; padding: 4px 0; font: var(--type-label); color: var(--text-primary); text-decoration: underline; text-decoration-color: var(--stroke-primary); text-underline-offset: 3px; cursor: pointer; }
+      .x-more:hover { text-decoration-color: currentColor; }
+      .x-ad { display: grid; gap: 8px; padding: 10px 12px 12px; border: 1px solid var(--stroke-primary); border-radius: var(--r-l); }
+      .x-ad__lbl, .x-ad__cap { font: var(--type-caption); color: var(--text-secondary); }
+      .x-ad__cap { text-align: center; }
+      .x-ad__banner { position: relative; width: 100%; max-width: 300px; aspect-ratio: 300 / 250; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: var(--r-m); background: var(--fill-primary); color: var(--text-primary-on); text-decoration: none; overflow: hidden; }
+      .x-ad__banner svg { position: absolute; right: -36px; top: -30px; width: 170px; height: 170px; opacity: 0.18; pointer-events: none; }
+      .x-ad__eyebrow { font: var(--type-tag); opacity: 0.75; }
+      .x-ad__title { font: var(--type-heading); max-width: 13ch; }
+      .x-ad__sub { font: var(--type-small); opacity: 0.85; margin-top: auto; }
+      .x-ad__cta { align-self: flex-start; padding: 8px 14px; border-radius: var(--r-pill); background: var(--fill-primary-on); color: var(--text-primary); font: var(--type-label); }
+      .x-ad__banner:hover .x-ad__cta { box-shadow: inset 0 0 0 100px var(--hover-wash); }
       .x-pane { display: grid; gap: 12px; align-content: start; }
       .x-pane h3 { font: var(--type-body-strong); }
       .x-cm { display: grid; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--stroke-secondary); }
@@ -278,9 +314,10 @@
       @media (max-width: 1180px) {
         .x-rd { grid-template-columns: 260px minmax(0, 1fr); }
         .x-onlysheet { display: grid !important; }
-        .x-rdr { position: fixed; top: 0; right: 0; bottom: 0; z-index: 50; width: min(380px, 92vw); max-height: none; padding: 16px; background: var(--fill-primary-on); box-shadow: var(--hark-shadow); transform: translateX(105%); transition: transform 240ms var(--ease-out); overflow-y: auto; }
-        .x-rdr.is-open { transform: none; }
-        .x-rdr .x-sheethead { display: flex; }
+        .x-rdr { grid-column: 2; position: static; max-height: none; overflow: visible; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; align-items: start; }
+        .x-rdr > .x-sbhead, .x-rdr > .x-ad { grid-column: 1 / -1; }
+        .x-rdl { grid-row: 1 / span 2; }
+        .x-sbhead { grid-template-columns: 96px minmax(0, 1fr); }
         .x-logo__name { display: none; }
       }
       @media (max-width: 900px) {
@@ -289,8 +326,8 @@
         .x-rdl { position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; width: min(340px, 88vw); max-height: none; padding: 16px; background: var(--fill-primary-on); box-shadow: var(--hark-shadow); transform: translateX(-105%); transition: transform 240ms var(--ease-out); }
         .x-rdl.is-open { transform: none; }
         .x-rdl .x-sheethead { display: flex; }
-        .x-rdr { top: auto; left: 0; width: auto; max-height: 78vh; border-radius: var(--r-l) var(--r-l) 0 0; transform: translateY(105%); padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
-        .x-rdr::before { content: ""; display: block; width: 40px; height: 4px; margin: -6px auto 4px; border-radius: 2px; background: var(--stroke-primary); flex: none; }
+        .x-rdr { grid-column: auto; grid-template-columns: minmax(0, 1fr); }
+        .x-sbhead { grid-template-columns: 84px minmax(0, 1fr); }
       }
       @media (max-width: 700px) {
         .x-dochead { padding: 18px; border-radius: var(--r-m); }
@@ -302,6 +339,10 @@
         .x-tsearch .x-field { height: var(--tap); }
         .x-doc, .x-toc a { min-height: var(--tap); }
         .x-tctog { height: var(--tap); width: 32px; }
+        .x-topic .x-subbtn, .x-more { min-height: var(--tap); }
+        .x-upd .btn, .x-upd .link { min-height: var(--tap); display: inline-flex; align-items: center; }
+        .x-rdr .x-tabs button { min-height: var(--tap); }
+        .x-rdr .x-panel { border-radius: var(--r-m); }
         .x-text { --x-fs: 16px; }
       }
       @media (hover: none) {
@@ -631,23 +672,46 @@
                 <button class="x-ibtn" type="button" id="fz-plus" aria-label="Увеличить шрифт">A+</button>
               </div>
               <button class="x-ibtn" type="button" id="theme-tg" aria-label="Тёмная тема">◐</button>
-              <button class="btn x-onlysheet" type="button" data-open="rd-right" aria-controls="rd-right">Панель</button>
+              <button class="btn x-onlysheet" type="button" data-goside aria-controls="rd-right">Форум и статьи</button>
             </div>
             <article class="x-text" id="rd-text"></article>
             <p class="fineprint">Текст из открытых источников (pravo.gov.ru). Не заменяет официальную публикацию. Обсуждения и счётчики у пунктов — демо.</p>
           </div>
 
-          <aside class="x-rdr" id="rd-right" aria-label="Панель пункта">
-            <div class="x-sheethead">
-              <strong id="rd-right-title">Панель</strong>
-              <button class="x-x" type="button" data-close-sheet aria-label="Закрыть">✕</button>
-            </div>
-            <div class="x-tabs" role="tablist" aria-label="Панель" id="rp-tabs">
-              <button type="button" role="tab" data-rp="disc" aria-selected="true" aria-controls="rp-body">Обсуждения пункта</button>
-              <button type="button" role="tab" data-rp="bm" aria-selected="false" aria-controls="rp-body">Закладки</button>
-              <button type="button" role="tab" data-rp="chg" aria-selected="false" aria-controls="rp-body">Изменения</button>
-            </div>
-            <section class="x-panel x-rpbody" id="rp-body" role="tabpanel"></section>
+          <aside class="x-rdr" id="rd-right" aria-label="О документе">
+            <section class="x-panel x-sbhead" id="sb-head" aria-label="Документ и обновления">
+              <div class="x-skel" style="height: 112px"></div>
+              <div class="x-upd"><div class="x-skel" style="width: 70%"></div><div class="x-skel"></div></div>
+            </section>
+
+            <section class="x-panel" id="sb-forum" aria-labelledby="sb-forum-h">
+              <div class="x-sbtitle"><h3 id="sb-forum-h">Что пишут на форуме</h3><span class="x-demo">демо</span></div>
+              <div class="x-tabs" role="tablist" aria-label="Форум по документу" id="rp-tabs">
+                <button type="button" role="tab" data-rp="topics" aria-selected="true" aria-controls="rp-body">Темы</button>
+                <button type="button" role="tab" data-rp="disc" aria-selected="false" aria-controls="rp-body">Пункт</button>
+                <button type="button" role="tab" data-rp="bm" aria-selected="false" aria-controls="rp-body">Закладки</button>
+                <button type="button" role="tab" data-rp="chg" aria-selected="false" aria-controls="rp-body">Правки</button>
+              </div>
+              <div class="x-rpbody" id="rp-body" role="tabpanel" aria-live="polite"></div>
+            </section>
+
+            <section class="x-panel" id="sb-arts" aria-labelledby="sb-arts-h">
+              <div class="x-sbtitle"><h3 id="sb-arts-h">Статьи и разборы</h3><span class="x-demo">демо</span></div>
+              <ul class="x-list" id="sb-arts-list"></ul>
+              <button class="x-more" type="button" data-demo="Раздел статей появится в рабочей версии">Все статьи →</button>
+            </section>
+
+            <section class="x-ad" aria-label="Реклама">
+              <p class="x-ad__lbl">Реклама</p>
+              <a class="x-ad__banner" href="#reader" data-demo="Демо-баннер: запись в тренажёрный центр недоступна в макете">
+                <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><circle cx="50" cy="50" r="6"/><path d="M50 44V4M50 56v40M44 50H4M56 50h40"/><circle cx="50" cy="50" r="44" stroke-dasharray="2 6"/></svg>
+                <span class="x-ad__eyebrow">Тренажёрный центр</span>
+                <span class="x-ad__title">КПК на Ми‑8 / AW139</span>
+                <span class="x-ad__sub">FFS-тренажёр, допуск к полётам после курса. Запись на ноябрь.</span>
+                <span class="x-ad__cta">Записаться</span>
+              </a>
+              <p class="x-ad__cap">Реклама · демо</p>
+            </section>
           </aside>
         </div>
         <div class="x-scrim" id="rd-scrim"></div>
@@ -843,7 +907,7 @@
 
         var CAT = null, catSrc = "", NEW = {}, CACHE = {}, PEND = {};
         var cur = null, curMeta = null, blocks = [], heads = [], headEls = [], textEls = [], seq = 0;
-        var state = { tab: "disc", pt: null, active: false };
+        var state = { tab: "topics", pt: null, active: false };
         var BM = [];
         try { BM = JSON.parse(sessionStorage.getItem("x-bm") || "[]"); } catch (e) { BM = []; }
 
@@ -1255,12 +1319,135 @@
           if (CAT) h += '<p class="fineprint">Каталог проверен ' + fmtD(CAT.checked_at || CAT.generated_at) + ".</p>";
           return h;
         }
-        var TITLES = { disc: "Обсуждения пункта", bm: "Закладки", chg: "Изменения" };
+        /* ---------- document sidebar ---------- */
+        var FOLLOW = {};
+        try { FOLLOW = JSON.parse(sessionStorage.getItem("x-follow") || "{}"); } catch (e) { FOLLOW = {}; }
+        var SEC = { law: "Воздушный кодекс и федеральные законы", fap: "ФАП", ivp: "Использование воздушного пространства", lic: "Лицензии, ВЛЭК, допуски", safety: "Безопасность полётов", intl: "ICAO / EASA / FAA" };
+        function docCode(meta) {
+          if (!meta) return "";
+          if (FTAG[meta.id]) return FTAG[meta.id];
+          var m = meta.short.match(/^(ФАП-\d+|ФП ИВП|ВК РФ)/);
+          if (m) return m[1];
+          if (/ФЗ/.test(meta.number)) return /Воздушный кодекс/.test(meta.title) ? "ВК РФ" : "№ " + meta.number;
+          if (/^Постановление/.test(meta.title)) return "ПП-" + meta.number;
+          if (/авиационных правил/i.test(meta.title)) return "ФАП-" + meta.number;
+          return "№ " + meta.number;
+        }
+        function docKind(meta) {
+          var t = meta ? meta.title : "";
+          if (/^Воздушный кодекс/.test(t)) return "Кодекс";
+          if (/^Федеральный закон/.test(t)) return "Федер. закон";
+          if (/^Постановление/.test(t)) return "Постановление";
+          if (/^Приказ/.test(t)) return "Приказ";
+          return "Документ";
+        }
+        function docSec(meta) {
+          var code = docCode(meta);
+          if (/ИВП|воздушного пространства/i.test(code + meta.short)) return SEC.ivp;
+          if (/ФЗ|Кодекс/.test(meta.number + docKind(meta))) return SEC.law;
+          if (/медицин|свидетельств|персонал|экипаж/i.test(meta.short)) return SEC.lic;
+          return SEC.fap;
+        }
+        function edDate(meta) { var m = meta && meta.edition && meta.edition.match(/от\s+([\d.]+)/); return m ? m[1] : ""; }
+        function cut(s, n) { return s.length > n ? s.slice(0, n).replace(/[\s,«]+\S*$/, "") + "…" : s; }
+        var T128 = [
+          { t: "Метеоминимумы КВС после перехода на новый тип: как читать требования ФАП-128", s: SEC.fap, n: 47, w: "2 ч назад", exp: true },
+          { t: "Предполётная подготовка: что оформлять письменно, а что можно на брифинге", s: SEC.fap, n: 23, w: "вчера, 18:40" },
+          { t: "Предполётная информация по ИВП: NOTAM, план полёта и кто за что отвечает", s: SEC.ivp, n: 18, w: "3 дня назад" },
+          { t: "Минимумы запасного аэродрома при планировании: расхождения с РПП", s: SEC.fap, n: 31, w: "неделю назад" }
+        ];
+        var A128 = [
+          { t: "Метеоминимумы по ФАП-128 без путаницы: КВС, ВС и аэродром", a: "instructor_kzn", m: 12 },
+          { t: "Предполётная подготовка экипажа: чек-лист по тексту правил", a: "b737_capt", m: 8 },
+          { t: "ИВП для пилота: что из ФП ИВП нужно знать вместе с ФАП-128", a: "atc_rostov", m: 10 },
+          { t: "Редакция от 29.05.2023: что изменилось и что осталось", a: "Редакция АвиаДок", m: 6 }
+        ];
+        function demoTopics(meta) {
+          if (meta.id === DEFAULT) return T128;
+          var c = docCode(meta), s = docSec(meta), ed = edDate(meta), sh = cut(meta.short.replace(/^[^—]+—\s*/, ""), 60), h = hsh(meta.id);
+          var list = [
+            { t: c + ": какие пункты чаще всего спрашивают на проверках", s: s },
+            { t: "Что поменялось в " + c + (ed ? " в редакции от " + ed : "") + " — сводка правок", s: SEC.lic === s ? s : "Новые и изменённые документы" },
+            { t: "«" + sh + "»: как это прописать в РПП эксплуатанта", s: s },
+            { t: c + " на практике: разночтения и ответы Росавиации", s: s }
+          ];
+          var W = ["40 мин назад", "вчера", "3 дня назад", "2 недели назад"];
+          return list.map(function (x, i) { x.n = 3 + ((h >>> (i * 5)) % 38); x.w = W[i]; x.exp = i === h % 4; return x; });
+        }
+        function demoArts(meta) {
+          if (meta.id === DEFAULT) return A128;
+          var c = docCode(meta), ed = edDate(meta), h = hsh(meta.id + "a");
+          var AU = ["instructor_kzn", "heli_kvs", "b737_capt", "atc_rostov", "mi8_ito"];
+          return [
+            { t: c + " простыми словами: структура и ключевые пункты", a: "Редакция АвиаДок", m: 7 + h % 6 },
+            { t: "Как читать " + c + ": термины и ссылки на другие документы", a: AU[h % 5], m: 5 + (h >>> 4) % 8 },
+            { t: (ed ? "Редакция от " + ed : "Действующая редакция") + ": что изменилось", a: "Редакция АвиаДок", m: 4 + (h >>> 8) % 5 },
+            { t: "Типовые нарушения " + c + " по итогам проверок", a: AU[(h >>> 12) % 5], m: 6 + (h >>> 16) % 9 }
+          ];
+        }
+        function paneTopics() {
+          if (!curMeta) {
+            var nm = cur && cur.indexOf("ext:") === 0 ? cur.slice(4) : "";
+            return '<p class="fineprint">' + (nm ? esc(nm) + " обсуждают в разделе ICAO / EASA / FAA." : "Темы появятся, когда документ откроется.") + "</p>" +
+              (nm ? '<button class="x-more" type="button" data-forum="' + esc(nm.replace(/^(ICAO|EASA)\s+/, "")) + '">Все обсуждения →</button>' : "");
+          }
+          var code = docCode(curMeta);
+          return '<ul class="x-list">' + demoTopics(curMeta).map(function (x) {
+            return '<li class="x-topic"><button class="x-subbtn" type="button" data-forum="' + esc(code) + '">' + esc(x.t) + "</button>" +
+              "<small><span>" + esc(x.s) + "</span><span>" + x.n + " " + plural(x.n, "ответ", "ответа", "ответов") + "</span><span>" + x.w + "</span></small>" +
+              (x.exp ? '<span class="dot">Ответ эксперта</span>' : "") + "</li>";
+          }).join("") + '</ul><button class="x-more" type="button" data-forum="' + esc(code) + '">Все обсуждения документа →</button>';
+        }
+        function plural(n, a, b, c) { var m = n % 10, mm = n % 100; return m === 1 && mm !== 11 ? a : m >= 2 && m <= 4 && (mm < 12 || mm > 14) ? b : c; }
+        function renderDoc() {
+          var meta = curMeta, ext = cur && cur.indexOf("ext:") === 0 ? cur.slice(4) : "";
+          var code = meta ? docCode(meta) : (ext || "—"), kind = meta ? docKind(meta) : (ext ? "Междунар." : "Документ");
+          var year = meta ? meta.date.slice(-4) : "";
+          var h = '<div class="x-cover" role="img" aria-label="' + esc(kind + " " + code) + '"><span class="x-cover__kind">' + esc(kind) + '</span><span class="x-cover__code">' + esc(code) +
+            '</span><span class="x-cover__lines"></span><span class="x-cover__year">' + (year || "&nbsp;") + "</span></div>";
+          if (!meta) {
+            h += '<div class="x-upd"><h3>Обновления</h3><p class="fineprint">' + (ext ? "Документа нет в каталоге читалки — следите за ним на форуме." : "Документ не найден в каталоге.") + "</p></div>";
+            $("sb-head").innerHTML = h; $("sb-arts-list").innerHTML = '<li class="fineprint">Статей по документу пока нет.</li>';
+            return;
+          }
+          var chg = (CAT && CAT.changes || []).filter(function (c) { return c.id === cur; }).sort(function (a, b) { return b.at - a.at; })[0];
+          var last = chg ? (chg.type === "added" ? "Добавлен в каталог" : "Текст обновлён") + " · " + fmtD(chg.at) : (meta.updated ? "Текст сверен " + fmtD(meta.updated) : "");
+          var on = !!FOLLOW[cur], ed = edDate(meta);
+          h += '<div class="x-upd"><h3>Обновления</h3><dl>' +
+            "<div><dt>Текущая редакция</dt><dd>" + esc(ed ? "от " + ed : meta.edition || meta.date) + "</dd></div>" +
+            '<div><dt>Статус</dt><dd><span class="chip chip--solid">' + (meta.valid_until ? "Действует, срок ограничен" : "Действует") + "</span></dd></div>" +
+            (last ? "<div><dt>Последняя правка</dt><dd>" + esc(last) + "</dd></div>" : "") +
+            "</dl>" +
+            '<a class="link" href="' + esc(meta.source_url || "http://pravo.gov.ru/") + '" target="_blank" rel="noopener">Первоисточник ↗</a>' +
+            '<button class="btn" type="button" data-follow aria-pressed="' + on + '">' + (on ? "✓ Вы следите" : "Следить за изменениями") + "</button></div>" +
+            '<p class="fineprint">' + esc(meta.valid_until || "") + (meta.valid_until ? ". " : "") + "Источник: " + esc(meta.source || "pravo.gov.ru") + ". Подписка — демо.</p>";
+          $("sb-head").innerHTML = h;
+          $("sb-arts-list").innerHTML = demoArts(meta).map(function (a) {
+            return '<li class="x-topic"><button class="x-subbtn" type="button" data-demo="Демо: текст статьи появится в рабочей версии">' + esc(a.t) + "</button><small><span>" + esc(a.a) + "</span><span>" + a.m + " мин чтения</span></small></li>";
+          }).join("");
+        }
+        $("rd-right").addEventListener("click", function (e) {
+          var f = e.target.closest("[data-follow]");
+          if (f && cur) {
+            var on = !FOLLOW[cur];
+            if (on) FOLLOW[cur] = 1; else delete FOLLOW[cur];
+            try { sessionStorage.setItem("x-follow", JSON.stringify(FOLLOW)); } catch (err) { /* ignore */ }
+            f.setAttribute("aria-pressed", on); f.textContent = on ? "✓ Вы следите" : "Следить за изменениями";
+            toast(on ? "Демо: сообщим о новой редакции " + docCode(curMeta) : "Вы больше не следите за документом");
+            return;
+          }
+          var d = e.target.closest("[data-demo]");
+          if (d) { e.preventDefault(); toast(d.dataset.demo); }
+        });
+        function goSide(id) {
+          var el = $(id); if (!el) return;
+          if (matchMedia("(max-width: 1180px)").matches) el.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+          else { var r = $("rd-right"); r.scrollTop += el.getBoundingClientRect().top - r.getBoundingClientRect().top; }
+        }
+
         function renderPane() {
           [].forEach.call(document.querySelectorAll("#rp-tabs [data-rp]"), function (b) { b.setAttribute("aria-selected", b.dataset.rp === state.tab ? "true" : "false"); });
-          $("rd-right-title").textContent = TITLES[state.tab];
-          $("rp-body").innerHTML = state.tab === "disc" ? paneDisc() : state.tab === "bm" ? paneBm() : paneChg();
-          $("rp-body").scrollTop = 0;
+          $("rp-body").innerHTML = state.tab === "topics" ? paneTopics() : state.tab === "disc" ? paneDisc() : state.tab === "bm" ? paneBm() : paneChg();
         }
         $("rp-tabs").addEventListener("click", function (e) { var b = e.target.closest("[data-rp]"); if (!b) return; state.tab = b.dataset.rp; renderPane(); });
         $("rp-body").addEventListener("click", function (e) {
@@ -1279,7 +1466,7 @@
         }
 
         /* ---------- sheets (mobile) ---------- */
-        var NARROW = { "rd-left": "(max-width: 900px)", "rd-right": "(max-width: 1180px)" };
+        var NARROW = { "rd-left": "(max-width: 900px)" };
         function syncInert() {
           Object.keys(NARROW).forEach(function (id) { var el = $(id); el.inert = matchMedia(NARROW[id]).matches && !el.classList.contains("is-open"); });
         }
@@ -1298,6 +1485,7 @@
         }
         document.addEventListener("click", function (e) {
           var o = e.target.closest("[data-open]"); if (o) { openSheet(o.dataset.open); return; }
+          if (e.target.closest("[data-goside]")) { goSide("rd-right"); return; }
           if (e.target.closest("[data-close-sheet]") || e.target.id === "rd-scrim") { closeSheets(); return; }
           var f = e.target.closest("[data-forum]");
           if (f && state.active) {
@@ -1332,7 +1520,7 @@
               var txt = b ? b.x : "", cut = txt.length > 500 ? txt.slice(0, 500) + "…" : txt;
               copy("«" + num + ". " + cut + "»\n— " + label(curMeta) + ", п. " + num + "\n" + ptUrl(k)).then(function () { toast("Цитата п. " + num + " скопирована — вставьте её в ответ в теме"); });
             } else if (a === "disc") {
-              state.pt = k; state.tab = "disc"; renderPane(); openSheet("rd-right");
+              state.pt = k; state.tab = "disc"; renderPane(); goSide("sb-forum");
             }
             return;
           }
@@ -1356,6 +1544,10 @@
           if (id === cur && textEl.dataset.ready === id) return Promise.resolve();
           var my = ++seq;
           cur = id; curMeta = null; state.pt = null; textEl.dataset.ready = "";
+          if (state.tab === "disc") state.tab = "topics";
+          $("sb-head").innerHTML = '<div class="x-skel" style="height: 112px"></div><div class="x-upd"><div class="x-skel" style="width: 70%"></div><div class="x-skel"></div></div>';
+          $("sb-arts-list").innerHTML = '<li><div class="x-skel"></div></li>';
+          $("rp-body").innerHTML = '<p class="fineprint">Загрузка…</p>';
           renderSwitcher();
           if (id.indexOf("ext:") === 0) {
             var name = id.slice(4);
@@ -1363,7 +1555,7 @@
             showState(esc(name) + " нет в каталоге читалки",
               "В читалке — 40 российских документов: Воздушный кодекс, постановления и ФАП. Международные правила разбирают на форуме.",
               '<button class="btn" type="button" data-forum="' + esc(name.replace(/^(ICAO|EASA)\s+/, "")) + '">Темы на форуме</button><a class="btn" href="#reader/' + DEFAULT + '">Открыть ФАП-128</a>');
-            textEl.dataset.ready = id; renderPane(); return Promise.resolve();
+            textEl.dataset.ready = id; renderDoc(); renderPane(); return Promise.resolve();
           }
           $("rd-head").innerHTML = '<div class="x-skel" style="width: 40%"></div><div class="x-skel" style="width: 90%; height: 22px"></div>';
           textEl.innerHTML = '<div class="x-skel" style="width: 96%"></div><div class="x-skel" style="width: 88%"></div><div class="x-skel" style="width: 92%"></div><p class="fineprint">Загружаем текст…</p>';
@@ -1374,11 +1566,11 @@
             if (!meta) {
               $("rd-head").innerHTML = "<h1>Документ не найден</h1>";
               showState("Такого документа нет в каталоге", "Выберите документ слева или откройте ФАП-128.", '<a class="btn" href="#reader/' + DEFAULT + '">Открыть ФАП-128</a>');
-              textEl.dataset.ready = id; renderPane(); return;
+              textEl.dataset.ready = id; renderDoc(); renderPane(); return;
             }
             curMeta = meta;
             renderHead(meta, "Загружаем текст…");
-            renderPane();
+            renderDoc(); renderPane();
             return loadText(id).then(function (doc) {
               if (my !== seq) return;
               if (!doc) {
