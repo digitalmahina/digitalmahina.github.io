@@ -127,6 +127,9 @@
       .x-flegend { display: inline-flex; align-items: center; gap: 8px; font: var(--type-caption); color: var(--text-secondary); }
       .x-flegend i { display: inline-block; width: 90px; height: 8px; border-radius: 4px; }
       .x-field { image-rendering: auto; }
+      .x-gam { background: #ffd400; color: #0d1117; border-color: transparent; font-weight: 600; }
+      .x-gam:hover { color: #0d1117; filter: brightness(1.1); }
+      .x-gam--old { background: #6b7280; color: #fff; }
       .leaflet-bottom.leaflet-right { bottom: 150px; }
       @media (max-width: 760px) { .leaflet-bottom.leaflet-right { bottom: 200px; } }
       /* markers */
@@ -711,7 +714,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
         }
         (function () {
           var tg = document.querySelector(".x-toggles"), b = document.createElement("button");
-          b.className = "x-tgl"; b.type = "button"; b.id = "t-gamet"; b.setAttribute("aria-pressed", "false"); b.textContent = "GAMET";
+          b.className = "x-tgl x-gam"; b.type = "button"; b.id = "t-gamet"; b.textContent = "GAMET";
           b.addEventListener("click", openGamet);
           tg.insertBefore(b, document.getElementById("t-list"));
           fetch("gamet.json?t=" + Date.now()).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
@@ -719,7 +722,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             if (j && j.items && j.items[0]) {
               var m = /VALID \d{6}\/(\d\d)(\d\d)(\d\d)/.exec(j.items[0].header), now = new Date();
               var end = m ? Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), +m[1], +m[2], +m[3]) : 0;
-              b.textContent = "GAMET " + (end && end < now.getTime() ? "(устарел)" : gValid(j.items[0].header).slice(3, 9) + "–" + gValid(j.items[0].header).slice(-6));
+              var old = end && end < now.getTime(); b.innerHTML = "<b>GAMET</b> " + (old ? "устарел" : gValid(j.items[0].header).slice(3, 5) + "–" + gValid(j.items[0].header).slice(-6, -4) + "Z"); if (old) b.classList.add("x-gam--old");
             }
           }).catch(function () {});
         })();
