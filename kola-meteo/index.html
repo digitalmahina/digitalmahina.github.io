@@ -203,6 +203,7 @@ try {
   if (x.status === 200) { var D = JSON.parse(x.responseText);
     if (D.metar && D.metar.length) document.getElementById("metar-data").textContent = JSON.stringify(D.metar);
     if (D.synop && D.synop.length) document.getElementById("synop-data").textContent = JSON.stringify(D.synop);
+    window.KOLA_TAF = D.taf || {}; window.KOLA_SIG = D.sigmet || [];
     window.KOLA_GEN = D.generated || window.KOLA_GEN; }
 } catch (e) {}
 function kolaAge() { var t = Date.parse(window.KOLA_GEN.replace("Z", ":00Z")); if (!t) return "";
@@ -645,6 +646,33 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             .then(function (j) { if (j && j.times) { G = j; buildGridUI(); } }).catch(function () {});
           map.on("zoomend", function () { /* оверлей масштабируется сам */ });
         }
+
+        /* ---------- TAF и SIGMET ---------- */
+        var TAF = window.KOLA_TAF || {}, SIG = window.KOLA_SIG || [];
+        var HAZ = { TS: "грозы", TURB: "турбулентность", ICE: "обледенение", MTW: "горные волны", VA: "вулканический пепел", TC: "тропический циклон", DS: "пыльная буря", SS: "песчаная буря", RDOACT: "радиоактивное облако", CB: "кучево-дождевая" };
+        function hhmm(u) { var d = new Date(u * 1000), p = function (n) { return (n < 10 ? "0" : "") + n; }; return p(d.getUTCDate()) + " " + p(d.getUTCHours()) + ":" + p(d.getUTCMinutes()) + "Z"; }
+        function sigTitle(g) { return "SIGMET " + (g.fir || "") + " · " + (HAZ[g.hazard] || g.hazard || "") + (g.qual ? " (" + g.qual.toLowerCase() + ")" : ""); }
+        if (map && ok) SIG.forEach(function (g) {
+          if (!g.coords || g.coords.length < 3) return;
+          L.polygon(g.coords, { color: "#ff4d00", weight: 2, dashArray: "6 4", fillColor: "#ff4d00", fillOpacity: 0.12 })
+            .bindPopup("<b>" + esc(sigTitle(g)) + "</b><br>" + hhmm(g.from) + " – " + hhmm(g.to) +
+              (g.top ? "<br>до FL" + Math.round(g.top / 100) : "") + '<div class="x-raw">' + esc(g.raw || "") + "</div>").addTo(map);
+        });
+        function tafHtml(icao) {
+          var t = TAF[icao];
+          if (!t) return '<h3>TAF</h3><p class="x-sub">Нет действующего TAF.</p>';
+          return '<h3>TAF</h3><div class="x-raw">' + esc(t).replace(/\s+(TEMPO|BECMG|PROB\d\d|FM\d{6})/g, "<br>$1") + "</div>";
+        }
+        var _om2 = openMetar;
+        openMetar = function (s) { _om2(s); panel.insertAdjacentHTML("beforeend", tafHtml(s.icao)); };
+        var _rl = renderList;
+        renderList = function () {
+          _rl();
+          var h = SIG.length
+            ? '<div class="x-note x-note--bad" style="margin:0 0 12px"><b>Действующие SIGMET: ' + SIG.length + "</b><br>" + SIG.map(function (g) { return esc(sigTitle(g)) + ", до " + hhmm(g.to); }).join("<br>") + "</div>"
+            : '<div class="x-note x-note--ok" style="margin:0 0 12px">Действующих SIGMET над Кольским и РПИ Мурманск нет.</div>';
+          var h2 = panel.querySelector("h2"); if (h2) h2.insertAdjacentHTML("beforebegin", h); else panel.insertAdjacentHTML("afterbegin", h);
+        };
 
         if (!ok) fail("Карта не загрузилась — показана схема берега");
         renderList();
