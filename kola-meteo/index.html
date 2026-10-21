@@ -138,8 +138,8 @@
       .x-gam { background: #ffd400; color: #0d1117; border-color: transparent; font-weight: 600; }
       .x-gam:hover { color: #0d1117; filter: brightness(1.1); }
       .x-gam--old { background: #6b7280; color: #fff; }
-      .leaflet-bottom.leaflet-right { bottom: 150px; }
-      @media (max-width: 760px) { .leaflet-bottom.leaflet-right { bottom: 200px; } }
+      .leaflet-bottom.leaflet-right, .leaflet-bottom.leaflet-left { bottom: 150px; }
+      @media (max-width: 760px) { .leaflet-bottom.leaflet-right, .leaflet-bottom.leaflet-left { bottom: 200px; } }
       /* markers */
       .x-metar {
         font: var(--weight-medium) 11px/1 "Geist Mono", ui-monospace, monospace;
@@ -162,7 +162,7 @@
         .x-panel { bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); max-height: 50%; }
         .x-bottom { padding: 8px 12px; gap: 6px 10px; }
         .x-legend { display: none; }
-        .leaflet-bottom.leaflet-right { bottom: 96px; }
+        .leaflet-bottom.leaflet-right, .leaflet-bottom.leaflet-left { bottom: 96px; }
       }
     </style>
   </head>
@@ -249,7 +249,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
         try {
           if (window.L) {
             map = L.map("map", { zoomControl: false, attributionControl: true }).setView([68.0, 34.5], 6);
-            L.control.zoom({ position: "bottomright" }).addTo(map);
+            L.control.zoom({ position: "bottomleft" }).addTo(map); map.attributionControl.setPosition("bottomleft");
             L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}", {
               maxZoom: 16, minZoom: 4, pane: "overlayPane", opacity: 0.8
             }).addTo(map);
@@ -690,6 +690,14 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           var g = function (x) { panel.classList.remove("x-panel--wide"); return f(x); };
           if (n === "openMetar") openMetar = g; else if (n === "openSynop") openSynop = g; else renderList = g;
         });
+        function fitPanel() {
+          var bar = document.querySelector(".x-bottom"); if (!bar || !panel) return;
+          var top = panel.getBoundingClientRect().top, lim = bar.getBoundingClientRect().top - 12;
+          if (window.innerWidth > 760 && lim > top + 120) panel.style.maxHeight = (lim - top) + "px";
+        }
+        window.addEventListener("resize", fitPanel);
+        if (window.MutationObserver) new MutationObserver(fitPanel).observe(panel, { childList: true });
+        setTimeout(fitPanel, 1500);
         /* ---------- GAMET (MetAvia2, кладёт плановая задача Hark) ---------- */
         var GAM = null;
         var GLAB = { "SFC VIS": "Видимость у земли", "SFC WIND": "Ветер у земли", "SIGWX": "Опасные явления", "MT OBSC": "Горы закрыты",
