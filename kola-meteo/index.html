@@ -127,6 +127,14 @@
       .x-flegend { display: inline-flex; align-items: center; gap: 8px; font: var(--type-caption); color: var(--text-secondary); }
       .x-flegend i { display: inline-block; width: 90px; height: 8px; border-radius: 4px; }
       .x-field { image-rendering: auto; }
+      .x-panel--wide { width: 440px; }
+      .x-gr { margin: 10px 0; }
+      .x-gk { font: var(--type-caption); color: var(--text-secondary); margin-bottom: 2px; }
+      .x-gv { font: var(--weight-medium) var(--size-small)/1.45 "Geist Mono", ui-monospace, monospace; overflow-wrap: anywhere; }
+      .x-wt { width: 100%; border-collapse: collapse; font: var(--weight-medium) var(--size-small)/1.3 "Geist Mono", ui-monospace, monospace; }
+      .x-wt th { font: var(--type-caption); color: var(--text-secondary); text-align: left; padding: 2px 6px 4px 0; }
+      .x-wt td { padding: 3px 6px 3px 0; border-top: 1px solid var(--stroke-primary); white-space: nowrap; }
+      @media (max-width: 760px) { .x-panel--wide { width: auto; } }
       .x-gam { background: #ffd400; color: #0d1117; border-color: transparent; font-weight: 600; }
       .x-gam:hover { color: #0d1117; filter: brightness(1.1); }
       .x-gam--old { background: #6b7280; color: #fff; }
@@ -677,24 +685,43 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           var h2 = panel.querySelector("h2"); if (h2) h2.insertAdjacentHTML("beforebegin", h); else panel.insertAdjacentHTML("afterbegin", h);
         };
 
+        ["openMetar", "openSynop", "renderList"].forEach(function (n) {
+          var f = { openMetar: openMetar, openSynop: openSynop, renderList: renderList }[n];
+          var g = function (x) { panel.classList.remove("x-panel--wide"); return f(x); };
+          if (n === "openMetar") openMetar = g; else if (n === "openSynop") openSynop = g; else renderList = g;
+        });
         /* ---------- GAMET (MetAvia2, кладёт плановая задача Hark) ---------- */
         var GAM = null;
         var GLAB = { "SFC VIS": "Видимость у земли", "SFC WIND": "Ветер у земли", "SIGWX": "Опасные явления", "MT OBSC": "Горы закрыты",
           "SIG CLD": "Значимая облачность", "ICE": "Обледенение", "TURB": "Турбулентность", "MTW": "Горные волны", "SIGMETS APPLICABLE": "Действуют SIGMET",
           "PSYS": "Синоптика", "WIND/T": "Ветер и температура по высотам", "CLD": "Облачность", "FZLVL": "Изотерма 0 °C", "MNM QNH": "Мин. QNH", "VA": "Вулк. пепел" };
         function gValid(h) { var m = /VALID (\d\d)(\d\d)(\d\d)\/(\d\d)(\d\d)(\d\d)/.exec(h); return m ? m[1] + " " + m[2] + ":" + m[3] + "Z – " + m[4] + " " + m[5] + ":" + m[6] + "Z" : ""; }
+        function windTab(v) {
+          var tk = v.replace(/=\s*$/, "").split(/\s+/), rows = [], cur = null, lvl = "", sec = "";
+          for (var i = 0; i < tk.length; i++) {
+            var w = tk[i];
+            if (/^(SFC|\d{3,4}M)$/.test(w)) { lvl = w === "SFC" ? "у земли" : w.replace("M", " м"); sec = ""; }
+            else if ((w === "W" || w === "E" || w === "N" || w === "S") && tk[i + 1] === "OF") { sec = ({ W: "западнее", E: "восточнее", N: "севернее", S: "южнее" })[w] + " " + tk[i + 2].replace(/^[EN]0*/, "") + "°"; i += 2; }
+            else if (/^\d{3}\/\d+(G\d+)?MPS$/.test(w)) { cur = { l: lvl, s: sec, w: (function (m) { return m[1] + "° " + (+m[2]) + (m[3] ? "–" + (+m[3]) : "") + " м/с"; })(/^(\d{3})\/(\d+)(?:G(\d+))?/.exec(w)), t: "" }; rows.push(cur); }
+            else if (/^(PS|MS)\d\d$/.test(w) && cur) cur.t = (w[0] === "M" ? "−" : "+") + (+w.slice(2)) + "°";
+          }
+          if (!rows.length) return '<div class="x-gv">' + esc(v) + "</div>";
+          var hasS = rows.some(function (r) { return r.s; });
+          return '<table class="x-wt"><tr><th>Высота</th>' + (hasS ? "<th>Сектор</th>" : "") + "<th>Ветер</th><th>T</th></tr>" +
+            rows.map(function (r) { return "<tr><td>" + r.l + "</td>" + (hasS ? "<td>" + esc(r.s) + "</td>" : "") + "<td>" + r.w + "</td><td>" + r.t + "</td></tr>"; }).join("") + "</table>";
+        }
+        function gEnd(h) { var m = /VALID \d{6}\/(\d\d)(\d\d)(\d\d)/.exec(h), n = new Date(); return m ? Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), +m[1], +m[2], +m[3]) : 0; }
         function gamHtml(t) {
           var body = t.replace(/^.*?BLW FL\d+\s*/, "");
           var keys = Object.keys(GLAB).sort(function (a, b) { return b.length - a.length; }).map(function (k) { return k.replace("/", "\\/"); });
-          var re = new RegExp("\\s*(SECN I{1,2}|" + keys.join("|") + "):?\\s", "g");
+          var re = new RegExp("\\s*(SECN I{1,2}(?=\\s)|(?:" + keys.join("|") + ")(?=:)):?\\s", "g");
           var parts = body.split(re), out = "", i = 1;
           if (parts[0].trim()) out += '<div class="x-raw">' + esc(parts[0]) + "</div>";
           for (; i < parts.length; i += 2) {
             var k = parts[i], v = (parts[i + 1] || "").trim();
             if (/^SECN/.test(k)) { out += "<h3>" + (k === "SECN I" ? "Раздел I — опасные явления" : "Раздел II — общая информация") + "</h3>"; if (v) out += '<div class="x-raw">' + esc(v) + "</div>"; continue; }
-            var vv = esc(v);
-            if (k === "WIND/T") vv = vv.replace(/\s(\d{3,4}M)\s/g, "<br>$1 ");
-            out += '<dl class="x-kv"><dt>' + GLAB[k] + "</dt><dd>" + vv + "</dd></dl>";
+            var vv = k === "WIND/T" ? windTab(v) : '<div class="x-gv">' + esc(v.replace(/=\s*$/, "")).replace(/\s(AREA|LCA|EMBD|ISOL|OCNL|FRQ)\s/g, "<br>$1 ") + "</div>";
+            out += '<div class="x-gr"><div class="x-gk">' + GLAB[k] + "</div>" + vv + "</div>";
           }
           return out;
         }
@@ -704,13 +731,16 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           if (!GAM || !GAM.items || !GAM.items.length) h += '<p class="x-sub">GAMET пока не загружен.</p>';
           else {
             h += '<p class="x-sub">' + esc(GAM.source || "") + " · получено " + esc(GAM.fetched || "") + "</p>";
-            GAM.items.forEach(function (g) {
-              var m = /FIR\/(.*?) BLW (FL\d+)/.exec(g.header);
+            var live = GAM.items.filter(function (g) { return gEnd(g.header) > Date.now(); }), old = GAM.items.filter(function (g) { return gEnd(g.header) <= Date.now(); });
+            if (!live.length) h += '<div class="x-note x-note--bad" style="margin-top:14px">Действующего GAMET в файле нет — ждём обновления.</div>';
+            live.concat(old).forEach(function (g, gi) {
+              var m = /FIR\/(.*?) BLW (FL\d+)/.exec(g.header), isOld = gEnd(g.header) <= Date.now();
+              if (isOld) { h += '<details style="margin-top:14px"><summary class="x-sub" style="cursor:pointer">Истёкший: ' + gValid(g.header) + " · районы " + esc(m ? m[1] : "") + '</summary><div class="x-raw">' + esc(g.text) + "</div></details>"; return; }
               h += '<div class="x-note x-note--ok" style="margin-top:14px"><b>' + gValid(g.header) + "</b> · районы " + esc(m ? m[1] : "") + " · ниже " + (m ? m[2] : "") + "</div>" + gamHtml(g.text) +
                 '<details style="margin-top:8px"><summary class="x-sub" style="cursor:pointer">Исходный текст</summary><div class="x-raw">' + esc(g.text) + "</div></details>";
             });
           }
-          panel.innerHTML = h; panel.style.display = "block"; wire();
+          panel.innerHTML = h; panel.style.display = "block"; panel.classList.add("x-panel--wide"); panel.scrollTop = 0; wire();
         }
         (function () {
           var tg = document.querySelector(".x-toggles"), b = document.createElement("button");
