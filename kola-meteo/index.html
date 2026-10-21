@@ -229,8 +229,11 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           if (window.L) {
             map = L.map("map", { zoomControl: false, attributionControl: true }).setView([68.0, 34.5], 6);
             L.control.zoom({ position: "bottomright" }).addTo(map);
-            var tiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-              maxZoom: 12, minZoom: 4, attribution: "© OpenStreetMap, © CARTO"
+            L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}", {
+              maxZoom: 16, minZoom: 4, pane: "overlayPane", opacity: 0.8
+            }).addTo(map);
+            var tiles = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+              maxZoom: 16, minZoom: 4, attribution: "Esri, HERE, Garmin, © OpenStreetMap"
             });
             var tileErrs = 0;
             tiles.on("tileerror", function () { if (++tileErrs > 3) fail("Тайлы недоступны — показана схема берега"); });
