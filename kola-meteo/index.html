@@ -736,6 +736,37 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           }
           return out;
         }
+        var VER = null;
+        var VCOL = { "хуже": "#ff6b6b", "совпало": "#3fb950", "лучше": "#9ecbff" };
+        function vtag(e) { return e ? '<span style="color:' + VCOL[e.verdict] + '">' + e.verdict + "</span>" : '<span class="x-sub">—</span>'; }
+        function verLine(i) {
+          if (!i) return "";
+          if (i.status !== "ok") return '<p class="x-sub">Сверка: ' + esc(i.status) + "</p>";
+          var t = '<table class="x-wt"><tr><th></th><th>Прогноз</th><th>Факт (худший)</th><th></th></tr>';
+          if (i.vis) t += "<tr><td>Видимость</td><td>" + i.vis.fc + (i.vis.fc_lca ? ", мест. " + i.vis.fc_lca : "") + " м</td><td>" + Math.round(i.vis.obs_min) + " м · " + esc(i.vis.obs_station) + "</td><td>" + vtag(i.vis) + "</td></tr>";
+          if (i.cld) t += "<tr><td>НГО (AMSL)</td><td>от " + i.cld.fc_min + " м</td><td>" + i.cld.obs_min + " м · " + esc(i.cld.obs_station) + "</td><td>" + vtag(i.cld) + "</td></tr>";
+          if (i.qnh) t += "<tr><td>Мин. QNH</td><td>" + i.qnh.fc + "</td><td>" + i.qnh.obs_min + " · " + esc(i.qnh.obs_station) + "</td><td>" + vtag(i.qnh) + "</td></tr>";
+          t += "</table>";
+          if (i.wx) t += '<p class="x-sub" style="margin-top:4px">Явления: совпали ' + (i.wx.hit.join(" ") || "—") + " · пропущены " + (i.wx.miss.join(" ") || "—") + " · не было " + (i.wx.false.join(" ") || "—") + "</p>";
+          return t;
+        }
+        function loadVer() {
+          var box = document.getElementById("g-ver");
+          fetch("gamet_verif.json?t=" + Date.now()).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+            VER = j;
+            if (!j || !j.summary || !j.summary.bulletins) { box.innerHTML = '<p class="x-sub">Пока нечего сверять: первый результат появится после окончания срока проверенного бюллетеня.</p>'; return; }
+            var S = j.summary, row = function (n, c) { var k = c["хуже"] + c["совпало"] + c["лучше"]; return k ? "<tr><td>" + n + '</td><td style="color:#ff6b6b">' + c["хуже"] + '</td><td style="color:#3fb950">' + c["совпало"] + '</td><td style="color:#9ecbff">' + c["лучше"] + "</td><td>" + Math.round(100 * c["хуже"] / k) + " %</td></tr>" : ""; };
+            var h = '<p class="x-sub">Проверено бюллетеней: ' + S.bulletins + ". «Хуже» — факт хуже прогноза.</p>" +
+              '<table class="x-wt"><tr><th></th><th>хуже</th><th>совп.</th><th>лучше</th><th>недопрогноз</th></tr>' + row("Видимость", S.vis) + row("НГО", S.cld) + row("Мин. QNH", S.qnh) + "</table>";
+            var ph = Object.keys(S.wx || {});
+            if (ph.length) h += '<table class="x-wt" style="margin-top:8px"><tr><th>Явление</th><th>совпало</th><th>пропущено</th><th>ложная тревога</th></tr>' +
+              ph.map(function (k) { var w = S.wx[k]; return "<tr><td>" + k + "</td><td>" + w.hit + "</td><td>" + w.miss + "</td><td>" + w.false + "</td></tr>"; }).join("") + "</table>";
+            var last = j.items.filter(function (i) { return i.status === "ok"; }).slice(-1)[0];
+            if (last) h += '<p class="x-sub" style="margin-top:8px">Последний проверенный: ' + gValid(last.header) + "</p>" + verLine(last);
+            h += '<p class="x-sub" style="margin-top:6px">Автоматическая сверка для анализа, не официальная оценка. НГО по SYNOP — грубыми градациями кода.</p>';
+            box.innerHTML = h;
+          }).catch(function () { box.innerHTML = '<p class="x-sub">Сверка недоступна.</p>'; });
+        }
         function loadArch() {
           var sel = document.getElementById("g-day"), box = document.getElementById("g-arch");
           function show(d) {
@@ -744,7 +775,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
               box.innerHTML = (j.items || []).slice().reverse().map(function (g) {
                 var m = /FIR\/(.*?) BLW (FL\d+)/.exec(g.header);
                 return '<details style="margin-top:8px"><summary style="cursor:pointer"><b>' + gValid(g.header) + '</b> <span class="x-sub">· ' + esc(m ? m[1] : "") + " · ниже " + (m ? m[2] : "") + "</span></summary>" +
-                  gamHtml(g.text) + '<div class="x-raw" style="margin-top:6px">' + esc(g.text) + "</div></details>";
+                  (VER ? verLine(VER.items.filter(function (i) { return i.header === g.header; })[0]) : "") + gamHtml(g.text) + '<div class="x-raw" style="margin-top:6px">' + esc(g.text) + "</div></details>";
               }).join("") || '<p class="x-sub">За этот день записей нет.</p>';
             }).catch(function () { box.innerHTML = '<p class="x-sub">Не удалось загрузить.</p>'; });
           }
@@ -799,8 +830,9 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
                 '<details style="margin-top:8px"><summary class="x-sub" style="cursor:pointer">Исходный текст</summary><div class="x-raw">' + esc(g.text) + "</div></details>";
             });
           }
+          h += '<h3>Точность GAMET</h3><div id="g-ver"><p class="x-sub">загрузка…</p></div>';
           h += '<h3>Архив GAMET</h3><select id="g-day" class="x-tgl x-sel" aria-label="День архива"><option>загрузка…</option></select><div id="g-arch"></div>';
-          panel.innerHTML = h; panel.style.display = "block"; panel.classList.add("x-panel--wide"); loadArch(); panel.scrollTop = 0; wire();
+          panel.innerHTML = h; panel.style.display = "block"; panel.classList.add("x-panel--wide"); loadArch(); loadVer(); panel.scrollTop = 0; wire();
         }
         (function () {
           var tg = document.querySelector(".x-toggles"), b = document.createElement("button");
