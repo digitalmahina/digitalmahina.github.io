@@ -2,8 +2,8 @@
 """Сетка модели Open-Meteo над Кольским -> kola-meteo/grid.json (каждые 3 ч)"""
 import json, sys, time, urllib.request, os
 OUT = sys.argv[1] if len(sys.argv) > 1 else "kola-meteo/grid.json"
-LAT0, LAT1, DLAT = 65.8, 70.3, 0.3
-LON0, LON1, DLON = 28.0, 41.5, 0.6
+LAT0, LAT1, DLAT = 64.9, 70.9, 0.3
+LON0, LON1, DLON = 26.8, 44.2, 0.6
 lats = [round(LAT0 + i * DLAT, 2) for i in range(int((LAT1 - LAT0) / DLAT) + 1)]
 lons = [round(LON0 + j * DLON, 2) for j in range(int((LON1 - LON0) / DLON) + 1)]
 if os.environ.get("FORCE") != "1" and os.path.exists(OUT):
