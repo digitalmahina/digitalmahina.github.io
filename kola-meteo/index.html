@@ -719,6 +719,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             rows.map(function (r) { return "<tr><td>" + r.l + "</td>" + (hasS ? "<td>" + esc(r.s) + "</td>" : "") + "<td>" + r.w + "</td><td>" + r.t + "</td></tr>"; }).join("") + "</table>";
         }
         function gEnd(h) { var m = /VALID \d{6}\/(\d\d)(\d\d)(\d\d)/.exec(h), n = new Date(); return m ? Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), +m[1], +m[2], +m[3]) : 0; }
+        function gStart(h) { var m = /VALID (\d\d)(\d\d)(\d\d)\//.exec(h), n = new Date(); return m ? Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), +m[1], +m[2], +m[3]) : 0; }
         function gamHtml(t) {
           var body = t.replace(/^.*?BLW FL\d+\s*/, "");
           var keys = Object.keys(GLAB).sort(function (a, b) { return b.length - a.length; }).map(function (k) { return k.replace("/", "\\/"); });
@@ -744,7 +745,8 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             live.concat(old).forEach(function (g, gi) {
               var m = /FIR\/(.*?) BLW (FL\d+)/.exec(g.header), isOld = gEnd(g.header) <= Date.now();
               if (isOld) { h += '<details style="margin-top:14px"><summary class="x-sub" style="cursor:pointer">Истёкший: ' + gValid(g.header) + " · районы " + esc(m ? m[1] : "") + '</summary><div class="x-raw">' + esc(g.text) + "</div></details>"; return; }
-              h += '<div class="x-note x-note--ok" style="margin-top:14px"><b>' + gValid(g.header) + "</b> · районы " + esc(m ? m[1] : "") + " · ниже " + (m ? m[2] : "") + "</div>" + gamHtml(g.text) +
+              var fut = gStart(g.header) > Date.now();
+              h += '<div class="x-note x-note--ok" style="margin-top:14px"><b>' + (fut ? "Следующий срок, вступает в " + gValid(g.header).slice(3, 9) + " · " : "Действует · ") + gValid(g.header) + "</b> · районы " + esc(m ? m[1] : "") + " · ниже " + (m ? m[2] : "") + "</div>" + gamHtml(g.text) +
                 '<details style="margin-top:8px"><summary class="x-sub" style="cursor:pointer">Исходный текст</summary><div class="x-raw">' + esc(g.text) + "</div></details>";
             });
           }
@@ -760,7 +762,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             if (j && j.items && j.items[0]) {
               var m = /VALID \d{6}\/(\d\d)(\d\d)(\d\d)/.exec(j.items[0].header), now = new Date();
               var end = m ? Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), +m[1], +m[2], +m[3]) : 0;
-              var old = end && end < now.getTime(); b.innerHTML = "<b>GAMET</b> " + (old ? "устарел" : gValid(j.items[0].header).slice(3, 5) + "–" + gValid(j.items[0].header).slice(-6, -4) + "Z"); if (old) b.classList.add("x-gam--old");
+              var old = end && end < now.getTime(); var fut = gStart(j.items[0].header) > now.getTime(); b.innerHTML = "<b>GAMET</b> " + (old ? "устарел" : (fut ? "след. " : "") + gValid(j.items[0].header).slice(3, 5) + "–" + gValid(j.items[0].header).slice(-6, -4) + "Z"); if (old) b.classList.add("x-gam--old");
             }
           }).catch(function () {});
         })();
