@@ -734,6 +734,25 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           }
           return out;
         }
+        function loadArch() {
+          var sel = document.getElementById("g-day"), box = document.getElementById("g-arch");
+          function show(d) {
+            box.innerHTML = '<p class="x-sub">загрузка…</p>';
+            fetch("gamet-archive/" + d + ".json?t=" + Date.now()).then(function (r) { return r.json(); }).then(function (j) {
+              box.innerHTML = (j.items || []).slice().reverse().map(function (g) {
+                var m = /FIR\/(.*?) BLW (FL\d+)/.exec(g.header);
+                return '<details style="margin-top:8px"><summary style="cursor:pointer"><b>' + gValid(g.header) + '</b> <span class="x-sub">· ' + esc(m ? m[1] : "") + " · ниже " + (m ? m[2] : "") + "</span></summary>" +
+                  gamHtml(g.text) + '<div class="x-raw" style="margin-top:6px">' + esc(g.text) + "</div></details>";
+              }).join("") || '<p class="x-sub">За этот день записей нет.</p>';
+            }).catch(function () { box.innerHTML = '<p class="x-sub">Не удалось загрузить.</p>'; });
+          }
+          fetch("gamet-archive/index.json?t=" + Date.now()).then(function (r) { return r.json(); }).then(function (j) {
+            var days = (j.days || []).slice().reverse();
+            if (!days.length) { sel.innerHTML = "<option>архив пуст</option>"; return; }
+            sel.innerHTML = days.map(function (d) { return "<option>" + d + "</option>"; }).join("");
+            sel.onchange = function () { show(sel.value); }; show(days[0]);
+          }).catch(function () { sel.innerHTML = "<option>архив недоступен</option>"; });
+        }
         function openGamet() {
           state.sel = "gamet";
           var h = '<button class="x-close" id="pclose" type="button" aria-label="Закрыть">✕</button><h2>GAMET</h2>';
@@ -750,7 +769,8 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
                 '<details style="margin-top:8px"><summary class="x-sub" style="cursor:pointer">Исходный текст</summary><div class="x-raw">' + esc(g.text) + "</div></details>";
             });
           }
-          panel.innerHTML = h; panel.style.display = "block"; panel.classList.add("x-panel--wide"); panel.scrollTop = 0; wire();
+          h += '<h3>Архив GAMET</h3><select id="g-day" class="x-tgl x-sel" aria-label="День архива"><option>загрузка…</option></select><div id="g-arch"></div>';
+          panel.innerHTML = h; panel.style.display = "block"; panel.classList.add("x-panel--wide"); loadArch(); panel.scrollTop = 0; wire();
         }
         (function () {
           var tg = document.querySelector(".x-toggles"), b = document.createElement("button");
