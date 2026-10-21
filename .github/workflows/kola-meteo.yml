@@ -16,9 +16,11 @@ jobs:
       - name: Сетка модели Open-Meteo (раз в 3 ч)
         env: { FORCE: "${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}" }
         run: python3 kola-meteo/fetch_grid.py kola-meteo/grid.json || echo "::warning::Open-Meteo недоступен"
+      - name: Сверка GAMET с фактом
+        run: python3 kola-meteo/verify_gamet.py || echo "::warning::сверка GAMET не удалась"
       - name: Сохранить (GitHub Pages опубликует сам)
         run: |
           git config user.name "kola-meteo-bot"; git config user.email "kola-meteo-bot@users.noreply.github.com"
-          git add kola-meteo/data.json kola-meteo/grid.json
+          git add kola-meteo/data.json kola-meteo/grid.json kola-meteo/gamet_verif.json 2>/dev/null || git add kola-meteo/data.json kola-meteo/grid.json
           git diff --cached --quiet || git commit -m "Кольский метеослой: данные $(date -u +%FT%H:%MZ)"
           git pull --rebase -q && git push
