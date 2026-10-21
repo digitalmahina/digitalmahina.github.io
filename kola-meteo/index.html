@@ -914,6 +914,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
                 var ll = map.containerPointToLatLng([x, y]), w = windAt(ll.lat, ll.lng);
                 if (w) { u = w.u; v = w.v; ok2 = true; }
               }
+              if (!ok2 && G) { FX[k] = NaN; FY[k] = NaN; FS[k] = NaN; continue; }
               if (!ok2) { var f = stationField(x, y); u = f.x; v = -f.y; }
               FX[k] = u; FY[k] = -v; FS[k] = Math.hypot(u, v);
             }
@@ -922,6 +923,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             var fc = x / STEP, fr = y / STEP, c0 = Math.floor(fc), r0 = Math.floor(fr);
             if (c0 < 0 || r0 < 0 || c0 >= cols - 1 || r0 >= rows - 1) return null;
             var tc = fc - c0, tr = fr - r0, k = r0 * cols + c0;
+            if (isNaN(FX[k]) || isNaN(FX[k + 1]) || isNaN(FX[k + cols]) || isNaN(FX[k + cols + 1])) return null;
             var a = (1 - tc) * (1 - tr), b = tc * (1 - tr), d = (1 - tc) * tr, e = tc * tr;
             return [FX[k] * a + FX[k + 1] * b + FX[k + cols] * d + FX[k + cols + 1] * e,
                     FY[k] * a + FY[k + 1] * b + FY[k + cols] * d + FY[k + cols + 1] * e,
@@ -930,7 +932,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           var P = [];
           function spawn(p) { p = p || {}; p.x = Math.random() * W; p.y = Math.random() * H; p.age = 0; p.max = 40 + Math.random() * 70; return p; }
           function seedAll() {
-            var n = Math.min(4500, Math.round(W * H / 420));
+            var n = Math.min(3000, Math.round(W * H / 650));
             P = []; for (var i = 0; i < n; i++) { var p = spawn(); p.age = Math.random() * p.max; P.push(p); }
           }
           function speedK() { var z = map && ok ? map.getZoom() : 7; return 0.28 * Math.pow(1.3, z - 7); }
@@ -960,7 +962,9 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             }
             ctx.globalCompositeOperation = "source-over";
           }
-          function reset() { ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); buildField(); if (!P.length || Math.abs(P.length - Math.round(W * H / 420)) > 200) seedAll(); }
+          if (map && ok) { var wp = map.createPane("windPane"); wp.style.zIndex = 450; wp.style.pointerEvents = "none"; wp.appendChild(cv); cv.style.position = "absolute"; }
+          function place() { if (map && ok) L.DomUtil.setPosition(cv, map.containerPointToLayerPoint([0, 0])); }
+          function reset() { place(); ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); buildField(); if (!P.length || Math.abs(P.length - Math.min(3000, Math.round(W * H / 650))) > 200) seedAll(); }
           if (map && ok) {
             map.on("movestart zoomstart", function () { moving = true; cv.style.opacity = "0"; });
             map.on("moveend zoomend", function () { reset(); moving = false; cv.style.transition = "opacity .25s"; cv.style.opacity = "1"; });
