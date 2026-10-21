@@ -127,6 +127,16 @@
       .x-flegend { display: inline-flex; align-items: center; gap: 8px; font: var(--type-caption); color: var(--text-secondary); }
       .x-flegend i { display: inline-block; width: 90px; height: 8px; border-radius: 4px; }
       .x-field { image-rendering: auto; }
+      .x-probe { position: fixed; z-index: 900; pointer-events: none; padding: 6px 9px; border-radius: 8px; background: rgb(13 17 23 / 0.88); border: 1px solid rgb(255 255 255 / 0.12); color: #e6edf3; font: 500 12px/1.4 "Geist Mono", ui-monospace, monospace; box-shadow: 0 6px 24px rgb(0 0 0 / .45); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); white-space: nowrap; }
+      .x-probe b { color: #fff; font-weight: 600; }
+      .x-play { width: 36px; height: 36px; flex: 0 0 36px; border-radius: 50%; border: 0; background: var(--fill-system-orange); color: #0d1117; font: 600 13px/1 "Geist", sans-serif; cursor: pointer; box-shadow: 0 2px 10px rgb(0 0 0 / .4); }
+      .x-play:hover { filter: brightness(1.1); }
+      .x-wl i { display: inline-block; width: 70px; height: 6px; border-radius: 3px; }
+      .x-arrow { pointer-events: none; }
+      .x-arrow svg { filter: drop-shadow(0 1px 2px rgb(0 0 0 / .6)); transition: transform .4s; }
+      .x-field { filter: blur(1.2px) saturate(1.15); }
+      .x-glass { background: rgb(18 22 30 / 0.72); border-color: rgb(255 255 255 / 0.08); }
+      .x-tgl { transition: background .15s, color .15s, border-color .15s; }
       .x-panel--wide { width: 440px; }
       .x-alab { pointer-events: none; display: flex !important; justify-content: center; }
       .x-alab span { background: rgba(13,17,23,.85); color: #cfe6ff; border: 1px solid rgba(158,203,255,.5); border-radius: 6px; padding: 0 4px; font: 600 11px/15px "Geist Mono", ui-monospace, monospace; white-space: nowrap; }
@@ -847,6 +857,181 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
               var old = end && end < now.getTime(); var fut = gStart(j.items[0].header) > now.getTime(); b.innerHTML = "<b>GAMET</b> " + (old ? "устарел" : (fut ? "след. " : "") + gValid(j.items[0].header).slice(3, 5) + "–" + gValid(j.items[0].header).slice(-6, -4) + "Z"); if (old) b.classList.add("x-gam--old");
             }
           }).catch(function () {});
+        })();
+
+        /* ================= СОВРЕМЕННЫЙ СЛОЙ: поток ветра, стрелки, пипетка, анимация срока ================= */
+        (function modern() {
+          if (timer) { clearInterval(timer); timer = null; }
+          run = function () {};
+          var W = 0, H = 0, STEP = 10, FX = null, FY = null, FS = null, cols = 0, rows = 0, moving = false, raf = 0;
+          var PAL = [[0, [98, 113, 183]], [3, [57, 160, 222]], [6, [70, 200, 140]], [9, [190, 220, 70]], [12, [250, 200, 50]], [15, [250, 130, 40]], [20, [230, 60, 60]], [26, [200, 60, 200]]];
+          function pal(v) {
+            if (v <= PAL[0][0]) return PAL[0][1];
+            for (var i = 1; i < PAL.length; i++) if (v <= PAL[i][0]) {
+              var t = (v - PAL[i - 1][0]) / (PAL[i][0] - PAL[i - 1][0]), a = PAL[i - 1][1], b = PAL[i][1];
+              return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+            }
+            return PAL[PAL.length - 1][1];
+          }
+          var BUCKETS = 12, BCOL = [];
+          for (var bi = 0; bi < BUCKETS; bi++) { var c = pal(bi * 2.2); BCOL.push("rgba(" + (c[0] | 0) + "," + (c[1] | 0) + "," + (c[2] | 0) + ",0.9)"); }
+          // u/v по узлам модели (интерполируем компоненты, а не направление — без скачков через 0°/360°)
+          var UV = { key: "" };
+          function uvGrid() {
+            var lvl = gField === "ws925" ? "925" : "10", key = lvl + ":" + gIdx;
+            if (UV.key === key) return UV;
+            var S = G.fields["ws" + lvl], D = G.fields["wd" + lvl];
+            if (!S || !D) return null;
+            var s = S[gIdx], d = D[gIdx], n = s.length, U = new Float32Array(n), V = new Float32Array(n), M = new Uint8Array(n);
+            for (var k = 0; k < n; k++) {
+              if (s[k] == null || d[k] == null) continue;
+              var r = d[k] * Math.PI / 180; U[k] = -s[k] * Math.sin(r); V[k] = -s[k] * Math.cos(r); M[k] = 1;
+            }
+            UV = { key: key, U: U, V: V, M: M };
+            return UV;
+          }
+          function windAt(lat, lon) {
+            if (!G) return null;
+            var g = uvGrid(); if (!g) return null;
+            var la = G.lats, lo = G.lons, nc = lo.length, fi = (lat - la[0]) / (la[1] - la[0]), fj = (lon - lo[0]) / (lo[1] - lo[0]);
+            if (fi < 0 || fj < 0 || fi > la.length - 1 || fj > nc - 1) return null;
+            var i = Math.min(la.length - 2, Math.floor(fi)), j = Math.min(nc - 2, Math.floor(fj)), ti = fi - i, tj = fj - j, u = 0, v = 0, w = 0;
+            [[i, j, (1 - ti) * (1 - tj)], [i + 1, j, ti * (1 - tj)], [i, j + 1, (1 - ti) * tj], [i + 1, j + 1, ti * tj]].forEach(function (q) {
+              var k = q[0] * nc + q[1]; if (g.M[k]) { u += g.U[k] * q[2]; v += g.V[k] * q[2]; w += q[2]; }
+            });
+            if (w < 0.3) return null;
+            u /= w; v /= w;
+            return { u: u, v: v, s: Math.hypot(u, v), dir: (Math.atan2(-u, -v) * 180 / Math.PI + 360) % 360 };
+          }
+          // экранное поле на сетке 10 px: пересчитывается при сдвиге карты и смене срока
+          function buildField() {
+            W = window.innerWidth; H = window.innerHeight;
+            cols = Math.ceil(W / STEP) + 2; rows = Math.ceil(H / STEP) + 2;
+            FX = new Float32Array(cols * rows); FY = new Float32Array(cols * rows); FS = new Float32Array(cols * rows);
+            for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+              var x = c * STEP, y = r * STEP, k = r * cols + c, u = 0, v = 0, ok2 = false;
+              if (G && map && ok) {
+                var ll = map.containerPointToLatLng([x, y]), w = windAt(ll.lat, ll.lng);
+                if (w) { u = w.u; v = w.v; ok2 = true; }
+              }
+              if (!ok2) { var f = stationField(x, y); u = f.x; v = -f.y; }
+              FX[k] = u; FY[k] = -v; FS[k] = Math.hypot(u, v);
+            }
+          }
+          function look(x, y) {
+            var fc = x / STEP, fr = y / STEP, c0 = Math.floor(fc), r0 = Math.floor(fr);
+            if (c0 < 0 || r0 < 0 || c0 >= cols - 1 || r0 >= rows - 1) return null;
+            var tc = fc - c0, tr = fr - r0, k = r0 * cols + c0;
+            var a = (1 - tc) * (1 - tr), b = tc * (1 - tr), d = (1 - tc) * tr, e = tc * tr;
+            return [FX[k] * a + FX[k + 1] * b + FX[k + cols] * d + FX[k + cols + 1] * e,
+                    FY[k] * a + FY[k + 1] * b + FY[k + cols] * d + FY[k + cols + 1] * e,
+                    FS[k] * a + FS[k + 1] * b + FS[k + cols] * d + FS[k + cols + 1] * e];
+          }
+          var P = [];
+          function spawn(p) { p = p || {}; p.x = Math.random() * W; p.y = Math.random() * H; p.age = 0; p.max = 40 + Math.random() * 70; return p; }
+          function seedAll() {
+            var n = Math.min(4500, Math.round(W * H / 420));
+            P = []; for (var i = 0; i < n; i++) { var p = spawn(); p.age = Math.random() * p.max; P.push(p); }
+          }
+          function speedK() { var z = map && ok ? map.getZoom() : 7; return 0.09 * Math.pow(1.35, z - 7); }
+          var lastT = 0;
+          function frame(t) {
+            raf = requestAnimationFrame(frame);
+            if (!state.wind || moving || document.hidden || !FX) return;
+            if (t - lastT < 30) return; lastT = t;
+            ctx.globalCompositeOperation = "destination-in";
+            ctx.fillStyle = "rgba(0,0,0,0.90)"; ctx.fillRect(0, 0, W, H);
+            ctx.globalCompositeOperation = "lighter";
+            ctx.lineWidth = 1.2; ctx.lineCap = "round";
+            var paths = []; for (var b = 0; b < BUCKETS; b++) paths.push([]);
+            var K = speedK();
+            for (var i = 0; i < P.length; i++) {
+              var p = P[i], f = look(p.x, p.y);
+              if (!f || p.age++ > p.max) { spawn(p); continue; }
+              var nx = p.x + f[0] * K * 3, ny = p.y + f[1] * K * 3;
+              paths[Math.min(BUCKETS - 1, Math.floor(f[2] / 2.2))].push(p.x, p.y, nx, ny);
+              p.x = nx; p.y = ny;
+            }
+            for (b = 0; b < BUCKETS; b++) {
+              var a = paths[b]; if (!a.length) continue;
+              ctx.strokeStyle = BCOL[b]; ctx.beginPath();
+              for (var j = 0; j < a.length; j += 4) { ctx.moveTo(a[j], a[j + 1]); ctx.lineTo(a[j + 2], a[j + 3]); }
+              ctx.stroke();
+            }
+            ctx.globalCompositeOperation = "source-over";
+          }
+          function reset() { ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); buildField(); if (!P.length || Math.abs(P.length - Math.round(W * H / 420)) > 200) seedAll(); }
+          if (map && ok) {
+            map.on("movestart zoomstart", function () { moving = true; cv.style.opacity = "0"; });
+            map.on("moveend zoomend", function () { reset(); moving = false; cv.style.transition = "opacity .25s"; cv.style.opacity = "1"; });
+          }
+          window.addEventListener("resize", reset);
+          reset();
+          if (!reduce) raf = requestAnimationFrame(frame);
+          // смена срока / уровня — пересобрать поле
+          var _df = drawField;
+          drawField = function () { _df(); UV.key = ""; if (FX) reset(); arrowsUpdate(); };
+
+          /* ---- стрелки ветра на станциях ---- */
+          var arrows = [];
+          function arrowSvg(dir, spd, gust) {
+            var c = pal(spd), col = "rgb(" + (c[0] | 0) + "," + (c[1] | 0) + "," + (c[2] | 0) + ")", len = 14 + Math.min(16, spd * 1.6);
+            if (!spd) return '<svg width="44" height="44" viewBox="-22 -22 44 44"><circle r="5" fill="none" stroke="' + col + '" stroke-width="2"/></svg>';
+            return '<svg width="44" height="44" viewBox="-22 -22 44 44" style="transform:rotate(' + ((dir + 180) % 360) + 'deg)">' +
+              '<line x1="0" y1="' + (len / 2) + '" x2="0" y2="' + (-len / 2 + 4) + '" stroke="#0d1117" stroke-width="5" stroke-linecap="round"/>' +
+              '<line x1="0" y1="' + (len / 2) + '" x2="0" y2="' + (-len / 2 + 4) + '" stroke="' + col + '" stroke-width="2.6" stroke-linecap="round"/>' +
+              '<path d="M0 ' + (-len / 2 - 3) + ' L6 ' + (-len / 2 + 6) + ' L-6 ' + (-len / 2 + 6) + ' Z" fill="' + col + '" stroke="#0d1117" stroke-width="1.2"/></svg>';
+          }
+          function arrowsUpdate() {
+            if (!map || !ok) return;
+            arrows.forEach(function (m) { map.removeLayer(m); }); arrows = [];
+            if (!state.wind) return;
+            METAR.concat(SYNOP).forEach(function (s) {
+              if (s.wdir == null) return;
+              var off = s.icao ? [0, 26] : [0, 0];
+              var m = L.marker([s.lat, s.lon], { icon: L.divIcon({ className: "x-arrow", html: arrowSvg(s.wdir, s.wspd || 0, s.wgst), iconSize: [44, 44], iconAnchor: [22 - off[0], 22 - off[1]] }), interactive: false, keyboard: false, zIndexOffset: -500 });
+              m.addTo(map); arrows.push(m);
+            });
+          }
+          arrowsUpdate();
+          document.getElementById("t-wind").addEventListener("click", function () { arrowsUpdate(); if (state.wind) reset(); });
+
+          /* ---- пипетка: значение под курсором ---- */
+          if (map && ok && window.matchMedia("(hover: hover)").matches) {
+            var tip = document.createElement("div"); tip.className = "x-probe"; tip.style.display = "none"; document.body.appendChild(tip);
+            var DIRS = ["С", "ССВ", "СВ", "ВСВ", "В", "ВЮВ", "ЮВ", "ЮЮВ", "Ю", "ЮЮЗ", "ЮЗ", "ЗЮЗ", "З", "ЗСЗ", "СЗ", "ССЗ"];
+            map.on("mousemove", function (e) {
+              if (!G) { tip.style.display = "none"; return; }
+              var w = windAt(e.latlng.lat, e.latlng.lng), f = FIELDS[gField], h = "";
+              if (w) h += '<b>' + String(Math.round(w.dir / 10) * 10).padStart(3, "0") + "° " + DIRS[Math.round(w.dir / 22.5) % 16] + " · " + w.s.toFixed(0) + " м/с</b>" + (gField === "ws925" ? " 925 гПа" : " 10 м");
+              if (gField !== "none" && gField.indexOf("ws") !== 0) {
+                var v = sample(gField, gIdx, e.latlng.lat, e.latlng.lng);
+                h += "<br>" + f.name + ": " + (v == null ? "—" : gField === "ice" ? (v >= 1 ? "высокий" : v > 0 ? "умеренный" : "нет") : (v >= 100 ? Math.round(v / 10) * 10 : v.toFixed(1)) + " " + f.unit);
+              }
+              if (!h) { tip.style.display = "none"; return; }
+              tip.innerHTML = h; tip.style.display = "block";
+              tip.style.left = (e.originalEvent.clientX + 14) + "px"; tip.style.top = (e.originalEvent.clientY + 14) + "px";
+            });
+            map.on("mouseout movestart", function () { tip.style.display = "none"; });
+          }
+
+          /* ---- кнопка «▶» для прокрутки срока прогноза ---- */
+          var waitTl = setInterval(function () {
+            var hr = document.getElementById("t-hour"); if (!hr) return; clearInterval(waitTl);
+            var b = document.createElement("button"); b.type = "button"; b.className = "x-play"; b.setAttribute("aria-label", "Проиграть прогноз"); b.textContent = "▶";
+            hr.parentNode.insertBefore(b, hr);
+            var pt = null;
+            b.addEventListener("click", function () {
+              if (pt) { clearInterval(pt); pt = null; b.textContent = "▶"; return; }
+              b.textContent = "❚❚";
+              pt = setInterval(function () { hr.value = (+hr.value + 1) % (+hr.max + 1); hr.dispatchEvent(new Event("input")); }, 1300);
+            });
+          }, 300);
+          setTimeout(function () { clearInterval(waitTl); }, 20000);
+
+          /* ---- легенда частиц ---- */
+          var lg = document.querySelector(".x-legend");
+          if (lg) lg.insertAdjacentHTML("beforeend", '<span class="x-wl">Ветер <i style="background:linear-gradient(90deg,' + PAL.map(function (q) { return "rgb(" + q[1].join(",") + ")"; }).join(",") + ')"></i>0 · 10 · 20+ м/с</span>');
         })();
 
         if (!ok) fail("Карта не загрузилась — показана схема берега");
