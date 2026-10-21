@@ -222,13 +222,18 @@
       .x-ticks { position: absolute; left: 8px; right: 8px; bottom: 0; height: 12px; }
       .x-ticks span { position: absolute; transform: translateX(-50%); font: 500 9px/1 "Geist Mono", ui-monospace, monospace; color: var(--x-dim); white-space: nowrap; }
       .x-ticks span.x-tick-day { color: #ffb35c; }
+      .x-ticks span.x-tick-now { color: #fff; font-weight: 600; }
       .x-flegend { flex: 0 0 auto; font: 500 10px/1.2 "Geist", sans-serif; }
       .x-flegend i { width: 110px; height: 6px; border-radius: 3px; }
       .x-st { display: inline-flex; align-items: center; gap: 6px; padding: 3px 7px 3px 4px; border-radius: 7px; background: rgb(12 15 21 / .82); border: 1px solid rgb(255 255 255 / .1); box-shadow: 0 2px 10px rgb(0 0 0 / .5); white-space: nowrap; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
       .x-st i { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 8px; }
       .x-st b { font: 600 11px/1 "Geist Mono", ui-monospace, monospace; color: #f0f4f8; }
       .x-st em { font: 600 9px/1 "Geist", sans-serif; font-style: normal; letter-spacing: .04em; }
-      .x-hill { mix-blend-mode: screen; }
+      .x-tgl.x-gam { background: #ffd400; color: #0d1117; border-color: transparent; font-weight: 600; }
+      .x-tgl.x-gam--old { background: #6b7280; color: #fff; }
+      .x-panel { padding-bottom: 28px; }
+      .x-ticks span { font-size: 10px; color: #b4bdc9; }
+      .x-hill { mix-blend-mode: screen; filter: contrast(1.5) brightness(.85); }
       .leaflet-control-zoom a { background: var(--x-bg) !important; color: #e6edf3 !important; border-color: var(--x-line) !important; }
       .leaflet-bottom.leaflet-left { left: 80px; }
       @media (max-width: 760px) {
@@ -331,7 +336,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
               maxZoom: 16, minZoom: 4, pane: "overlayPane", opacity: 0.8
             }).addTo(map);
             L.tileLayer("https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade_Dark/MapServer/tile/{z}/{y}/{x}", {
-              maxZoom: 16, maxNativeZoom: 13, minZoom: 4, opacity: 0.55, className: "x-hill", zIndex: 2, attribution: "Esri World Hillshade"
+              maxZoom: 16, maxNativeZoom: 13, minZoom: 4, opacity: 1, className: "x-hill", zIndex: 2, attribution: "Esri World Hillshade"
             }).addTo(map);
             var tiles = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
               maxZoom: 16, minZoom: 4, attribution: "Esri, HERE, Garmin, © OpenStreetMap"
@@ -703,7 +708,8 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
         function hourLabel(i) {
           var t = new Date(G.times[i].replace("Z", ":00Z"));
           var p = function (n) { return (n < 10 ? "0" : "") + n; };
-          return (i ? "+" + Math.round((t - new Date(G.times[0].replace("Z", ":00Z"))) / 36e5) + " ч · " : "сейчас · ") +
+          var dh = Math.round((t - Date.now()) / 36e5);
+          return (dh === 0 ? "сейчас · " : (dh > 0 ? "+" : "−") + Math.abs(dh) + " ч · ") +
             p(t.getUTCHours()) + ":00Z · " + p(t.getHours()) + ":00 местн.";
         }
         function buildGridUI() {
@@ -945,7 +951,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
         (function modern() {
           if (timer) { clearInterval(timer); timer = null; }
           run = function () {};
-          var W = 0, H = 0, STEP = 10, FX = null, FY = null, FS = null, cols = 0, rows = 0, moving = false, raf = 0;
+          var W = 0, H = 0, STEP = 10, FE = null, FX = null, FY = null, FS = null, cols = 0, rows = 0, moving = false, raf = 0;
           var PAL = [[0, [98, 113, 183]], [3, [57, 160, 222]], [6, [70, 200, 140]], [9, [190, 220, 70]], [12, [250, 200, 50]], [15, [250, 130, 40]], [20, [230, 60, 60]], [26, [200, 60, 200]]];
           function pal(v) {
             if (v <= PAL[0][0]) return PAL[0][1];
@@ -956,7 +962,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             return PAL[PAL.length - 1][1];
           }
           var BUCKETS = 12, BCOL = [];
-          for (var bi = 0; bi < BUCKETS; bi++) { var c = pal(bi * 2.2); BCOL.push("rgba(" + (c[0] | 0) + "," + (c[1] | 0) + "," + (c[2] | 0) + ",0.9)"); }
+          for (var bi = 0; bi < BUCKETS; bi++) { var c = pal(bi * 2.2); BCOL.push("rgba(" + (c[0] | 0) + "," + (c[1] | 0) + "," + (c[2] | 0) + ",0.62)"); }
           // u/v по узлам модели (интерполируем компоненты, а не направление — без скачков через 0°/360°)
           var UV = { key: "" };
           function uvGrid() {
@@ -989,12 +995,14 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           function buildField() {
             W = window.innerWidth; H = window.innerHeight;
             cols = Math.ceil(W / STEP) + 2; rows = Math.ceil(H / STEP) + 2;
-            FX = new Float32Array(cols * rows); FY = new Float32Array(cols * rows); FS = new Float32Array(cols * rows);
+            FX = new Float32Array(cols * rows); FY = new Float32Array(cols * rows); FS = new Float32Array(cols * rows); FE = new Float32Array(cols * rows).fill(1);
             for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
               var x = c * STEP, y = r * STEP, k = r * cols + c, u = 0, v = 0, ok2 = false;
               if (G && map && ok) {
                 var ll = map.containerPointToLatLng([x, y]), w = windAt(ll.lat, ll.lng);
-                if (w) { u = w.u; v = w.v; ok2 = true; }
+                if (w) { u = w.u; v = w.v; ok2 = true;
+                  var gi = (ll.lat - G.lats[0]) / (G.lats[1] - G.lats[0]), gj = (ll.lng - G.lons[0]) / (G.lons[1] - G.lons[0]);
+                  var ed = Math.min(gi, gj, G.lats.length - 1 - gi, G.lons.length - 1 - gj) / 2.2; FE[k] = Math.max(0, Math.min(1, ed)); }
               }
               if (!ok2 && G) { FX[k] = NaN; FY[k] = NaN; FS[k] = NaN; continue; }
               if (!ok2) { var f = stationField(x, y); u = f.x; v = -f.y; }
@@ -1014,7 +1022,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           var P = [];
           function spawn(p) { p = p || {}; p.x = Math.random() * W; p.y = Math.random() * H; p.age = 0; p.max = 40 + Math.random() * 70; return p; }
           function seedAll() {
-            var n = Math.min(3000, Math.round(W * H / 650));
+            var n = Math.min(2000, Math.round(W * H / 1100));
             P = []; for (var i = 0; i < n; i++) { var p = spawn(); p.age = Math.random() * p.max; P.push(p); }
           }
           function speedK() { var z = map && ok ? map.getZoom() : 7; return 0.28 * Math.pow(1.3, z - 7); }
@@ -1025,13 +1033,15 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             if (t - lastT < 30) return; lastT = t;
             ctx.globalCompositeOperation = "destination-in";
             ctx.fillStyle = "rgba(0,0,0,0.94)"; ctx.fillRect(0, 0, W, H);
-            ctx.globalCompositeOperation = "lighter";
-            ctx.lineWidth = 1.6; ctx.lineCap = "round";
+            ctx.globalCompositeOperation = "source-over";
+            ctx.lineWidth = 1.25; ctx.lineCap = "round";
             var paths = []; for (var b = 0; b < BUCKETS; b++) paths.push([]);
             var K = speedK();
             for (var i = 0; i < P.length; i++) {
               var p = P[i], f = look(p.x, p.y);
               if (!f || p.age++ > p.max) { spawn(p); continue; }
+              var fe = FE[Math.round(p.y / STEP) * cols + Math.round(p.x / STEP)];
+              if (fe < 1 && Math.random() > fe * 0.9 + 0.05) { spawn(p); continue; }
               var nx = p.x + f[0] * K * 3, ny = p.y + f[1] * K * 3;
               paths[Math.min(BUCKETS - 1, Math.floor(f[2] / 2.2))].push(p.x, p.y, nx, ny);
               p.x = nx; p.y = ny;
@@ -1046,7 +1056,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           }
           if (map && ok) { var wp = map.createPane("windPane"); wp.style.zIndex = 450; wp.style.pointerEvents = "none"; wp.appendChild(cv); cv.style.position = "absolute"; }
           function place() { if (map && ok) L.DomUtil.setPosition(cv, map.containerPointToLayerPoint([0, 0])); }
-          function reset() { place(); ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); buildField(); if (!P.length || Math.abs(P.length - Math.min(3000, Math.round(W * H / 650))) > 200) seedAll(); }
+          function reset() { place(); ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); buildField(); if (!P.length || Math.abs(P.length - Math.min(2000, Math.round(W * H / 1100))) > 150) seedAll(); }
           if (map && ok) {
             map.on("movestart zoomstart", function () { moving = true; cv.style.opacity = "0"; });
             map.on("moveend zoomend", function () { reset(); moving = false; cv.style.transition = "opacity .25s"; cv.style.opacity = "1"; });
@@ -1137,7 +1147,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             ice: '<path d="M12 2v20M4 7l16 10M20 7L4 17"/><path d="M9 4l3 2 3-2M9 20l3-2 3 2"/>',
             none: '<circle cx="12" cy="12" r="8"/><path d="M6 18L18 6"/>'
           };
-          var SHORT = { base: "НГО", low: "Облака", vis: "Видим.", precip: "Осадки", ws10: "Ветер 10 м", ws925: "Ветер 800 м", ice: "Обледен.", none: "Без поля" };
+          var SHORT = { base: "НГО", low: "Облака", vis: "Видим.", precip: "Осадки", ws10: "10 м", ws925: "800 м", ice: "Обледен.", none: "Без поля" };
           function svg(k) { return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + ICO[k] + "</svg>"; }
           var rail = document.createElement("nav"); rail.className = "x-rail x-glass"; rail.setAttribute("aria-label", "Слои");
           rail.innerHTML = '<div class="x-rail-h">Поле</div><div id="r-fields" class="x-rail-g"></div><div class="x-rail-h">Слои</div><div id="r-layers" class="x-rail-g x-rail-g--l"></div>';
@@ -1173,16 +1183,19 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           function buildTicks() {
             var hr = document.getElementById("t-hour"); if (!hr || !G) return;
             var box = document.createElement("div"); box.className = "x-ticks";
-            var n = G.times.length, p = function (x) { return (x < 10 ? "0" : "") + x; };
+            var n = G.times.length, p = function (x) { return (x < 10 ? "0" : "") + x; }, nowI = 0, best = 1e15;
+            G.times.forEach(function (t, i) { var dd = Math.abs(new Date(t.replace("Z", ":00Z")) - Date.now()); if (dd < best) { best = dd; nowI = i; } });
             G.times.forEach(function (t, i) {
               var d = new Date(t.replace("Z", ":00Z")), sp = document.createElement("span");
               sp.style.left = (i / (n - 1) * 100) + "%";
-              sp.textContent = i === 0 ? "сейчас" : p(d.getUTCHours()) + "Z";
+              sp.textContent = i === nowI ? "сейчас" : p(d.getUTCHours()) + "Z";
+              if (i === nowI) sp.className = "x-tick-now";
               if (d.getUTCHours() === 0) sp.className = "x-tick-day";
               box.appendChild(sp);
             });
             var wrap = document.createElement("div"); wrap.className = "x-trk";
             hr.parentNode.insertBefore(wrap, hr); wrap.appendChild(hr); wrap.appendChild(box);
+            if (nowI) { hr.value = nowI; hr.dispatchEvent(new Event("input")); }
           }
 
           // крупные цифры в карточке станции + метеограмма модели на 12 ч
