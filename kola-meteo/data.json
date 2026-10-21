@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-21T18:45Z",
+ "generated": "2026-10-21T19:42Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -8,16 +8,16 @@
    "lat": 68.607,
    "lon": 27.405,
    "cat": "MVFR",
-   "wdir": 210,
-   "wspd": 6,
+   "wdir": 220,
+   "wspd": 7,
    "wgst": null,
    "vis": 9999,
    "ceil": 1200,
    "temp": 2,
    "dew": 0,
    "qnh": 1025,
-   "time": "18:20Z",
-   "raw": "METAR EFIV 211820Z AUTO 21011KT 9999 BKN012 02/00 Q1025"
+   "time": "19:20Z",
+   "raw": "METAR EFIV 211920Z AUTO 22013KT 9999 BKN012 02/M00 Q1025"
   },
   {
    "icao": "EFKS",
@@ -26,7 +26,7 @@
    "lat": 65.992,
    "lon": 29.236,
    "cat": "VFR",
-   "wdir": 120,
+   "wdir": 110,
    "wspd": 3,
    "wgst": null,
    "vis": 10000,
@@ -34,8 +34,8 @@
    "temp": -1,
    "dew": -2,
    "qnh": 1029,
-   "time": "18:20Z",
-   "raw": "METAR EFKS 211820Z AUTO 12006KT CAVOK M01/M02 Q1029"
+   "time": "19:20Z",
+   "raw": "METAR EFKS 211920Z AUTO 11006KT CAVOK M01/M02 Q1029"
   },
   {
    "icao": "ENKR",
@@ -45,15 +45,15 @@
    "lon": 29.898,
    "cat": "VFR",
    "wdir": 170,
-   "wspd": 5,
+   "wspd": 3,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
    "temp": 1,
    "dew": 0,
    "qnh": 1024,
-   "time": "18:20Z",
-   "raw": "METAR ENKR 211820Z 17009KT CAVOK 01/M00 Q1024 RMK WIND 731FT 19019KT"
+   "time": "19:20Z",
+   "raw": "METAR ENKR 211920Z 17006KT 150V210 CAVOK 01/M00 Q1024 RMK WIND 731FT 21019KT"
   },
   {
    "icao": "ULMM",
@@ -62,16 +62,16 @@
    "lat": 68.781,
    "lon": 32.749,
    "cat": "VFR",
-   "wdir": 150,
+   "wdir": 160,
    "wspd": 3,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
-   "temp": -1,
-   "dew": -2,
+   "temp": 0,
+   "dew": -1,
    "qnh": 1028,
-   "time": "18:30Z",
-   "raw": "METAR ULMM 211830Z 15003MPS CAVOK M01/M02 Q1028 R13/190060 NOSIG RMK QFE764"
+   "time": "19:30Z",
+   "raw": "METAR ULMM 211930Z 16003MPS CAVOK M00/M01 Q1028 R13/190060 NOSIG RMK QFE764"
   }
  ],
  "synop": [
@@ -301,10 +301,10 @@
   }
  ],
  "taf": {
-  "EFIV": "TAF EFIV 210828Z 2109/2112 21012KT 9999 OVC015 TEMPO 2109/2112 BKN012",
   "EFKS": "TAF EFKS 210229Z 2103/2106 24005KT 9999 OVC003 TEMPO 2103/2106 BKN005",
   "ENKR": "TAF ENKR 211700Z 2118/2203 20015KT 9999 FEW015 PROB30 TEMPO 2118/2203 BKN009",
-  "ULMM": "TAF ULMM 211703Z 2118/2218 21003G08MPS 6000 BKN016 TEMPO 2118/2122 0500 FZFG VV002 TEMPO 2206/2215 BKN011"
+  "ULMM": "TAF ULMM 211703Z 2118/2218 21003G08MPS 6000 BKN016 TEMPO 2118/2122 0500 FZFG VV002 TEMPO 2206/2215 BKN011",
+  "EFIV": "TAF EFIV 210828Z 2109/2112 21012KT 9999 OVC015 TEMPO 2109/2112 BKN012"
  },
  "sigmet": [
   {
