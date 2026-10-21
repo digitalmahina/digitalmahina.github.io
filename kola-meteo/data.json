@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-21T18:34Z",
+ "generated": "2026-10-21T18:45Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -63,15 +63,15 @@
    "lon": 32.749,
    "cat": "VFR",
    "wdir": 150,
-   "wspd": 1,
+   "wspd": 3,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
    "temp": -1,
    "dew": -2,
    "qnh": 1028,
-   "time": "18:00Z",
-   "raw": "METAR ULMM 211800Z 15001MPS CAVOK M01/M02 Q1028 R13/190060 NOSIG RMK QFE764"
+   "time": "18:30Z",
+   "raw": "METAR ULMM 211830Z 15003MPS CAVOK M01/M02 Q1028 R13/190060 NOSIG RMK QFE764"
   }
  ],
  "synop": [
