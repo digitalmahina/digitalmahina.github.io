@@ -674,6 +674,56 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           var h2 = panel.querySelector("h2"); if (h2) h2.insertAdjacentHTML("beforebegin", h); else panel.insertAdjacentHTML("afterbegin", h);
         };
 
+        /* ---------- GAMET (MetAvia2, кладёт плановая задача Hark) ---------- */
+        var GAM = null;
+        var GLAB = { "SFC VIS": "Видимость у земли", "SFC WIND": "Ветер у земли", "SIGWX": "Опасные явления", "MT OBSC": "Горы закрыты",
+          "SIG CLD": "Значимая облачность", "ICE": "Обледенение", "TURB": "Турбулентность", "MTW": "Горные волны", "SIGMETS APPLICABLE": "Действуют SIGMET",
+          "PSYS": "Синоптика", "WIND/T": "Ветер и температура по высотам", "CLD": "Облачность", "FZLVL": "Изотерма 0 °C", "MNM QNH": "Мин. QNH", "VA": "Вулк. пепел" };
+        function gValid(h) { var m = /VALID (\d\d)(\d\d)(\d\d)\/(\d\d)(\d\d)(\d\d)/.exec(h); return m ? m[1] + " " + m[2] + ":" + m[3] + "Z – " + m[4] + " " + m[5] + ":" + m[6] + "Z" : ""; }
+        function gamHtml(t) {
+          var body = t.replace(/^.*?BLW FL\d+\s*/, "");
+          var keys = Object.keys(GLAB).sort(function (a, b) { return b.length - a.length; }).map(function (k) { return k.replace("/", "\\/"); });
+          var re = new RegExp("\\s*(SECN I{1,2}|" + keys.join("|") + "):?\\s", "g");
+          var parts = body.split(re), out = "", i = 1;
+          if (parts[0].trim()) out += '<div class="x-raw">' + esc(parts[0]) + "</div>";
+          for (; i < parts.length; i += 2) {
+            var k = parts[i], v = (parts[i + 1] || "").trim();
+            if (/^SECN/.test(k)) { out += "<h3>" + (k === "SECN I" ? "Раздел I — опасные явления" : "Раздел II — общая информация") + "</h3>"; if (v) out += '<div class="x-raw">' + esc(v) + "</div>"; continue; }
+            var vv = esc(v);
+            if (k === "WIND/T") vv = vv.replace(/\s(\d{3,4}M)\s/g, "<br>$1 ");
+            out += '<dl class="x-kv"><dt>' + GLAB[k] + "</dt><dd>" + vv + "</dd></dl>";
+          }
+          return out;
+        }
+        function openGamet() {
+          state.sel = "gamet";
+          var h = '<button class="x-close" id="pclose" type="button" aria-label="Закрыть">✕</button><h2>GAMET</h2>';
+          if (!GAM || !GAM.items || !GAM.items.length) h += '<p class="x-sub">GAMET пока не загружен.</p>';
+          else {
+            h += '<p class="x-sub">' + esc(GAM.source || "") + " · получено " + esc(GAM.fetched || "") + "</p>";
+            GAM.items.forEach(function (g) {
+              var m = /FIR\/(.*?) BLW (FL\d+)/.exec(g.header);
+              h += '<div class="x-note x-note--ok" style="margin-top:14px"><b>' + gValid(g.header) + "</b> · районы " + esc(m ? m[1] : "") + " · ниже " + (m ? m[2] : "") + "</div>" + gamHtml(g.text) +
+                '<details style="margin-top:8px"><summary class="x-sub" style="cursor:pointer">Исходный текст</summary><div class="x-raw">' + esc(g.text) + "</div></details>";
+            });
+          }
+          panel.innerHTML = h; panel.style.display = "block"; wire();
+        }
+        (function () {
+          var tg = document.querySelector(".x-toggles"), b = document.createElement("button");
+          b.className = "x-tgl"; b.type = "button"; b.id = "t-gamet"; b.setAttribute("aria-pressed", "false"); b.textContent = "GAMET";
+          b.addEventListener("click", openGamet);
+          tg.insertBefore(b, document.getElementById("t-list"));
+          fetch("gamet.json?t=" + Date.now()).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+            GAM = j;
+            if (j && j.items && j.items[0]) {
+              var m = /VALID \d{6}\/(\d\d)(\d\d)(\d\d)/.exec(j.items[0].header), now = new Date();
+              var end = m ? Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), +m[1], +m[2], +m[3]) : 0;
+              b.textContent = "GAMET " + (end && end < now.getTime() ? "(устарел)" : gValid(j.items[0].header).slice(3, 9) + "–" + gValid(j.items[0].header).slice(-6));
+            }
+          }).catch(function () {});
+        })();
+
         if (!ok) fail("Карта не загрузилась — показана схема берега");
         renderList();
       })();
