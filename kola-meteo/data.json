@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-21T13:20Z",
+ "generated": "2026-10-21T13:43Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -8,34 +8,16 @@
    "lat": 68.607,
    "lon": 27.405,
    "cat": "MVFR",
-   "wdir": 200,
-   "wspd": 6,
+   "wdir": 210,
+   "wspd": 3,
    "wgst": null,
    "vis": 9999,
-   "ceil": 1800,
+   "ceil": 1700,
    "temp": 4,
    "dew": 0,
    "qnh": 1027,
-   "time": "12:50Z",
-   "raw": "METAR EFIV 211250Z AUTO 20011KT 180V240 9999 BKN018 04/00 Q1027"
-  },
-  {
-   "icao": "EFKS",
-   "name": "Куусамо",
-   "place": "Финляндия",
-   "lat": 65.992,
-   "lon": 29.236,
-   "cat": "VFR",
-   "wdir": 160,
-   "wspd": 4,
-   "wgst": null,
-   "vis": 10000,
-   "ceil": 99999,
-   "temp": 3,
-   "dew": 0,
-   "qnh": 1031,
-   "time": "12:50Z",
-   "raw": "METAR EFKS 211250Z AUTO 16007KT CAVOK 03/M00 Q1031"
+   "time": "13:20Z",
+   "raw": "METAR EFIV 211320Z AUTO 21006KT 170V230 9999 BKN017 04/00 Q1027"
   },
   {
    "icao": "ENKR",
@@ -45,15 +27,15 @@
    "lon": 29.898,
    "cat": "MVFR",
    "wdir": 210,
-   "wspd": 4,
+   "wspd": 5,
    "wgst": null,
    "vis": 9999,
-   "ceil": 1000,
+   "ceil": 1300,
    "temp": 4,
    "dew": 2,
    "qnh": 1027,
-   "time": "12:50Z",
-   "raw": "METAR ENKR 211250Z 21008KT 9999 BKN010 04/02 Q1027 RMK WIND 731FT 22013KT"
+   "time": "13:20Z",
+   "raw": "METAR ENKR 211320Z 21009KT 170V230 9999 BKN013 04/02 Q1027 RMK WIND 731FT 22017KT"
   },
   {
    "icao": "ULMM",
@@ -61,17 +43,35 @@
    "place": "Мурмаши",
    "lat": 68.781,
    "lon": 32.749,
-   "cat": "IFR",
-   "wdir": 210,
-   "wspd": 2,
+   "cat": "MVFR",
+   "wdir": 200,
+   "wspd": 3,
    "wgst": null,
    "vis": 9999,
-   "ceil": 900,
+   "ceil": 1100,
    "temp": 5,
    "dew": 3,
    "qnh": 1029,
-   "time": "13:00Z",
-   "raw": "METAR ULMM 211300Z 21002MPS 160V230 9999 BKN009 05/03 Q1029 R13/190060 NOSIG RMK OBST OBSC QFE765"
+   "time": "13:30Z",
+   "raw": "METAR ULMM 211330Z 20003MPS 170V250 9999 BKN011 05/03 Q1029 R13/190060 NOSIG RMK QFE765"
+  },
+  {
+   "icao": "EFKS",
+   "name": "Куусамо",
+   "place": "Финляндия",
+   "lat": 65.992,
+   "lon": 29.236,
+   "cat": "VFR",
+   "wdir": 150,
+   "wspd": 4,
+   "wgst": null,
+   "vis": 10000,
+   "ceil": 99999,
+   "temp": 2,
+   "dew": -1,
+   "qnh": 1030,
+   "time": "13:20Z",
+   "raw": "METAR EFKS 211320Z AUTO 15007KT CAVOK 02/M01 Q1030"
   }
  ],
  "synop": [
