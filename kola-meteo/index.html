@@ -120,6 +120,13 @@
       .x-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
       .x-disc { width: 100%; font: var(--type-caption); color: var(--text-secondary); }
 
+      .x-sel { background: rgb(22 27 34 / 0.9); color: var(--text-primary); padding-right: 8px; }
+      .x-sel option { background: #161b22; color: #e6edf3; }
+      .x-tl { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; width: 100%; }
+      .x-tl input[type=range] { flex: 1 1 220px; min-width: 160px; height: var(--tap, 44px); accent-color: var(--fill-system-orange); }
+      .x-flegend { display: inline-flex; align-items: center; gap: 8px; font: var(--type-caption); color: var(--text-secondary); }
+      .x-flegend i { display: inline-block; width: 90px; height: 8px; border-radius: 4px; }
+      .x-field { image-rendering: auto; }
       /* markers */
       .x-metar {
         font: var(--weight-medium) 11px/1 "Geist Mono", ui-monospace, monospace;
@@ -507,6 +514,135 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             p(d.getUTCHours()) + ":" + p(d.getUTCMinutes()) + "Z · местное " + p(d.getHours()) + ":" + p(d.getMinutes());
         }
         clock(); setInterval(clock, 30000);
+
+        /* ---------- поля модели (grid.json, Open-Meteo, обновление каждые 3 ч) ---------- */
+        var G = null, gIdx = 0, gField = "base", gOverlay = null;
+        var FIELDS = {
+          none:  { name: "Без поля" },
+          base:  { name: "НГО (оценка)", unit: "м", stops: [[0,"#e040fb",.75],[80,"#ff3b3b",.7],[150,"#ff8a00",.6],[300,"#ffd400",.45],[600,"#7ddc8a",.2],[1000,"#7ddc8a",0]], none: [0,0,0,0], legend: "<80 · 150 · 300 · 600 м" },
+          low:   { name: "Низкая облачность", unit: "%", stops: [[0,"#ffffff",0],[30,"#cfd8e3",.15],[70,"#cfd8e3",.4],[100,"#ffffff",.6]], legend: "0 · 30 · 70 · 100 %" },
+          vis:   { name: "Видимость", unit: "км", stops: [[0,"#e040fb",.75],[0.8,"#ff3b3b",.7],[1.5,"#ff8a00",.6],[5,"#ffd400",.4],[10,"#ffd400",0]], legend: "0,8 · 1,5 · 5 · 10 км" },
+          precip:{ name: "Осадки", unit: "мм/ч", stops: [[0,"#4aa3ff",0],[0.1,"#4aa3ff",.35],[1,"#2f6bff",.55],[3,"#7b3cff",.7],[8,"#ff3bd4",.8]], legend: "0,1 · 1 · 3 · 8 мм/ч" },
+          ws10:  { name: "Ветер 10 м", unit: "м/с", stops: [[0,"#2f6bff",.35],[5,"#00b386",.4],[10,"#ffd400",.5],[15,"#ff8a00",.6],[20,"#ff3b3b",.7]], legend: "0 · 5 · 10 · 15 · 20 м/с" },
+          ws925: { name: "Ветер 925 гПа (~800 м)", unit: "м/с", stops: [[0,"#2f6bff",.35],[5,"#00b386",.4],[10,"#ffd400",.5],[15,"#ff8a00",.6],[20,"#ff3b3b",.7]], legend: "0 · 5 · 10 · 15 · 20 м/с" },
+          ice:   { name: "Обледенение (риск)", unit: "", stops: [[0,"#4aa3ff",0],[0.5,"#ffd400",.45],[1,"#ff3b3b",.7]], legend: "облачность ≥50 % и T(925) от 0 до −12 °C" }
+        };
+        function hex(c) { return [parseInt(c.substr(1,2),16), parseInt(c.substr(3,2),16), parseInt(c.substr(5,2),16)]; }
+        function colorFor(f, v) {
+          var st = FIELDS[f].stops;
+          if (v == null || isNaN(v)) return [0,0,0,0];
+          if (v <= st[0][0]) { var a = hex(st[0][1]); return [a[0],a[1],a[2],st[0][2]]; }
+          for (var i = 1; i < st.length; i++) if (v <= st[i][0]) {
+            var t = (v - st[i-1][0]) / (st[i][0] - st[i-1][0]), p = hex(st[i-1][1]), q = hex(st[i][1]);
+            return [p[0]+(q[0]-p[0])*t, p[1]+(q[1]-p[1])*t, p[2]+(q[2]-p[2])*t, st[i-1][2]+(st[i][2]-st[i-1][2])*t];
+          }
+          var z = hex(st[st.length-1][1]); return [z[0],z[1],z[2],st[st.length-1][2]];
+        }
+        function rawVal(f, h, k) {
+          var F = G.fields;
+          if (f === "ice") {
+            var lo = F.low[h][k], t = F.t925 ? F.t925[h][k] : null;
+            if (lo == null || t == null || lo < 50 || t > 0 || t < -12) return 0;
+            return t > -2 || t < -10 ? 0.5 : 1;
+          }
+          return F[f][h][k];
+        }
+        // билинейная интерполяция; null берём как «нет значения»
+        function sample(f, h, lat, lon) {
+          var la = G.lats, lo = G.lons, dl = la[1]-la[0], dn = lo[1]-lo[0], nc = lo.length;
+          var fi = (lat - la[0]) / dl, fj = (lon - lo[0]) / dn;
+          if (fi < -0.5 || fj < -0.5 || fi > la.length - 0.5 || fj > nc - 0.5) return null;
+          fi = Math.max(0, Math.min(la.length - 1.001, fi)); fj = Math.max(0, Math.min(nc - 1.001, fj));
+          var i = Math.floor(fi), j = Math.floor(fj), ti = fi - i, tj = fj - j, s = 0, w = 0;
+          [[i,j,(1-ti)*(1-tj)],[i+1,j,ti*(1-tj)],[i,j+1,(1-ti)*tj],[i+1,j+1,ti*tj]].forEach(function (c) {
+            var v = rawVal(f, h, c[0]*nc + c[1]);
+            if (v != null) { s += v * c[2]; w += c[2]; }
+          });
+          if (f === "base" && w < 0.5) return null;
+          return w ? s / w : null;
+        }
+        function merc(lat) { return Math.log(Math.tan(Math.PI/4 + lat*Math.PI/360)); }
+        function imerc(y) { return (2*Math.atan(Math.exp(y)) - Math.PI/2) * 180/Math.PI; }
+        function drawField() {
+          if (gOverlay) { map.removeLayer(gOverlay); gOverlay = null; }
+          if (!G || !map || !ok || gField === "none") return;
+          var la = G.lats, lo = G.lons, dl = la[1]-la[0], dn = lo[1]-lo[0];
+          var s = la[0]-dl/2, n = la[la.length-1]+dl/2, w = lo[0]-dn/2, e = lo[lo.length-1]+dn/2;
+          var W = 540, yN = merc(n), yS = merc(s), H = Math.round(W * (yN - yS) / ((e - w) * Math.PI / 180));
+          var c = document.createElement("canvas"); c.width = W; c.height = H;
+          var cx = c.getContext("2d"), img = cx.createImageData(W, H), d = img.data;
+          for (var y = 0; y < H; y++) {
+            var lat = imerc(yN - (y + 0.5) / H * (yN - yS));
+            for (var x = 0; x < W; x++) {
+              var lon = w + (x + 0.5) / W * (e - w), col = colorFor(gField, sample(gField, gIdx, lat, lon)), o = (y*W + x)*4;
+              d[o] = col[0]; d[o+1] = col[1]; d[o+2] = col[2]; d[o+3] = Math.round(col[3]*255);
+            }
+          }
+          cx.putImageData(img, 0, 0);
+          gOverlay = L.imageOverlay(c.toDataURL(), [[s, w], [n, e]], { opacity: 1, interactive: false, className: "x-field" }).addTo(map);
+        }
+        // ветер частиц: из модели (10 м или 925 гПа), иначе по станциям
+        var stationField = field;
+        field = function (x, y) {
+          if (!G || !map || !ok) return stationField(x, y);
+          var ll = map.containerPointToLatLng([x, y]), lvl = gField === "ws925" ? "925" : "10";
+          var spd = sample("ws" + lvl, gIdx, ll.lat, ll.lng), dir = sample("wd" + lvl, gIdx, ll.lat, ll.lng);
+          if (spd == null || dir == null) return stationField(x, y);
+          // направление интерполируем грубо; для частиц достаточно
+          var r = dir * Math.PI / 180;
+          return { x: -Math.sin(r) * spd, y: Math.cos(r) * spd };
+        };
+        function hourLabel(i) {
+          var t = new Date(G.times[i].replace("Z", ":00Z"));
+          var p = function (n) { return (n < 10 ? "0" : "") + n; };
+          return (i ? "+" + Math.round((t - new Date(G.times[0].replace("Z", ":00Z"))) / 36e5) + " ч · " : "сейчас · ") +
+            p(t.getUTCHours()) + ":00Z · " + p(t.getHours()) + ":00 местн.";
+        }
+        function buildGridUI() {
+          var tg = document.querySelector(".x-toggles");
+          var sel = document.createElement("select");
+          sel.id = "t-field"; sel.className = "x-tgl x-sel"; sel.setAttribute("aria-label", "Поле модели");
+          Object.keys(FIELDS).forEach(function (k) {
+            var o = document.createElement("option"); o.value = k; o.textContent = FIELDS[k].name;
+            if (k === gField) o.selected = true; sel.appendChild(o);
+          });
+          tg.insertBefore(sel, tg.firstChild);
+          var bar = document.querySelector(".x-bottom");
+          var box = document.createElement("div"); box.className = "x-tl";
+          box.innerHTML = '<input type="range" id="t-hour" min="0" max="' + (G.times.length - 1) + '" value="0" step="1" aria-label="Срок прогноза">' +
+            '<span id="t-hlab" class="x-time"></span><span id="t-leg" class="x-flegend"></span>';
+          bar.insertBefore(box, bar.querySelector(".x-disc"));
+          var hr = document.getElementById("t-hour");
+          function upd() {
+            document.getElementById("t-hlab").textContent = hourLabel(gIdx);
+            var f = FIELDS[gField];
+            document.getElementById("t-leg").innerHTML = gField === "none" ? "" :
+              '<i style="background:linear-gradient(90deg,' + f.stops.map(function (s) { var c = hex(s[1]); return "rgba(" + c.join(",") + "," + Math.max(.25, s[2]) + ")"; }).join(",") + ')"></i>' + f.name + ": " + f.legend;
+            drawField(); ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+          }
+          sel.addEventListener("change", function () { gField = sel.value; upd(); });
+          hr.addEventListener("input", function () { gIdx = +hr.value; upd(); });
+          upd();
+          setStatus("Наблюдения " + kolaAge() + " · модель " + G.generated.slice(11, 16) + "Z (" + G.model + ")");
+        }
+        function modelNote(lat, lon, stVis) {
+          if (!G) return "";
+          var v = sample("vis", 0, lat, lon), lo = sample("low", 0, lat, lon), b = sample("base", 0, lat, lon);
+          var miss = stVis != null && stVis < 1 && v != null && v > 5;
+          return "<h3>Модель в этой точке, сейчас</h3><dl class=\"x-kv\">" +
+            "<dt>Видимость</dt><dd>" + (v == null ? "н/д" : v.toFixed(1) + " км") + "</dd>" +
+            "<dt>Низкая обл.</dt><dd>" + (lo == null ? "н/д" : Math.round(lo) + " %") + "</dd>" +
+            "<dt>НГО (оценка)</dt><dd>" + (b == null ? "—" : "~" + Math.round(b / 10) * 10 + " м") + "</dd></dl>" +
+            (miss ? '<div class="x-note x-note--bad">Модель не видит туман, который наблюдается на станции. Верьте станции.</div>' : "");
+        }
+        var _om = openMetar, _os = openSynop;
+        openMetar = function (s) { _om(s); panel.insertAdjacentHTML("beforeend", modelNote(s.lat, s.lon, s.vis / 1000)); wire(); };
+        openSynop = function (s) { _os(s); panel.insertAdjacentHTML("beforeend", modelNote(s.lat, s.lon, s.vis)); wire(); };
+        if (map && ok) {
+          fetch("grid.json?t=" + Date.now()).then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (j) { if (j && j.times) { G = j; buildGridUI(); } }).catch(function () {});
+          map.on("zoomend", function () { /* оверлей масштабируется сам */ });
+        }
 
         if (!ok) fail("Карта не загрузилась — показана схема берега");
         renderList();
