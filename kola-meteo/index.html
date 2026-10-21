@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Кольский метеослой</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap"
+    />
+    <link rel="stylesheet" href="hark.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+      /* The page is one full-screen map app, so the page frame is replaced;
+         every colour, radius and type below is a Hark token. */
+      html, body { height: 100%; overflow: hidden; }
+      body { background: #0d1117; color: var(--text-primary); }
+
+      .x-app { position: fixed; inset: 0; display: block; }
+      .x-map { position: absolute; inset: 0; background: #0d1117; }
+      .x-fallback { position: absolute; inset: 0; display: none; }
+      .x-fallback svg { width: 100%; height: 100%; display: block; }
+      .x-wind { position: absolute; inset: 0; pointer-events: none; }
+      .leaflet-container { background: #0d1117; font: var(--type-small); }
+      .x-fb-mark { position: absolute; transform: translate(-50%, -50%); cursor: pointer; border: 0; padding: 0; background: none; z-index: 2; }
+      .x-fb-mark .x-synop { display: block; width: 18px; height: 18px; }
+      .leaflet-control-attribution { background: rgb(13 17 23 / 0.7) !important; color: var(--text-secondary); font: var(--type-caption); }
+      .leaflet-control-attribution a { color: var(--text-secondary); }
+
+      .x-glass {
+        background: rgb(22 27 34 / 0.82);
+        -webkit-backdrop-filter: var(--hark-blur);
+        backdrop-filter: var(--hark-blur);
+        border: 1px solid var(--stroke-primary);
+        box-shadow: 0 8px 40px rgb(0 0 0 / 0.45);
+      }
+
+      /* top bar */
+      .x-top {
+        position: absolute; z-index: 600;
+        top: calc(env(safe-area-inset-top, 0px) + 12px); left: 12px; right: 12px;
+        display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        padding: 8px 12px; border-radius: var(--r-pill);
+      }
+      .x-brand { font: var(--type-body-strong); white-space: nowrap; }
+      .x-brand small { display: block; font: var(--type-caption); color: var(--text-secondary); }
+      .x-top .x-spacer { flex: 1 1 auto; }
+
+      .x-toggles { display: flex; gap: 6px; flex-wrap: wrap; }
+      .x-tgl {
+        min-height: 32px; padding: 6px 12px; border-radius: var(--r-pill);
+        border: 1px solid var(--stroke-primary); background: transparent;
+        color: var(--text-secondary); font: var(--type-tag); cursor: pointer;
+        display: inline-flex; align-items: center; gap: 6px;
+      }
+      .x-tgl:hover { color: var(--text-primary); }
+      .x-tgl[aria-pressed="true"] { background: var(--fill-primary); color: var(--text-primary-on); border-color: transparent; }
+      .x-tgl--alert[aria-pressed="true"] { background: var(--fill-system-orange); color: #0d1117; }
+      @media (max-width: 760px) {
+        .x-tgl { min-height: var(--tap); }
+        .leaflet-touch .leaflet-bar a { width: var(--tap); height: var(--tap); line-height: var(--tap); }
+        .leaflet-control-attribution a { display: inline-block; min-height: var(--tap); line-height: var(--tap); padding-inline: 4px; }
+      }
+
+      /* side sheet / list panel */
+      .x-panel {
+        position: absolute; z-index: 600;
+        top: calc(env(safe-area-inset-top, 0px) + 72px); right: 12px; width: 340px;
+        max-height: calc(100% - 190px); overflow: auto;
+        border-radius: var(--r-l); padding: 16px;
+      }
+      .x-panel h2 { font: var(--type-heading); margin-bottom: 2px; }
+      .x-panel h3 { font: var(--type-body-strong); margin: 14px 0 6px; }
+      .x-panel p.x-sub { font: var(--type-caption); color: var(--text-secondary); }
+      .x-close {
+        float: right; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+        border: 1px solid var(--stroke-primary); background: transparent; color: var(--text-primary);
+        font: var(--type-label); line-height: 1;
+      }
+      .x-rows { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
+      .x-row {
+        width: 100%; text-align: left; cursor: pointer; display: grid;
+        grid-template-columns: 10px 1fr auto; align-items: center; gap: 10px;
+        min-height: var(--tap); padding: 8px 10px; border-radius: var(--r-s);
+        border: 1px solid var(--stroke-secondary); background: var(--fill-tertiary); color: inherit;
+      }
+      .x-row:hover { border-color: var(--stroke-primary); }
+      .x-row b { font: var(--type-body-strong); display: block; }
+      .x-row small { font: var(--type-caption); color: var(--text-secondary); }
+      .x-row .x-val { font: var(--weight-medium) var(--size-small)/1.3 "Geist Mono", ui-monospace, monospace; white-space: nowrap; }
+      .x-bullet { width: 10px; height: 10px; border-radius: 50%; }
+      .x-flag { display: inline-block; padding: 2px 8px; border-radius: var(--r-pill); font: var(--type-tag); color: #0d1117; }
+
+      .x-kv { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; }
+      .x-kv dt { font: var(--type-caption); color: var(--text-secondary); }
+      .x-kv dd { margin: 0; font: var(--weight-medium) var(--size-small)/1.3 "Geist Mono", ui-monospace, monospace; }
+      .x-raw {
+        margin-top: 12px; padding: 10px; border-radius: var(--r-s);
+        background: var(--fill-tertiary); color: var(--text-secondary);
+        font: var(--weight-regular) var(--size-caption)/1.5 "Geist Mono", ui-monospace, monospace;
+        word-break: break-word;
+      }
+      .x-note { margin-top: 10px; padding: 10px; border-radius: var(--r-s); font: var(--type-caption); }
+      .x-note--bad { background: rgb(255 77 0 / 0.14); color: #ffb08a; border: 1px solid rgb(255 77 0 / 0.35); }
+      .x-note--ok { background: rgb(0 166 101 / 0.14); color: #7fdcb4; border: 1px solid rgb(0 166 101 / 0.35); }
+
+      /* bottom bar */
+      .x-bottom {
+        position: absolute; z-index: 600;
+        left: 12px; right: 12px; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+        border-radius: var(--r-l); padding: 10px 14px;
+        display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      }
+      .x-time { font: var(--weight-medium) var(--size-small)/1.3 "Geist Mono", ui-monospace, monospace; white-space: nowrap; }
+      .x-status { font: var(--type-caption); color: var(--text-secondary); }
+      .x-legend { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-left: auto; }
+      .x-legend span { display: inline-flex; align-items: center; gap: 5px; font: var(--type-caption); color: var(--text-secondary); }
+      .x-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+      .x-disc { width: 100%; font: var(--type-caption); color: var(--text-secondary); }
+
+      /* markers */
+      .x-metar {
+        font: var(--weight-medium) 11px/1 "Geist Mono", ui-monospace, monospace;
+        padding: 4px 6px; border-radius: 6px; color: #0d1117; white-space: nowrap;
+        box-shadow: 0 2px 8px rgb(0 0 0 / 0.5); text-align: center;
+      }
+      .x-metar b { display: block; font-size: 11px; }
+      .x-metar i { display: block; font-style: normal; font-size: 10px; opacity: 0.8; }
+      .x-synop { border-radius: 50%; border: 2px solid rgb(13 17 23 / 0.8); box-shadow: 0 2px 8px rgb(0 0 0 / 0.5); }
+      .x-pick { outline: 2px solid var(--fill-system-orange); outline-offset: 2px; }
+
+      @media (max-width: 760px) {
+        .x-top { gap: 8px; padding: 8px 10px; border-radius: var(--r-l); }
+        .x-brand small { display: none; }
+        .x-panel {
+          top: auto; left: 12px; right: 12px; width: auto;
+          bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+          max-height: 62%; border-radius: var(--r-l);
+        }
+        .x-panel { bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); max-height: 50%; }
+        .x-bottom { padding: 8px 12px; gap: 6px 10px; }
+        .x-legend { display: none; }
+        .leaflet-bottom.leaflet-right { bottom: 96px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="x-app">
+      <div id="map" class="x-map"></div>
+      <div class="x-fallback" id="fallback" aria-hidden="true">
+        <svg id="fb-svg" role="img" aria-label="Схематичная береговая линия Кольского полуострова">
+          <path id="fb-coast" fill="#19212b" stroke="#3a4656" stroke-width="1.5" />
+        </svg>
+      </div>
+      <canvas id="wind" class="x-wind"></canvas>
+
+      <header class="x-top x-glass">
+        <div class="x-brand">Кольский метеослой<small>Мурманская область · оперативная погода</small></div>
+        <div class="x-spacer"></div>
+        <div class="x-toggles" role="group" aria-label="Слои карты">
+          <button class="x-tgl" id="t-wind" type="button" aria-pressed="true">Ветер</button>
+          <button class="x-tgl" id="t-metar" type="button" aria-pressed="true">METAR</button>
+          <button class="x-tgl" id="t-synop" type="button" aria-pressed="true">SYNOP</button>
+          <button class="x-tgl x-tgl--alert" id="t-min" type="button" aria-pressed="false">Мой минимум 80 м × 800 м</button>
+          <button class="x-tgl" id="t-list" type="button" aria-pressed="true">Список</button>
+        </div>
+      </header>
+
+      <aside class="x-panel x-glass" id="panel" aria-live="polite"></aside>
+
+      <footer class="x-bottom x-glass">
+        <span class="x-time" id="clock">—</span>
+        <span class="x-status" id="status">Загрузка карты…</span>
+        <div class="x-legend">
+          <span><i class="x-dot" style="background:#00a665"></i>VFR</span>
+          <span><i class="x-dot" style="background:#4aa3ff"></i>MVFR</span>
+          <span><i class="x-dot" style="background:#f1555b"></i>IFR</span>
+          <span><i class="x-dot" style="background:#c77dff"></i>LIFR</span>
+        </div>
+        <p class="x-disc">Источники: aviationweather.gov (METAR), OGIMET (SYNOP Росгидромета). Ветер на карте интерполирован по станциям. Не для выполнения полётов.</p>
+      </footer>
+    </div>
+
+    <script type="application/json" id="metar-data">[{"icao": "EFIV", "name": "Ивало", "place": "Финляндия", "lat": 68.607, "lon": 27.405, "cat": "MVFR", "wdir": 220, "wspd": 4, "wgst": null, "vis": 9999, "ceil": 1100, "temp": 5, "dew": 2, "qnh": 1029, "time": "07:20Z", "raw": "METAR EFIV 210720Z AUTO 22008KT 180V240 9999 OVC011 05/02 Q1029"}, {"icao": "EFKS", "name": "Куусамо", "place": "Финляндия", "lat": 65.992, "lon": 29.236, "cat": "IFR", "wdir": 220, "wspd": 2, "wgst": null, "vis": 9999, "ceil": 600, "temp": 2, "dew": 1, "qnh": 1032, "time": "07:20Z", "raw": "METAR EFKS 210720Z AUTO 22004KT 9999 OVC006 02/01 Q1032"}, {"icao": "ENKR", "name": "Киркенес", "place": "Норвегия", "lat": 69.725, "lon": 29.898, "cat": "LIFR", "wdir": 180, "wspd": 3, "wgst": null, "vis": 9999, "ceil": 400, "temp": 2, "dew": 2, "qnh": 1029, "time": "07:20Z", "raw": "METAR ENKR 210720Z 18005KT 9999 4800E SCT002 BKN004 02/02 Q1029 RMK WIND 731FT 22014KT"}, {"icao": "ULMM", "name": "Мурманск", "place": "Мурмаши", "lat": 68.781, "lon": 32.749, "cat": "LIFR", "wdir": 160, "wspd": 2, "wgst": null, "vis": 6000, "ceil": 400, "temp": 3, "dew": 3, "qnh": 1031, "time": "07:30Z", "raw": "METAR ULMM 210730Z 16002MPS 6000 OVC004 03/03 Q1031 R31/190060 NOSIG RMK QBB140 OBST OBSC QFE766"}]</script>
+    <script type="application/json" id="synop-data">[{"id": "22003", "name": "Вайда-Губа", "lat": 69.93, "lon": 31.98, "temp": 5.2, "wdir": 170, "wspd": 5, "wgst": 7, "vis": 50, "cloud": 800, "press": 1029.6, "phen": "без явлений · 06Z"}, {"id": "22004", "name": "Никель", "lat": 69.4, "lon": 30.23, "temp": 2.2, "wdir": 190, "wspd": 4, "wgst": 7, "vis": 9, "cloud": 450, "press": 1030.2, "phen": "морось · 06Z"}, {"id": "22028", "name": "Териберка", "lat": 69.2, "lon": 35.12, "temp": 5.6, "wdir": 180, "wspd": 3, "wgst": 4, "vis": 20, "cloud": 800, "press": 1031.4, "phen": "без явлений · 06Z"}, {"id": "22101", "name": "Янискоски", "lat": 68.97, "lon": 28.78, "temp": 3.5, "wdir": 170, "wspd": 1, "wgst": 2, "vis": 20, "cloud": 450, "press": 1030.2, "phen": "осадки в последний час · 06Z"}, {"id": "22106", "name": "Падун", "lat": 68.62, "lon": 31.78, "temp": 0.5, "wdir": 0, "wspd": 0, "wgst": 0, "vis": 20, "cloud": 450, "press": 1031.5, "phen": "без явлений · 06Z"}, {"id": "22113", "name": "Мурманск", "lat": 68.97, "lon": 33.05, "temp": 2.4, "wdir": 190, "wspd": 4, "wgst": 5, "vis": 2.2, "cloud": 150, "press": 1031.4, "phen": "морось · 06Z"}, {"id": "22127", "name": "Ловозеро", "lat": 68.0, "lon": 35.03, "temp": -0.6, "wdir": 0, "wspd": 0, "wgst": 1, "vis": 0.5, "cloud": 30, "press": 1031.9, "phen": "туман · 06Z"}, {"id": "22212", "name": "Мончегорск", "lat": 67.95, "lon": 32.92, "temp": 1.6, "wdir": 180, "wspd": 2, "wgst": 4, "vis": 0.2, "cloud": 30, "press": 1031.8, "phen": "туман · 06Z"}, {"id": "22213", "name": "Апатиты", "lat": 67.55, "lon": 33.33, "temp": 3.0, "wdir": 130, "wspd": 1, "wgst": 1, "vis": 20, "cloud": 150, "press": 1032.8, "phen": "без явлений · 06Z"}, {"id": "22217", "name": "Кандалакша", "lat": 67.15, "lon": 32.35, "temp": 2.7, "wdir": 0, "wspd": 0, "wgst": 0, "vis": 11, "cloud": 450, "press": 1032.9, "phen": "морось · 06Z"}, {"id": "22235", "name": "Краснощелье", "lat": 67.35, "lon": 37.05, "temp": -2.7, "wdir": 90, "wspd": 1, "wgst": 1, "vis": 10, "cloud": 2600, "press": 1033.6, "phen": "осадки в последний час · 06Z"}, {"id": "22249", "name": "Каневка", "lat": 67.13, "lon": 39.67, "temp": -3.2, "wdir": 0, "wspd": 0, "wgst": 0, "vis": 1.2, "cloud": 2600, "press": 1033.9, "phen": "дымка · 06Z"}, {"id": "22312", "name": "Ковда", "lat": 66.7, "lon": 32.87, "temp": 4.6, "wdir": 190, "wspd": 1, "wgst": 2, "vis": 20, "cloud": 800, "press": 1033.2, "phen": "без явлений · 06Z"}, {"id": "22324", "name": "Умба", "lat": 66.68, "lon": 34.35, "temp": 1.8, "wdir": 0, "wspd": 0, "wgst": 0, "vis": 20, "cloud": 450, "press": 1033.8, "phen": "без явлений · 06Z"}, {"id": "22334", "name": "Кашкаранцы", "lat": 66.35, "lon": 36.03, "temp": 5.5, "wdir": 280, "wspd": 1, "wgst": 2, "vis": 20, "cloud": 30, "press": 1033.6, "phen": "без явлений · 06Z"}, {"id": "22349", "name": "Пялица", "lat": 66.18, "lon": 39.53, "temp": 3.3, "wdir": 290, "wspd": 3, "wgst": 4, "vis": 0.5, "cloud": 30, "press": 1033.6, "phen": "туман · 06Z"}]</script>
+
+    <script>
+/* живые данные: kola-meteo/data.json обновляет GitHub Actions каждые 30 мин */
+window.KOLA_GEN = "2026-10-21T07:43Z";
+try {
+  var x = new XMLHttpRequest(); x.open("GET", "data.json?t=" + Date.now(), false); x.send();
+  if (x.status === 200) { var D = JSON.parse(x.responseText);
+    if (D.metar && D.metar.length) document.getElementById("metar-data").textContent = JSON.stringify(D.metar);
+    if (D.synop && D.synop.length) document.getElementById("synop-data").textContent = JSON.stringify(D.synop);
+    window.KOLA_GEN = D.generated || window.KOLA_GEN; }
+} catch (e) {}
+function kolaAge() { var t = Date.parse(window.KOLA_GEN.replace("Z", ":00Z")); if (!t) return "";
+  var m = Math.round((Date.now() - t) / 60000); return m < 60 ? m + " мин назад" : Math.floor(m / 60) + " ч " + (m % 60) + " мин назад"; }
+setInterval(function () { location.reload(); }, 15 * 60 * 1000);
+</script>
+<script src="hark.js"></script>
+    <script>document.documentElement.setAttribute("data-theme", "dark");</script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script>
+      (function () {
+        "use strict";
+        var METAR = JSON.parse(document.getElementById("metar-data").textContent);
+        var SYNOP = JSON.parse(document.getElementById("synop-data").textContent);
+        var CAT = { VFR: "#00a665", MVFR: "#4aa3ff", IFR: "#f1555b", LIFR: "#c77dff" };
+        var MIN_CEIL = 80 * 3.28084; // 80 м в футах ≈ 262
+        var MIN_VIS = 800; // м
+
+        var elStatus = document.getElementById("status");
+        var elClock = document.getElementById("clock");
+        var panel = document.getElementById("panel");
+        var state = { wind: true, metar: true, synop: true, min: false, list: true, sel: null };
+
+        /* ---------- карта ---------- */
+        // упрощённый контур суши (lat, lon) для запасной схемы
+        var COAST = [[69.0,28.5],[69.7,30.0],[69.8,31.0],[69.95,32.0],[69.4,33.0],[68.95,33.1],[69.3,33.5],
+          [69.2,35.0],[69.0,36.5],[68.6,38.0],[68.2,39.5],[67.8,40.5],[67.2,41.2],[66.5,41.0],[66.2,40.0],
+          [66.1,38.5],[66.3,37.0],[66.4,35.5],[66.6,34.5],[66.75,33.5],[67.1,32.5],[66.9,32.2],[66.5,33.0],
+          [66.2,33.5],[65.8,34.0],[65.5,33.0],[65.5,28.5]];
+        var map = null, ok = false, failed = false;
+        function setStatus(t) { elStatus.textContent = t; }
+        try {
+          if (window.L) {
+            map = L.map("map", { zoomControl: false, attributionControl: true }).setView([68.0, 34.5], 6);
+            L.control.zoom({ position: "bottomright" }).addTo(map);
+            var tiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+              maxZoom: 12, minZoom: 4, attribution: "© OpenStreetMap, © CARTO"
+            });
+            var tileErrs = 0;
+            tiles.on("tileerror", function () { if (++tileErrs > 3) fail("Тайлы недоступны — показана схема берега"); });
+            tiles.addTo(map);
+            ok = true;
+            setStatus("Данные обновлены " + kolaAge() + " · METAR и SYNOP, сбор каждые 30 мин");
+          }
+        } catch (e) { map = null; ok = false; }
+        function fail(msg) {
+          if (failed) return; failed = true;
+          setStatus(msg);
+          if (map && ok) {
+            // карта работает, нет только подложки: рисуем контур в Leaflet
+            L.polygon(COAST, { color: "#3a4656", weight: 1.5, fillColor: "#19212b", fillOpacity: 1, interactive: false }).addTo(map);
+            return;
+          }
+          document.getElementById("map").style.display = "none";
+          document.getElementById("fallback").style.display = "block";
+          drawFallback();
+        }
+
+        /* ---------- проекция точек ---------- */
+        var BOX = { w: 28.5, e: 41.5, s: 65.8, n: 70.3 };
+        function project(lat, lon) {
+          if (map && ok) { var p = map.latLngToContainerPoint([lat, lon]); return { x: p.x, y: p.y }; }
+          var W = window.innerWidth, H = window.innerHeight;
+          var k = Math.min(W / ((BOX.e - BOX.w) * 0.37), H / (BOX.n - BOX.s));
+          var cx = W / 2 - ((BOX.e + BOX.w) / 2 - BOX.w) * 0.37 * k, cy = H / 2 - ((BOX.n - BOX.s) / 2) * k;
+          return { x: cx + (lon - BOX.w) * 0.37 * k, y: cy + (BOX.n - lat) * k };
+        }
+        function drawFallback() {
+          var fb = document.getElementById("fallback");
+          var d = COAST.map(function (c, i) { var p = project(c[0], c[1]); return (i ? "L" : "M") + p.x.toFixed(1) + " " + p.y.toFixed(1); }).join(" ") + " Z";
+          document.getElementById("fb-coast").setAttribute("d", d);
+          Array.prototype.forEach.call(fb.querySelectorAll(".x-fb-mark"), function (n) { n.remove(); });
+          METAR.forEach(function (s) {
+            var p = project(s.lat, s.lon), b = document.createElement("button");
+            b.className = "x-fb-mark"; b.type = "button"; b.style.left = p.x + "px"; b.style.top = p.y + "px";
+            b.setAttribute("aria-label", s.icao + " " + s.name);
+            b.innerHTML = '<div class="x-metar" style="background:' + CAT[s.cat] + '"><b>' + s.icao + "</b><i>" + s.cat + "</i></div>";
+            b.addEventListener("click", function () { openMetar(s); });
+            fb.appendChild(b);
+          });
+          SYNOP.forEach(function (s) {
+            var p = project(s.lat, s.lon), b = document.createElement("button");
+            b.className = "x-fb-mark"; b.type = "button"; b.style.left = p.x + "px"; b.style.top = p.y + "px";
+            b.setAttribute("aria-label", s.name);
+            b.innerHTML = '<span class="x-synop" style="background:' + synopColor(s) + '"></span>';
+            b.addEventListener("click", function () { openSynop(s); });
+            fb.appendChild(b);
+          });
+        }
+
+        /* ---------- метки ---------- */
+        var mMetar = [], mSynop = [];
+        function makeMarkers() {
+          if (!map || !ok) return;
+          METAR.forEach(function (s) {
+            var html =
+              '<div class="x-metar" style="background:' + CAT[s.cat] + '"><b>' + s.icao + "</b><i>" +
+              s.cat + " · " + s.wspd + " м/с</i></div>";
+            var m = L.marker([s.lat, s.lon], {
+              icon: L.divIcon({ className: "", html: html, iconSize: [64, 30], iconAnchor: [32, 15] }),
+              keyboard: true, title: s.name
+            });
+            m.on("click", function () { openMetar(s); });
+            m.addTo(map); mMetar.push(m);
+          });
+          SYNOP.forEach(function (s) {
+            var r = 8 + Math.min(10, s.wspd / 2);
+            var m = L.circleMarker([s.lat, s.lon], {
+              radius: r, className: "", color: "#0d1117", weight: 2,
+              fillColor: synopColor(s), fillOpacity: 0.9
+            });
+            m.on("click", function () { openSynop(s); });
+            m.bindTooltip(s.name + " · " + s.wspd + " м/с", { direction: "top", opacity: 0.9 });
+            m.addTo(map); mSynop.push(m);
+          });
+        }
+        // те же пороги, что у METAR: НГО 150/300/900 м, видимость 1,6/5/8 км
+        function synopColor(s) {
+          if (s.vis < 1.6 || s.cloud < 150) return CAT.LIFR;
+          if (s.vis < 5 || s.cloud < 300) return CAT.IFR;
+          if (s.vis <= 8 || s.cloud <= 900) return CAT.MVFR;
+          return CAT.VFR;
+        }
+        function applyLayers() {
+          if (!map || !ok) return;
+          mMetar.forEach(function (m) { state.metar ? m.addTo(map) : map.removeLayer(m); });
+          mSynop.forEach(function (m) { state.synop ? m.addTo(map) : map.removeLayer(m); });
+        }
+        makeMarkers();
+
+        /* ---------- ветровые частицы ---------- */
+        var cv = document.getElementById("wind"), ctx = cv.getContext("2d");
+        var parts = [], DPR = Math.min(2, window.devicePixelRatio || 1);
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        function sizeCanvas() {
+          cv.width = window.innerWidth * DPR; cv.height = window.innerHeight * DPR;
+          cv.style.width = window.innerWidth + "px"; cv.style.height = window.innerHeight + "px";
+          ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+          seed();
+        }
+        function seed() {
+          parts = [];
+          var n = Math.round((window.innerWidth * window.innerHeight) / 7000);
+          for (var i = 0; i < n; i++) parts.push(newPart());
+        }
+        function newPart() {
+          return { x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, a: Math.random() * 90 + 30 };
+        }
+        // поле ветра собираем из станций: обратные расстояния
+        function field(x, y) {
+          var ux = 0, uy = 0, w = 0;
+          var pts = SYNOP.concat(METAR.map(function (m) { return { lat: m.lat, lon: m.lon, wspd: m.wspd, wdir: m.wdir }; }));
+          for (var i = 0; i < pts.length; i++) {
+            var p = pts[i], s = project(p.lat, p.lon);
+            var dx = x - s.x, dy = y - s.y, d2 = dx * dx + dy * dy + 9000;
+            var dir = (p.wdir != null ? p.wdir : 320) * Math.PI / 180;
+            // метео-направление «откуда» -> вектор «куда»
+            var vx = Math.sin(dir) * p.wspd, vy = -Math.cos(dir) * p.wspd;
+            var k = 1 / d2;
+            ux += -vx * k; uy += -vy * k; w += k;
+          }
+          if (!w) return { x: 0, y: 0 };
+          return { x: ux / w, y: uy / w };
+        }
+        function tick() {
+          if (!state.wind) { ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); return; }
+          ctx.globalCompositeOperation = "destination-out";
+          ctx.fillStyle = "rgba(13,17,23,0.10)";
+          ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+          ctx.globalCompositeOperation = "source-over";
+          ctx.lineWidth = 1.1;
+          for (var i = 0; i < parts.length; i++) {
+            var p = parts[i], f = field(p.x, p.y);
+            var nx = p.x + f.x * 0.3, ny = p.y + f.y * 0.3;
+            var sp = Math.min(1, Math.hypot(f.x, f.y) / 18);
+            ctx.strokeStyle = "rgba(" + Math.round(140 + 110 * sp) + "," + Math.round(200 - 40 * sp) + ",255," + (0.25 + 0.45 * sp) + ")";
+            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(nx, ny); ctx.stroke();
+            p.x = nx; p.y = ny; p.a -= 1;
+            if (p.a < 0 || p.x < -10 || p.x > window.innerWidth + 10 || p.y < -10 || p.y > window.innerHeight + 10) parts[i] = newPart();
+          }
+        }
+        var timer = null;
+        function run() { if (timer) clearInterval(timer); if (!reduce) timer = setInterval(tick, 48); else tick(); }
+        sizeCanvas(); run();
+        window.addEventListener("resize", function () { sizeCanvas(); if (failed && !(map && ok)) drawFallback(); });
+        if (map && ok) { map.on("move zoom", function () { ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); }); }
+
+        /* ---------- оценка по минимуму ---------- */
+        function metarBelow(s) { return s.vis < MIN_VIS || s.ceil < MIN_CEIL; }
+        function synopBelow(s) { return s.vis * 1000 < MIN_VIS || s.cloud < 80; }
+        function score(o) {
+          // чем хуже, тем больше: видимость (м) и НГО (м), затем порывы
+          var isM = o.ceil != null;
+          var vis = isM ? o.vis : o.vis * 1000;
+          var ceil = isM ? o.ceil / 3.28084 : o.cloud;
+          return 20000 - Math.min(vis, 10000) - Math.min(ceil, 1000) * 10 + (o.wgst || o.wspd) * 5;
+        }
+
+        /* ---------- панель ---------- */
+        function esc(t) { return String(t).replace(/[&<>]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; }); }
+
+        function renderList() {
+          var items = [];
+          METAR.forEach(function (s) {
+            items.push({ kind: "metar", o: s, color: CAT[s.cat], title: s.icao + " · " + s.name,
+              sub: s.cat + " · ОВИ " + s.vis + " м · НГО " + s.ceil + " фт",
+              val: s.wspd + (s.wgst ? "G" + s.wgst : "") + " м/с", bad: metarBelow(s), sc: score(s) });
+          });
+          SYNOP.forEach(function (s) {
+            items.push({ kind: "synop", o: s, color: synopColor(s), title: s.name + " · SYNOP",
+              sub: s.phen + " · вид. " + s.vis + " км",
+              val: s.wspd + (s.wgst ? "G" + s.wgst : "") + " м/с", bad: synopBelow(s), sc: score(s) });
+          });
+          items.sort(function (a, b) { return b.sc - a.sc; });
+          var bad = items.filter(function (i) { return i.bad; }).length;
+          var html =
+            '<h2>Станции: худшие сверху</h2>' +
+            '<p class="x-sub">' + items.length + " пунктов · ниже минимума 80 м × 800 м: " + bad + "</p>" +
+            '<ul class="x-rows">';
+          items.forEach(function (i, n) {
+            var mark = state.min && i.bad ? ' <span class="x-flag" style="background:#ff4d00;color:#0d1117">ниже минимума</span>' : "";
+            html +=
+              '<li><button class="x-row" type="button" data-kind="' + i.kind + '" data-id="' + (i.o.icao || i.o.id) + '">' +
+              '<i class="x-bullet" style="background:' + i.color + '"></i>' +
+              "<span><b>" + esc(i.title) + mark + "</b><small>" + esc(i.sub) + "</small></span>" +
+              '<span class="x-val">' + esc(i.val) + "</span></button></li>";
+          });
+          html += "</ul>";
+          panel.innerHTML = html;
+          wire();
+        }
+
+        function openMetar(s) {
+          state.sel = s.icao;
+          var below = metarBelow(s);
+          panel.innerHTML =
+            '<button class="x-close" id="pclose" type="button" aria-label="Закрыть">✕</button>' +
+            "<h2>" + s.icao + "</h2>" +
+            '<p class="x-sub">' + esc(s.name) + " · " + esc(s.place) + " · METAR " + s.time + "</p>" +
+            '<p style="margin-top:10px"><span class="x-flag" style="background:' + CAT[s.cat] + '">' + s.cat + "</span></p>" +
+            "<h3>Погода</h3><dl class=\"x-kv\">" +
+            "<dt>Ветер</dt><dd>" + s.wdir + "° " + s.wspd + (s.wgst ? " пор. " + s.wgst : "") + " м/с</dd>" +
+            "<dt>Видимость</dt><dd>" + s.vis + " м</dd>" +
+            "<dt>НГО</dt><dd>" + s.ceil + " фт (" + Math.round(s.ceil / 3.28084) + " м)</dd>" +
+            "<dt>T / Td</dt><dd>" + s.temp + " / " + s.dew + " °C</dd>" +
+            "<dt>QNH</dt><dd>" + s.qnh + " гПа</dd></dl>" +
+            '<div class="x-note ' + (below ? "x-note--bad" : "x-note--ok") + '">' +
+            (below ? "Ниже моего минимума 80 м × 800 м." : "Выше моего минимума 80 м × 800 м.") + "</div>" +
+            '<div class="x-raw">' + esc(s.raw) + "</div>";
+          wire();
+          if (map && ok) map.panTo([s.lat, s.lon], { animate: true });
+        }
+
+        function openSynop(s) {
+          state.sel = s.id;
+          var below = synopBelow(s);
+          panel.innerHTML =
+            '<button class="x-close" id="pclose" type="button" aria-label="Закрыть">✕</button>' +
+            "<h2>" + esc(s.name) + "</h2>" +
+            '<p class="x-sub">SYNOP · ' + s.lat.toFixed(2) + "° с.ш., " + s.lon.toFixed(2) + "° в.д.</p>" +
+            "<h3>Наблюдение</h3><dl class=\"x-kv\">" +
+            "<dt>Явление</dt><dd>" + esc(s.phen) + "</dd>" +
+            "<dt>Ветер</dt><dd>" + s.wspd + " пор. " + s.wgst + " м/с</dd>" +
+            "<dt>Видимость</dt><dd>" + s.vis + " км</dd>" +
+            "<dt>НГО</dt><dd>" + s.cloud + " м</dd>" +
+            "<dt>Температура</dt><dd>" + s.temp + " °C</dd>" +
+            "<dt>Давление</dt><dd>" + s.press + " гПа</dd></dl>" +
+            '<div class="x-note ' + (below ? "x-note--bad" : "x-note--ok") + '">' +
+            (below ? "Ниже моего минимума 80 м × 800 м." : "Выше моего минимума 80 м × 800 м.") + "</div>";
+          wire();
+          if (map && ok) map.panTo([s.lat, s.lon], { animate: true });
+        }
+
+        function wire() {
+          var c = document.getElementById("pclose");
+          if (c) c.addEventListener("click", function () { state.sel = null; renderList(); });
+          Array.prototype.forEach.call(panel.querySelectorAll(".x-row"), function (b) {
+            b.addEventListener("click", function () {
+              var k = b.getAttribute("data-kind"), id = b.getAttribute("data-id");
+              if (k === "metar") openMetar(METAR.filter(function (s) { return s.icao === id; })[0]);
+              else openSynop(SYNOP.filter(function (s) { return s.id === id; })[0]);
+            });
+          });
+        }
+
+        /* ---------- переключатели ---------- */
+        function toggle(id, key, after) {
+          var b = document.getElementById(id);
+          b.addEventListener("click", function () {
+            state[key] = !state[key];
+            b.setAttribute("aria-pressed", state[key] ? "true" : "false");
+            if (after) after();
+          });
+        }
+        toggle("t-wind", "wind", function () { if (!state.wind) ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); });
+        toggle("t-metar", "metar", applyLayers);
+        toggle("t-synop", "synop", applyLayers);
+        toggle("t-min", "min", function () { if (!state.sel) renderList(); });
+        toggle("t-list", "list", function () {
+          panel.style.display = state.list ? "block" : "none";
+        });
+
+        /* ---------- время ---------- */
+        function clock() {
+          var d = new Date();
+          var p = function (n) { return (n < 10 ? "0" : "") + n; };
+          elClock.textContent =
+            p(d.getUTCHours()) + ":" + p(d.getUTCMinutes()) + "Z · местное " + p(d.getHours()) + ":" + p(d.getMinutes());
+        }
+        clock(); setInterval(clock, 30000);
+
+        if (!ok) fail("Карта не загрузилась — показана схема берега");
+        renderList();
+      })();
+    </script>
+  </body>
+</html>
