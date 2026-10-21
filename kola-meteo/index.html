@@ -128,7 +128,8 @@
       .x-flegend i { display: inline-block; width: 90px; height: 8px; border-radius: 4px; }
       .x-field { image-rendering: auto; }
       .x-panel--wide { width: 440px; }
-      .x-alab { color: #9ecbff; font: 600 11px/16px "Geist Mono", ui-monospace, monospace; text-align: center; text-shadow: 0 0 3px #000, 0 0 3px #000; }
+      .x-alab { pointer-events: none; display: flex !important; justify-content: center; }
+      .x-alab span { background: rgba(13,17,23,.85); color: #cfe6ff; border: 1px solid rgba(158,203,255,.5); border-radius: 6px; padding: 0 4px; font: 600 11px/15px "Geist Mono", ui-monospace, monospace; white-space: nowrap; }
       .x-gr { margin: 10px 0; }
       .x-gk { font: var(--type-caption); color: var(--text-secondary); margin-bottom: 2px; }
       .x-gv { font: var(--weight-medium) var(--size-small)/1.45 "Geist Mono", ui-monospace, monospace; overflow-wrap: anywhere; }
@@ -765,7 +766,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             AREAS.features.forEach(function (f) {
               var mtn = /[A-Z]$/.test(f.properties.area) && !/M$/.test(f.properties.area);
               L.polygon(f.geometry.coordinates[0].map(function (c) { return [c[1], c[0]]; }), { color: mtn ? "#ffd400" : "#9ecbff", weight: 1, opacity: .7, dashArray: mtn ? "4 4" : null, fill: false, interactive: false }).addTo(areaLayer);
-              L.marker(f.properties.label, { interactive: false, icon: L.divIcon({ className: "x-alab", html: f.properties.area, iconSize: [36, 16], iconAnchor: [18, 8] }) }).addTo(areaLayer);
+              L.marker(f.properties.label, { interactive: false, icon: L.divIcon({ className: "x-alab", html: "<span>" + f.properties.area + "</span>", iconSize: [36, 16], iconAnchor: [18, 8] }) }).addTo(areaLayer);
             });
           }
           if (on) areaLayer.addTo(map); else map.removeLayer(areaLayer);
