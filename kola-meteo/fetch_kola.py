@@ -137,7 +137,36 @@ def synops():
             "phen": ((r["phen"] or "без явлений") + " · " + r["hour"] + "Z")})
     return out
 
-data = {"generated": time.strftime("%Y-%m-%dT%H:%MZ", time.gmtime()), "metar": metars(), "synop": synops()}
+def tafs():
+    out = {}
+    try:
+        for t in json.loads(get("https://aviationweather.gov/api/data/taf?ids=" + ",".join(AIRPORTS) + "&format=json")):
+            if t.get("icaoId") in AIRPORTS and t.get("rawTAF"): out[t["icaoId"]] = t["rawTAF"]
+    except Exception as e:
+        print("TAF error", e)
+    return out
+
+# SIGMET по РПИ вокруг Кольского (Мурманск, Санкт-Петербург, Финляндия, Норвегия) + всё, что задевает район
+SIG_FIRS = {"ULMM", "ULLL", "EFIN", "ENOR", "ENOB", "ULAA"}
+def sigmets():
+    out = []
+    try:
+        data = json.loads(get("https://aviationweather.gov/api/data/isigmet?format=json"))
+    except Exception as e:
+        print("SIGMET error", e); return out
+    for g in data:
+        cs = g.get("coords") or []
+        while cs and isinstance(cs[0], list): cs = cs[0]
+        cs = [c for c in cs if isinstance(c, dict)]
+        near = any(64 <= c["lat"] <= 72 and 24 <= c["lon"] <= 46 for c in cs)
+        if (g.get("validTimeTo") or 0) < time.time(): continue
+        if (g.get("firId") or "")[:4] != "ULMM" and not near: continue
+        out.append({"fir": g.get("firId"), "name": g.get("firName"), "hazard": g.get("hazard"), "qual": g.get("qualifier"),
+                    "from": g.get("validTimeFrom"), "to": g.get("validTimeTo"), "base": g.get("base"), "top": g.get("top"),
+                    "coords": [[c["lat"], c["lon"]] for c in cs], "raw": g.get("rawSigmet")})
+    return out
+
+data = {"generated": time.strftime("%Y-%m-%dT%H:%MZ", time.gmtime()), "metar": metars(), "synop": synops(), "taf": tafs(), "sigmet": sigmets()}
 import os; os.makedirs(os.path.dirname(OUT) or ".", exist_ok=True)
 json.dump(data, open(OUT, "w"), ensure_ascii=False, indent=1)
-print(f"metar={len(data['metar'])} synop={len(data['synop'])}")
+print(f"metar={len(data['metar'])} synop={len(data['synop'])} taf={len(data['taf'])} sigmet={len(data['sigmet'])}")
