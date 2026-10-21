@@ -617,7 +617,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
         var G = null, gIdx = 0, gField = "base", gOverlay = null;
         var FIELDS = {
           none:  { name: "Без поля" },
-          base:  { name: "НГО (оценка)", unit: "м", stops: [[0,"#e040fb",.75],[80,"#ff3b3b",.7],[150,"#ff8a00",.6],[300,"#ffd400",.45],[600,"#7ddc8a",.2],[1000,"#7ddc8a",0]], none: [0,0,0,0], legend: "<80 · 150 · 300 · 600 м" },
+          base:  { name: "НГО (оценка)", unit: "м", stops: [[0,"#e040fb",.55],[80,"#ff3b3b",.5],[150,"#ff8a00",.42],[300,"#ffd400",.3],[600,"#7ddc8a",.2],[1000,"#7ddc8a",0]], none: [0,0,0,0], legend: "<80 · 150 · 300 · 600 м" },
           low:   { name: "Низкая облачность", unit: "%", stops: [[0,"#ffffff",0],[30,"#cfd8e3",.15],[70,"#cfd8e3",.4],[100,"#ffffff",.6]], legend: "0 · 30 · 70 · 100 %" },
           vis:   { name: "Видимость", unit: "км", stops: [[0,"#e040fb",.75],[0.8,"#ff3b3b",.7],[1.5,"#ff8a00",.6],[5,"#ffd400",.4],[10,"#ffd400",0]], legend: "0,8 · 1,5 · 5 · 10 км" },
           precip:{ name: "Осадки", unit: "мм/ч", stops: [[0,"#4aa3ff",0],[0.1,"#4aa3ff",.35],[1,"#2f6bff",.55],[3,"#7b3cff",.7],[8,"#ff3bd4",.8]], legend: "0,1 · 1 · 3 · 8 мм/ч" },
