@@ -128,6 +128,7 @@
       .x-flegend i { display: inline-block; width: 90px; height: 8px; border-radius: 4px; }
       .x-field { image-rendering: auto; }
       .x-panel--wide { width: 440px; }
+      .x-alab { color: #9ecbff; font: 600 11px/16px "Geist Mono", ui-monospace, monospace; text-align: center; text-shadow: 0 0 3px #000, 0 0 3px #000; }
       .x-gr { margin: 10px 0; }
       .x-gk { font: var(--type-caption); color: var(--text-secondary); margin-bottom: 2px; }
       .x-gv { font: var(--weight-medium) var(--size-small)/1.45 "Geist Mono", ui-monospace, monospace; overflow-wrap: anywhere; }
@@ -753,7 +754,35 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             sel.onchange = function () { show(sel.value); }; show(days[0]);
           }).catch(function () { sel.innerHTML = "<option>архив недоступен</option>"; });
         }
+        var AREAS = null, areaLayer = null;
+        function inPoly(lon, lat, r) { var c = false; for (var i = 0, j = r.length - 1; i < r.length; j = i++) { if ((r[i][1] > lat) !== (r[j][1] > lat) && lon < (r[j][0] - r[i][0]) * (lat - r[i][1]) / (r[j][1] - r[i][1]) + r[i][0]) c = !c; } return c; }
+        function areaOf(lat, lon) { if (!AREAS) return []; return AREAS.features.filter(function (f) { return inPoly(lon, lat, f.geometry.coordinates[0]); }).map(function (f) { return f.properties.area; }); }
+        function showAreas(on) {
+          var bt = document.getElementById("t-areas"); if (bt) bt.setAttribute("aria-pressed", on ? "true" : "false");
+          if (!map || !AREAS) return;
+          if (!areaLayer) {
+            areaLayer = L.layerGroup();
+            AREAS.features.forEach(function (f) {
+              var mtn = /[A-Z]$/.test(f.properties.area) && !/M$/.test(f.properties.area);
+              L.polygon(f.geometry.coordinates[0].map(function (c) { return [c[1], c[0]]; }), { color: mtn ? "#ffd400" : "#9ecbff", weight: 1, opacity: .7, dashArray: mtn ? "4 4" : null, fill: false, interactive: false }).addTo(areaLayer);
+              L.marker(f.properties.label, { interactive: false, icon: L.divIcon({ className: "x-alab", html: f.properties.area, iconSize: [36, 16], iconAnchor: [18, 8] }) }).addTo(areaLayer);
+            });
+          }
+          if (on) areaLayer.addTo(map); else map.removeLayer(areaLayer);
+        }
+        fetch("gamet_areas.json").then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+          AREAS = j; if (!j) return;
+          var tg = document.querySelector(".x-toggles"), b = document.createElement("button");
+          b.className = "x-tgl"; b.type = "button"; b.id = "t-areas"; b.setAttribute("aria-pressed", "false"); b.textContent = "Районы GAMET";
+          b.addEventListener("click", function () { showAreas(b.getAttribute("aria-pressed") !== "true"); });
+          tg.insertBefore(b, document.getElementById("t-list"));
+        }).catch(function () {});
+        var _om3 = openMetar, _os3 = openSynop;
+        function areaNote(s) { var a = areaOf(s.lat, s.lon); return a.length ? '<p class="x-sub" style="margin-top:8px">Район GAMET: <b>' + a.join(", ") + "</b></p>" : '<p class="x-sub" style="margin-top:8px">Вне районов GAMET Мурманска</p>'; }
+        openMetar = function (s) { _om3(s); panel.insertAdjacentHTML("beforeend", areaNote(s)); };
+        openSynop = function (s) { _os3(s); panel.insertAdjacentHTML("beforeend", areaNote(s)); };
         function openGamet() {
+          showAreas(true);
           state.sel = "gamet";
           var h = '<button class="x-close" id="pclose" type="button" aria-label="Закрыть">✕</button><h2>GAMET</h2>';
           if (!GAM || !GAM.items || !GAM.items.length) h += '<p class="x-sub">GAMET пока не загружен.</p>';
