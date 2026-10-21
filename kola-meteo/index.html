@@ -134,7 +134,7 @@
       .x-wl i { display: inline-block; width: 70px; height: 6px; border-radius: 3px; }
       .x-arrow { pointer-events: none; }
       .x-arrow svg { filter: drop-shadow(0 1px 2px rgb(0 0 0 / .6)); transition: transform .4s; }
-      .x-field { filter: blur(1.2px) saturate(1.15); }
+      .x-field { filter: saturate(1.1); }
       .x-glass { background: rgb(18 22 30 / 0.72); border-color: rgb(255 255 255 / 0.08); }
       .x-tgl { transition: background .15s, color .15s, border-color .15s; }
       .x-panel--wide { width: 440px; }
@@ -176,6 +176,71 @@
         .x-legend { display: none; }
         .leaflet-bottom.leaflet-right, .leaflet-bottom.leaflet-left { bottom: 96px; }
       }
+
+      /* ===== v2 ===== */
+      :root { --x-bg: rgb(12 15 21 / 0.78); --x-line: rgb(255 255 255 / 0.07); --x-dim: #8b95a5; }
+      .x-glass { background: var(--x-bg); border: 1px solid var(--x-line); box-shadow: 0 10px 40px rgb(0 0 0 / .5), inset 0 1px 0 rgb(255 255 255 / .04); -webkit-backdrop-filter: blur(16px) saturate(1.3); backdrop-filter: blur(16px) saturate(1.3); }
+      .x-top { left: 92px; border-radius: 14px; padding: 6px 8px 6px 14px; min-height: 48px; }
+      .x-brand { font: 600 15px/1.15 "Geist", sans-serif; letter-spacing: -.01em; }
+      .x-brand small { font: 400 11px/1.3 "Geist", sans-serif; color: var(--x-dim); }
+      .x-tgl { border-radius: 9px; border-color: var(--x-line); background: rgb(255 255 255 / .03); font: 500 12px/1 "Geist", sans-serif; letter-spacing: .01em; }
+      .x-tgl[aria-pressed="true"] { background: rgb(255 255 255 / .92); color: #0d1117; }
+      .x-tgl--alert[aria-pressed="true"] { background: #ff8a00; color: #0d1117; }
+      .x-rail { position: absolute; z-index: 610; left: 12px; top: calc(env(safe-area-inset-top, 0px) + 12px); width: 68px; border-radius: 14px; padding: 8px 6px; display: flex; flex-direction: column; gap: 4px; max-height: calc(100% - 200px); overflow-y: auto; scrollbar-width: none; }
+      .x-rail-h { font: 600 9px/1 "Geist", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--x-dim); text-align: center; margin: 6px 0 4px; }
+      .x-rail-g { display: flex; flex-direction: column; gap: 3px; }
+      .x-rf { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px 2px 6px; border: 0; border-radius: 10px; background: transparent; color: var(--x-dim); cursor: pointer; font: 500 10px/1.1 "Geist", sans-serif; transition: background .15s, color .15s; }
+      .x-rf:hover { background: rgb(255 255 255 / .06); color: #e6edf3; }
+      .x-rf[aria-pressed="true"] { background: linear-gradient(180deg, rgb(255 138 0 / .22), rgb(255 138 0 / .08)); color: #ffb35c; box-shadow: inset 0 0 0 1px rgb(255 138 0 / .35); }
+      .x-rl { width: 100%; justify-content: center; min-height: 30px !important; padding: 5px 2px !important; font-size: 10px !important; text-align: center; white-space: normal; line-height: 1.1 !important; }
+      .x-panel { border-radius: 14px; top: calc(env(safe-area-inset-top, 0px) + 72px); }
+      .x-panel h2 { font: 600 22px/1.1 "Geist", sans-serif; letter-spacing: -.02em; }
+      .x-panel h3 { font: 600 10px/1 "Geist", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--x-dim); margin: 18px 0 8px; }
+      .x-hero { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 12px 0 4px; }
+      .x-hc { background: rgb(255 255 255 / .04); border: 1px solid var(--x-line); border-radius: 10px; padding: 8px 9px; }
+      .x-hc span { display: block; font: 500 10px/1 "Geist", sans-serif; color: var(--x-dim); margin-bottom: 6px; }
+      .x-hc b { font: 500 19px/1 "Geist Mono", ui-monospace, monospace; letter-spacing: -.03em; color: #f0f4f8; white-space: nowrap; }
+      .x-hc b small { font-size: 11px; color: var(--x-dim); margin-left: 3px; letter-spacing: 0; }
+      .x-hc--bad { border-color: rgb(255 77 0 / .5); background: rgb(255 77 0 / .1); }
+      .x-hc--bad b { color: #ff9a5c; }
+      .x-mg { margin-bottom: 8px; }
+      .x-mg-h, .x-mg-x { display: flex; justify-content: space-between; font: 500 10px/1.2 "Geist", sans-serif; color: var(--x-dim); margin-bottom: 3px; }
+      .x-mg svg { display: block; border-radius: 6px; background: rgb(255 255 255 / .025); }
+      .x-row { border-radius: 10px; border-color: var(--x-line); background: rgb(255 255 255 / .03); }
+      .x-bottom { left: 92px; border-radius: 14px; padding: 8px 14px 6px; gap: 4px 14px; }
+      .x-time { font: 500 12px/1.2 "Geist Mono", ui-monospace, monospace; color: #e6edf3; }
+      .x-status { font: 400 11px/1.2 "Geist", sans-serif; color: var(--x-dim); }
+      .x-legend span { font: 500 10px/1 "Geist", sans-serif; color: var(--x-dim); }
+      .x-disc { font: 400 10px/1.3 "Geist", sans-serif; color: rgb(139 149 165 / .7); }
+      .x-tl { gap: 10px; flex-wrap: nowrap; }
+      .x-trk { position: relative; flex: 1 1 auto; min-width: 160px; padding-bottom: 14px; }
+      .x-trk input[type=range] { width: 100%; height: 26px; margin: 0; -webkit-appearance: none; appearance: none; background: transparent; }
+      .x-trk input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(90deg, rgb(255 138 0 / .6), rgb(255 255 255 / .15)); }
+      .x-trk input[type=range]::-moz-range-track { height: 4px; border-radius: 2px; background: linear-gradient(90deg, rgb(255 138 0 / .6), rgb(255 255 255 / .15)); }
+      .x-trk input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -6px; border-radius: 50%; background: #fff; border: 3px solid #ff8a00; box-shadow: 0 0 0 4px rgb(255 138 0 / .2); }
+      .x-trk input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 3px solid #ff8a00; }
+      .x-ticks { position: absolute; left: 8px; right: 8px; bottom: 0; height: 12px; }
+      .x-ticks span { position: absolute; transform: translateX(-50%); font: 500 9px/1 "Geist Mono", ui-monospace, monospace; color: var(--x-dim); white-space: nowrap; }
+      .x-ticks span.x-tick-day { color: #ffb35c; }
+      .x-flegend { flex: 0 0 auto; font: 500 10px/1.2 "Geist", sans-serif; }
+      .x-flegend i { width: 110px; height: 6px; border-radius: 3px; }
+      .x-st { display: inline-flex; align-items: center; gap: 6px; padding: 3px 7px 3px 4px; border-radius: 7px; background: rgb(12 15 21 / .82); border: 1px solid rgb(255 255 255 / .1); box-shadow: 0 2px 10px rgb(0 0 0 / .5); white-space: nowrap; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+      .x-st i { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 8px; }
+      .x-st b { font: 600 11px/1 "Geist Mono", ui-monospace, monospace; color: #f0f4f8; }
+      .x-st em { font: 600 9px/1 "Geist", sans-serif; font-style: normal; letter-spacing: .04em; }
+      .x-hill { mix-blend-mode: screen; }
+      .leaflet-control-zoom a { background: var(--x-bg) !important; color: #e6edf3 !important; border-color: var(--x-line) !important; }
+      .leaflet-bottom.leaflet-left { left: 80px; }
+      @media (max-width: 760px) {
+        .x-top { left: 12px; }
+        .x-rail { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 150px); left: 12px; right: 12px; width: auto; flex-direction: row; max-height: none; overflow-x: auto; padding: 5px; }
+        .x-rail-h { display: none; }
+        .x-rail-g { flex-direction: row; }
+        .x-rf { min-width: 58px; }
+        .x-rl { min-width: 58px; width: auto; }
+        .x-bottom { left: 12px; }
+        .leaflet-bottom.leaflet-left { left: 0; }
+      }
     </style>
   </head>
   <body>
@@ -211,7 +276,7 @@
           <span><i class="x-dot" style="background:#f1555b"></i>IFR</span>
           <span><i class="x-dot" style="background:#c77dff"></i>LIFR</span>
         </div>
-        <p class="x-disc">Источники: aviationweather.gov (METAR), OGIMET (SYNOP Росгидромета). Ветер на карте интерполирован по станциям. Не для выполнения полётов.</p>
+        <p class="x-disc">Источники: aviationweather.gov (METAR), OGIMET (SYNOP Росгидромета). Поля и поток ветра — модель Open-Meteo, рельеф Esri. Не для выполнения полётов.</p>
       </footer>
     </div>
 
@@ -264,6 +329,9 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             L.control.zoom({ position: "bottomleft" }).addTo(map); map.attributionControl.setPosition("bottomleft");
             L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}", {
               maxZoom: 16, minZoom: 4, pane: "overlayPane", opacity: 0.8
+            }).addTo(map);
+            L.tileLayer("https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade_Dark/MapServer/tile/{z}/{y}/{x}", {
+              maxZoom: 16, maxNativeZoom: 13, minZoom: 4, opacity: 0.55, className: "x-hill", zIndex: 2, attribution: "Esri World Hillshade"
             }).addTo(map);
             var tiles = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
               maxZoom: 16, minZoom: 4, attribution: "Esri, HERE, Garmin, © OpenStreetMap"
@@ -326,17 +394,16 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           if (!map || !ok) return;
           METAR.forEach(function (s) {
             var html =
-              '<div class="x-metar" style="background:' + CAT[s.cat] + '"><b>' + s.icao + "</b><i>" +
-              s.cat + " · " + s.wspd + " м/с</i></div>";
+              '<div class="x-st"><i style="background:' + CAT[s.cat] + ';box-shadow:0 0 0 3px ' + CAT[s.cat] + '33,0 0 12px ' + CAT[s.cat] + '"></i><b>' + s.icao + "</b><em style=\"color:" + CAT[s.cat] + "\">" + s.cat + "</em></div>";
             var m = L.marker([s.lat, s.lon], {
-              icon: L.divIcon({ className: "", html: html, iconSize: [84, 30], iconAnchor: [42, 15] }),
+              icon: L.divIcon({ className: "", html: html, iconSize: [96, 22], iconAnchor: [7, 11] }),
               keyboard: true, title: s.name
             });
             m.on("click", function () { openMetar(s); });
             m.addTo(map); mMetar.push(m);
           });
           SYNOP.forEach(function (s) {
-            var r = 8 + Math.min(10, s.wspd / 2);
+            var r = 6;
             var m = L.circleMarker([s.lat, s.lon], {
               radius: r, className: "", color: "#0d1117", weight: 2,
               fillColor: synopColor(s), fillOpacity: 0.9
@@ -594,15 +661,30 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           if (!G || !map || !ok || gField === "none") return;
           var la = G.lats, lo = G.lons, dl = la[1]-la[0], dn = lo[1]-lo[0];
           var s = la[0]-dl/2, n = la[la.length-1]+dl/2, w = lo[0]-dn/2, e = lo[lo.length-1]+dn/2;
-          var W = 540, yN = merc(n), yS = merc(s), H = Math.round(W * (yN - yS) / ((e - w) * Math.PI / 180));
+          var W = 900, yN = merc(n), yS = merc(s), H = Math.round(W * (yN - yS) / ((e - w) * Math.PI / 180));
           var c = document.createElement("canvas"); c.width = W; c.height = H;
           var cx = c.getContext("2d"), img = cx.createImageData(W, H), d = img.data;
+          var THR = { base: [80,150,300,600], vis: [0.8,1.5,5], precip: [0.1,1,3], ws10: [5,10,15,20], ws925: [5,10,15,20], low: [30,70], ice: [0.5,1] }[gField] || [];
+          var MINV = { base: 80, vis: 0.8 }[gField];
+          var B = new Int8Array(W * H), FA = new Float32Array(W * H);
+          function bk(v) { if (v == null) return -1; for (var t = 0; t < THR.length; t++) if (v < THR[t]) return t; return THR.length; }
           for (var y = 0; y < H; y++) {
-            var lat = imerc(yN - (y + 0.5) / H * (yN - yS));
+            var lat = imerc(yN - (y + 0.5) / H * (yN - yS)), fi = (lat - la[0]) / dl;
             for (var x = 0; x < W; x++) {
-              var lon = w + (x + 0.5) / W * (e - w), col = colorFor(gField, sample(gField, gIdx, lat, lon)), o = (y*W + x)*4;
-              d[o] = col[0]; d[o+1] = col[1]; d[o+2] = col[2]; d[o+3] = Math.round(col[3]*255);
+              var lon = w + (x + 0.5) / W * (e - w), fj = (lon - lo[0]) / dn, v = sample(gField, gIdx, lat, lon), col = colorFor(gField, v), o = (y*W + x)*4;
+              var edge = Math.min(fi + 0.5, fj + 0.5, la.length - 0.5 - fi, lo.length - 0.5 - fj), fade = Math.max(0, Math.min(1, edge / 1.4));
+              fade = fade * fade * (3 - 2 * fade);
+              d[o] = col[0]; d[o+1] = col[1]; d[o+2] = col[2]; d[o+3] = Math.round(col[3]*255*fade);
+              B[y*W + x] = bk(v); FA[y*W + x] = fade;
             }
+          }
+          // изолинии по порогам; порог личного минимума — оранжевым
+          for (y = 0; y < H - 1; y++) for (x = 0; x < W - 1; x++) {
+            var k0 = y*W + x, b0 = B[k0], b1 = B[k0 + 1], b2 = B[k0 + W];
+            if (b0 < 0 || (b0 === b1 && b0 === b2) || b1 < 0 || b2 < 0) continue;
+            var hi = Math.max(b0, b1, b2), tv = THR[hi - 1], isMin = MINV != null && tv === MINV, o2 = k0 * 4, a = FA[k0];
+            if (isMin) { d[o2] = 255; d[o2+1] = 140; d[o2+2] = 0; d[o2+3] = Math.round(240 * a); }
+            else { d[o2] = 235; d[o2+1] = 242; d[o2+2] = 255; d[o2+3] = Math.round(120 * a); }
           }
           cx.putImageData(img, 0, 0);
           gOverlay = L.imageOverlay(c.toDataURL(), [[s, w], [n, e]], { opacity: 1, interactive: false, className: "x-field" }).addTo(map);
@@ -979,12 +1061,18 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           /* ---- стрелки ветра на станциях ---- */
           var arrows = [];
           function arrowSvg(dir, spd, gust) {
-            var c = pal(spd), col = "rgb(" + (c[0] | 0) + "," + (c[1] | 0) + "," + (c[2] | 0) + ")", len = 14 + Math.min(16, spd * 1.6);
-            if (!spd) return '<svg width="44" height="44" viewBox="-22 -22 44 44"><circle r="5" fill="none" stroke="' + col + '" stroke-width="2"/></svg>';
-            return '<svg width="44" height="44" viewBox="-22 -22 44 44" style="transform:rotate(' + ((dir + 180) % 360) + 'deg)">' +
-              '<line x1="0" y1="' + (len / 2) + '" x2="0" y2="' + (-len / 2 + 4) + '" stroke="#0d1117" stroke-width="5" stroke-linecap="round"/>' +
-              '<line x1="0" y1="' + (len / 2) + '" x2="0" y2="' + (-len / 2 + 4) + '" stroke="' + col + '" stroke-width="2.6" stroke-linecap="round"/>' +
-              '<path d="M0 ' + (-len / 2 - 3) + ' L6 ' + (-len / 2 + 6) + ' L-6 ' + (-len / 2 + 6) + ' Z" fill="' + col + '" stroke="#0d1117" stroke-width="1.2"/></svg>';
+            var c = pal(spd), col = "rgb(" + (c[0] | 0) + "," + (c[1] | 0) + "," + (c[2] | 0) + ")";
+            var kt = Math.round(spd * 1.944 / 5) * 5;
+            if (kt < 5) return '<svg width="64" height="64" viewBox="-32 -32 64 64"><circle r="6" fill="none" stroke="#0d1117" stroke-width="4"/><circle r="6" fill="none" stroke="' + col + '" stroke-width="2"/></svg>';
+            var L0 = 28, y = -L0, d = "M0 0 L0 " + (-L0), fl = "";
+            var n50 = Math.floor(kt / 50), r = kt - n50 * 50, n10 = Math.floor(r / 10), n5 = (r - n10 * 10) >= 5 ? 1 : 0;
+            for (var a = 0; a < n50; a++) { fl += "M0 " + y + " L11 " + (y + 3) + " L0 " + (y + 7) + " Z "; y += 8; }
+            for (a = 0; a < n10; a++) { d += " M0 " + y + " L11 " + (y - 5); y += 4.5; }
+            if (n5) { if (y === -L0) y += 4.5; d += " M0 " + y + " L6 " + (y - 2.7); }
+            return '<svg width="64" height="64" viewBox="-32 -32 64 64" style="transform:rotate(' + dir + 'deg)">' +
+              '<path d="' + d + '" stroke="#0d1117" stroke-width="4.2" fill="none" stroke-linecap="round"/>' +
+              '<path d="' + d + '" stroke="' + col + '" stroke-width="1.9" fill="none" stroke-linecap="round"/>' +
+              (fl ? '<path d="' + fl + '" fill="' + col + '" stroke="#0d1117" stroke-width="1"/>' : "") + "</svg>";
           }
           function arrowsUpdate() {
             if (!map || !ok) return;
@@ -992,8 +1080,7 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
             if (!state.wind) return;
             METAR.concat(SYNOP).forEach(function (s) {
               if (s.wdir == null) return;
-              var off = s.icao ? [0, 26] : [0, 0];
-              var m = L.marker([s.lat, s.lon], { icon: L.divIcon({ className: "x-arrow", html: arrowSvg(s.wdir, s.wspd || 0, s.wgst), iconSize: [44, 44], iconAnchor: [22 - off[0], 22 - off[1]] }), interactive: false, keyboard: false, zIndexOffset: -500 });
+              var m = L.marker([s.lat, s.lon], { icon: L.divIcon({ className: "x-arrow", html: arrowSvg(s.wdir, s.wspd || 0, s.wgst), iconSize: [64, 64], iconAnchor: [32, 32] }), interactive: false, keyboard: false, zIndexOffset: -500 });
               m.addTo(map); arrows.push(m);
             });
           }
@@ -1036,6 +1123,111 @@ setInterval(function () { location.reload(); }, 15 * 60 * 1000);
           /* ---- легенда частиц ---- */
           var lg = document.querySelector(".x-legend");
           if (lg) lg.insertAdjacentHTML("beforeend", '<span class="x-wl">Ветер <i style="background:linear-gradient(90deg,' + PAL.map(function (q) { return "rgb(" + q[1].join(",") + ")"; }).join(",") + ')"></i>0 · 10 · 20+ м/с</span>');
+        })();
+
+        /* ================= ДИЗАЙН v2: рельса слоёв, таймлайн, карточка с метеограммой ================= */
+        (function v2() {
+          var ICO = {
+            base: '<path d="M4 15h16M6 11a4 4 0 0 1 7.5-2A3.5 3.5 0 1 1 17 15" /><path d="M4 19h16" stroke-dasharray="2 2"/>',
+            low: '<path d="M7 17a4 4 0 0 1 0-8 5 5 0 0 1 9.6-1A3.5 3.5 0 1 1 17 17Z"/>',
+            vis: '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/>',
+            precip: '<path d="M7 14a4 4 0 0 1 .5-8 5 5 0 0 1 9.4 1.5A3 3 0 1 1 17 14"/><path d="M8 17l-1 3M12 17l-1 3M16 17l-1 3"/>',
+            ws10: '<path d="M3 9h11a3 3 0 1 0-3-3M3 15h15a3 3 0 1 1-3 3M3 12h7"/>',
+            ws925: '<path d="M3 9h11a3 3 0 1 0-3-3M3 15h15a3 3 0 1 1-3 3"/><path d="M19 3v6M17 5l2-2 2 2"/>',
+            ice: '<path d="M12 2v20M4 7l16 10M20 7L4 17"/><path d="M9 4l3 2 3-2M9 20l3-2 3 2"/>',
+            none: '<circle cx="12" cy="12" r="8"/><path d="M6 18L18 6"/>'
+          };
+          var SHORT = { base: "НГО", low: "Облака", vis: "Видим.", precip: "Осадки", ws10: "Ветер 10 м", ws925: "Ветер 800 м", ice: "Обледен.", none: "Без поля" };
+          function svg(k) { return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + ICO[k] + "</svg>"; }
+          var rail = document.createElement("nav"); rail.className = "x-rail x-glass"; rail.setAttribute("aria-label", "Слои");
+          rail.innerHTML = '<div class="x-rail-h">Поле</div><div id="r-fields" class="x-rail-g"></div><div class="x-rail-h">Слои</div><div id="r-layers" class="x-rail-g x-rail-g--l"></div>';
+          document.querySelector(".x-app").appendChild(rail);
+          // слои-переключатели переезжают в рельсу
+          function moveLayers() {
+            ["t-wind", "t-metar", "t-synop", "t-areas"].forEach(function (id) {
+              var b = document.getElementById(id); if (b && b.parentNode.id !== "r-layers") { b.classList.add("x-rl"); document.getElementById("r-layers").appendChild(b); }
+            });
+          }
+          moveLayers();
+          var tries = 0, wt = setInterval(function () {
+            moveLayers();
+            var sel = document.getElementById("t-field");
+            if (sel && !document.getElementById("r-fields").children.length) {
+              sel.style.display = "none";
+              Object.keys(FIELDS).forEach(function (k) {
+                var b = document.createElement("button"); b.type = "button"; b.className = "x-rf"; b.dataset.k = k;
+                b.innerHTML = svg(k) + "<span>" + SHORT[k] + "</span>"; b.title = FIELDS[k].name;
+                b.setAttribute("aria-pressed", k === gField ? "true" : "false");
+                b.addEventListener("click", function () {
+                  sel.value = k; sel.dispatchEvent(new Event("change"));
+                  Array.prototype.forEach.call(document.querySelectorAll(".x-rf"), function (q) { q.setAttribute("aria-pressed", q.dataset.k === k ? "true" : "false"); });
+                });
+                document.getElementById("r-fields").appendChild(b);
+              });
+              buildTicks();
+            }
+            if ((document.getElementById("r-fields").children.length && document.getElementById("t-areas")) || ++tries > 60) clearInterval(wt);
+          }, 300);
+
+          // шкала времени: метки часов под ползунком
+          function buildTicks() {
+            var hr = document.getElementById("t-hour"); if (!hr || !G) return;
+            var box = document.createElement("div"); box.className = "x-ticks";
+            var n = G.times.length, p = function (x) { return (x < 10 ? "0" : "") + x; };
+            G.times.forEach(function (t, i) {
+              var d = new Date(t.replace("Z", ":00Z")), sp = document.createElement("span");
+              sp.style.left = (i / (n - 1) * 100) + "%";
+              sp.textContent = i === 0 ? "сейчас" : p(d.getUTCHours()) + "Z";
+              if (d.getUTCHours() === 0) sp.className = "x-tick-day";
+              box.appendChild(sp);
+            });
+            var wrap = document.createElement("div"); wrap.className = "x-trk";
+            hr.parentNode.insertBefore(wrap, hr); wrap.appendChild(hr); wrap.appendChild(box);
+          }
+
+          // крупные цифры в карточке станции + метеограмма модели на 12 ч
+          function hero(vis, ceilM, wdir, wspd, wgst) {
+            function cell(lbl, val, unit, bad) { return '<div class="x-hc' + (bad ? " x-hc--bad" : "") + '"><span>' + lbl + "</span><b>" + val + "<small>" + unit + "</small></b></div>"; }
+            return '<div class="x-hero">' +
+              cell("Видимость", vis >= 10000 ? "10+" : vis >= 1000 ? (vis / 1000).toFixed(vis < 5000 ? 1 : 0) : Math.round(vis), vis >= 1000 ? "км" : "м", vis < MIN_VIS) +
+              cell("НГО", ceilM >= 3000 ? "нет" : Math.round(ceilM), ceilM >= 3000 ? "" : "м", ceilM < 80) +
+              cell("Ветер", (wdir == null ? "—" : String(wdir).padStart(3, "0") + "°") + " " + wspd + (wgst ? "G" + wgst : ""), "м/с", false) + "</div>";
+          }
+          function chart(lat, lon) {
+            if (!G) return "";
+            var n = G.times.length, Wd = 300, Hc = 54, vis = [], base = [];
+            for (var h = 0; h < n; h++) { vis.push(sample("vis", h, lat, lon)); base.push(sample("base", h, lat, lon)); }
+            function one(arr, max, thr, lbl, unit, fmt) {
+              var pts = arr.map(function (v, i) { var y = v == null ? max : Math.min(v, max); return [i / (n - 1) * Wd, Hc - y / max * (Hc - 4)]; });
+              var line = pts.map(function (q, i) { return (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1); }).join(" ");
+              var ty = Hc - thr / max * (Hc - 4), lo = arr.reduce(function (m, v) { return v != null && v < m ? v : m; }, Infinity);
+              var cur = gIdx / (n - 1) * Wd;
+              return '<div class="x-mg"><div class="x-mg-h"><span>' + lbl + '</span><span>мин. ' + (lo === Infinity ? "—" : fmt(lo)) + " " + unit + "</span></div>" +
+                '<svg viewBox="0 0 ' + Wd + " " + Hc + '" preserveAspectRatio="none" width="100%" height="' + Hc + '">' +
+                '<defs><linearGradient id="g' + lbl.length + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4aa3ff" stop-opacity=".35"/><stop offset="1" stop-color="#4aa3ff" stop-opacity="0"/></linearGradient></defs>' +
+                '<rect x="0" y="' + ty.toFixed(1) + '" width="' + Wd + '" height="' + (Hc - ty).toFixed(1) + '" fill="rgba(255,77,0,.12)"/>' +
+                '<line x1="0" x2="' + Wd + '" y1="' + ty.toFixed(1) + '" y2="' + ty.toFixed(1) + '" stroke="#ff8a00" stroke-dasharray="4 3" stroke-width="1"/>' +
+                '<path d="' + line + " L" + Wd + " " + Hc + " L0 " + Hc + ' Z" fill="url(#g' + lbl.length + ')"/>' +
+                '<path d="' + line + '" fill="none" stroke="#9ecbff" stroke-width="1.8" vector-effect="non-scaling-stroke"/>' +
+                '<line x1="' + cur + '" x2="' + cur + '" y1="0" y2="' + Hc + '" stroke="#fff" stroke-opacity=".5" stroke-width="1"/></svg></div>';
+            }
+            var p = function (x) { return (x < 10 ? "0" : "") + x; }, t0 = new Date(G.times[0].replace("Z", ":00Z")), t1 = new Date(G.times[n - 1].replace("Z", ":00Z"));
+            return "<h3>Модель на " + (n - 1) + " ч</h3>" +
+              one(vis, 10, MIN_VIS / 1000, "Видимость", "км", function (v) { return v.toFixed(1); }) +
+              one(base, 600, 80, "НГО (оценка)", "м", function (v) { return Math.round(v / 10) * 10; }) +
+              '<div class="x-mg-x"><span>' + p(t0.getUTCHours()) + "Z</span><span>оранжевым — ниже минимума 80 × 800</span><span>" + p(t1.getUTCHours()) + "Z</span></div>";
+          }
+          var _m = openMetar, _s = openSynop;
+          openMetar = function (st) {
+            _m(st);
+            var sub = panel.querySelector(".x-sub"); if (sub) sub.insertAdjacentHTML("afterend", hero(st.vis, st.ceil >= 99999 ? 99999 : st.ceil / 3.28084, st.wdir, st.wspd, st.wgst));
+            panel.insertAdjacentHTML("beforeend", chart(st.lat, st.lon));
+          };
+          openSynop = function (st) {
+            _s(st);
+            var sub = panel.querySelector(".x-sub"); if (sub) sub.insertAdjacentHTML("afterend", hero(st.vis * 1000, st.cloud, st.wdir, st.wspd, st.wgst));
+            panel.insertAdjacentHTML("beforeend", chart(st.lat, st.lon));
+          };
         })();
 
         if (!ok) fail("Карта не загрузилась — показана схема берега");
