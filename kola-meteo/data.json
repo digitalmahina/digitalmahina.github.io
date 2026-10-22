@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-22T23:20Z",
+ "generated": "2026-10-22T23:35Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -8,16 +8,16 @@
    "lat": 68.607,
    "lon": 27.405,
    "cat": "IFR",
-   "wdir": 240,
-   "wspd": 2,
+   "wdir": 220,
+   "wspd": 6,
    "wgst": null,
    "vis": 9999,
    "ceil": 900,
    "temp": 3,
-   "dew": 2,
+   "dew": 1,
    "qnh": 1023,
-   "time": "22:50Z",
-   "raw": "METAR EFIV 222250Z AUTO 24004KT 200V300 9999 BKN009 03/02 Q1023"
+   "time": "23:20Z",
+   "raw": "METAR EFIV 222320Z AUTO 22011KT 9999 OVC009 03/01 Q1023"
   },
   {
    "icao": "EFKS",
@@ -26,16 +26,16 @@
    "lat": 65.992,
    "lon": 29.236,
    "cat": "LIFR",
-   "wdir": 140,
-   "wspd": 3,
+   "wdir": 150,
+   "wspd": 4,
    "wgst": null,
-   "vis": 800,
+   "vis": 900,
    "ceil": 100,
    "temp": 1,
    "dew": 1,
    "qnh": 1026,
-   "time": "22:50Z",
-   "raw": "METAR EFKS 222250Z AUTO 14006KT 0800 0750 R12/0900U FG VV001 01/01 Q1026"
+   "time": "23:20Z",
+   "raw": "METAR EFKS 222320Z AUTO 15007KT 0900 R12/1000U FG VV001 01/01 Q1026"
   },
   {
    "icao": "ENKR",
@@ -48,12 +48,12 @@
    "wspd": 6,
    "wgst": null,
    "vis": 9999,
-   "ceil": 1600,
+   "ceil": 1400,
    "temp": 6,
    "dew": 4,
    "qnh": 1022,
-   "time": "22:50Z",
-   "raw": "METAR ENKR 222250Z AUTO 18012KT 9999 OVC016/// 06/04 Q1022 RMK WIND 731FT 19019KT"
+   "time": "23:20Z",
+   "raw": "METAR ENKR 222320Z AUTO 18011KT 9999 OVC014/// 06/04 Q1022 RMK WIND 731FT 21020KT"
   },
   {
    "icao": "ULMM",
@@ -62,16 +62,16 @@
    "lat": 68.781,
    "lon": 32.749,
    "cat": "VFR",
-   "wdir": 190,
-   "wspd": 1,
+   "wdir": 170,
+   "wspd": 2,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
    "temp": -1,
    "dew": -2,
    "qnh": 1025,
-   "time": "23:00Z",
-   "raw": "METAR ULMM 222300Z 19001MPS CAVOK M01/M02 Q1025 R13/090070 NOSIG RMK QFE762"
+   "time": "23:30Z",
+   "raw": "METAR ULMM 222330Z 17002MPS CAVOK M01/M02 Q1025 R13/090070 NOSIG RMK QFE762"
   }
  ],
  "synop": [
@@ -304,7 +304,7 @@
   "EFIV": "TAF EFIV 220838Z 2209/2212 20006KT 9999 OVC006 TEMPO 2209/2212 BKN004",
   "EFKS": "TAF AMD EFKS 221109Z 2211/2212 14005KT 9999 OVC001 TEMPO 2211/2212 BKN002",
   "ENKR": "TAF ENKR 222000Z 2221/2306 19010KT 9999 SCT008 BKN018 TEMPO 2221/2306 BKN012 PROB30 TEMPO 2221/2306 2500 BR BKN004",
-  "ULMM": "TAF ULMM 222001Z 2221/2321 21003G08MPS 6000 SCT020 TEMPO 2221/2224 1000 BR BKN002 TEMPO 2300/2309 0300 FZFG VV001"
+  "ULMM": "TAF ULMM 222301Z 2300/2324 21003G08MPS 6000 SCT020 TEMPO 2300/2308 0300 FZFG VV001"
  },
  "sigmet": []
 }
