@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-22T05:20Z",
+ "generated": "2026-10-22T06:05Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -8,16 +8,16 @@
    "lat": 68.607,
    "lon": 27.405,
    "cat": "IFR",
-   "wdir": 210,
-   "wspd": 5,
+   "wdir": 220,
+   "wspd": 3,
    "wgst": null,
    "vis": 9999,
    "ceil": 500,
    "temp": 1,
    "dew": 0,
    "qnh": 1024,
-   "time": "04:50Z",
-   "raw": "METAR EFIV 220450Z AUTO 21010KT 9999 OVC005 01/00 Q1024"
+   "time": "05:50Z",
+   "raw": "METAR EFIV 220550Z AUTO 22006KT 180V240 9999 OVC005 01/M00 Q1024"
   },
   {
    "icao": "EFKS",
@@ -26,16 +26,16 @@
    "lat": 65.992,
    "lon": 29.236,
    "cat": "LIFR",
-   "wdir": 160,
+   "wdir": 140,
    "wspd": 3,
    "wgst": null,
-   "vis": 1100,
+   "vis": 750,
    "ceil": 200,
-   "temp": 0,
+   "temp": -1,
    "dew": -1,
    "qnh": 1027,
-   "time": "04:50Z",
-   "raw": "METAR EFKS 220450Z AUTO 16005KT 1100 R30/1700N BCFG VV002 M00/M01 Q1027"
+   "time": "05:50Z",
+   "raw": "METAR EFKS 220550Z AUTO 14005KT 0750 R30/1000N FZFG VV002 M01/M01 Q1027"
   },
   {
    "icao": "ENKR",
@@ -43,17 +43,17 @@
    "place": "Норвегия",
    "lat": 69.725,
    "lon": 29.898,
-   "cat": "MVFR",
-   "wdir": 200,
-   "wspd": 6,
+   "cat": "IFR",
+   "wdir": 180,
+   "wspd": 5,
    "wgst": null,
    "vis": 9999,
-   "ceil": 1000,
+   "ceil": 900,
    "temp": 2,
    "dew": 0,
    "qnh": 1022,
-   "time": "04:50Z",
-   "raw": "METAR ENKR 220450Z AUTO 20011KT 170V240 9999 OVC010/// 02/M00 Q1022 RMK WIND 731FT 22018KT"
+   "time": "05:50Z",
+   "raw": "METAR ENKR 220550Z 18010KT 9999 BKN009 02/M00 Q1022 RMK WIND 731FT 21021KT"
   },
   {
    "icao": "ULMM",
@@ -62,16 +62,16 @@
    "lat": 68.781,
    "lon": 32.749,
    "cat": "VFR",
-   "wdir": 200,
+   "wdir": 190,
    "wspd": 2,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
-   "temp": -3,
-   "dew": -4,
+   "temp": 1,
+   "dew": -3,
    "qnh": 1025,
-   "time": "05:00Z",
-   "raw": "METAR ULMM 220500Z 20002MPS CAVOK M03/M04 Q1025 R13/190060 NOSIG RMK QFE762"
+   "time": "06:00Z",
+   "raw": "METAR ULMM 220600Z 19002MPS CAVOK 01/M03 Q1025 R13/190060 NOSIG RMK QFE762"
   }
  ],
  "synop": [
@@ -301,72 +301,10 @@
   }
  ],
  "taf": {
-  "EFIV": "TAF EFIV 220235Z 2203/2212 22010KT 9999 BKN008 TEMPO 2203/2206 BKN010",
-  "EFKS": "TAF EFKS 220235Z 2203/2212 17005KT 0500 FZFG VV002 TEMPO 2203/2207 1500 BCFG VV001 BECMG 2207/2209 9999 NSW BECMG 2209/2211 SCT005",
-  "ENKR": "TAF ENKR 220200Z 2203/2212 21012KT 9999 FEW010 PROB40 TEMPO 2203/2212 BKN009",
-  "ULMM": "TAF ULMM 220202Z 2203/2303 21003G08MPS 6000 SCT016 TEMPO 2206/2215 BKN011"
+  "EFIV": "TAF EFIV 220538Z 2206/2212 22008KT 9999 OVC005 TEMPO 2209/2212 BKN004",
+  "EFKS": "TAF EFKS 220538Z 2206/2212 17005KT 0500 FZFG VV001 TEMPO 2206/2207 1500 BCFG VV002 BECMG 2207/2209 9999 NSW BKN002 BECMG 2209/2211 SCT005",
+  "ENKR": "TAF ENKR 220500Z 2206/2215 20012KT 9999 BKN009 PROB40 TEMPO 2206/2215 SCT009",
+  "ULMM": "TAF ULMM 220505Z 2206/2306 21003G08MPS 9999 SCT020"
  },
- "sigmet": [
-  {
-   "fir": "ULLL",
-   "name": "ULLL SANKT-PETERBURG",
-   "hazard": "ICE",
-   "qual": "SEV",
-   "from": 1792641600,
-   "to": 1792648800,
-   "base": 0,
-   "top": 2000,
-   "coords": [
-    [
-     66.2,
-     40.217
-    ],
-    [
-     65.133,
-     43.15
-    ],
-    [
-     65.817,
-     50.033
-    ],
-    [
-     64.967,
-     50.1
-    ],
-    [
-     62.6,
-     46.233
-    ],
-    [
-     62.617,
-     43.367
-    ],
-    [
-     61.717,
-     42.233
-    ],
-    [
-     61.983,
-     37.117
-    ],
-    [
-     63.9,
-     36.35
-    ],
-    [
-     64.467,
-     37.8
-    ],
-    [
-     66.033,
-     38.467
-    ],
-    [
-     66.2,
-     40.217
-    ]
-   ],
-   "raw": "WSRS31 RUSP 220328\nULLL SIGMET 2 VALID 220400/220600 ULLI-\nULLL SANKT-PETERBURG FIR SEV ICE (FZRA) FCST WI N6612 E04013 - N6508\nE04309 - N6549 E05002 - N6458 E05006 - N6236 E04614 - N6237 E04322 -\nN6143 E04214 - N6159 E03707 - N6354 E03621 - N6428 E03748 - N6602\nE03828 - N6612 E04013 SFC/FL020 STNR NC="
-  }
- ]
+ "sigmet": []
 }
