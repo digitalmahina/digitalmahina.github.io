@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-23T17:21Z",
+ "generated": "2026-10-23T17:51Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -14,10 +14,10 @@
    "vis": 9999,
    "ceil": 500,
    "temp": 3,
-   "dew": 2,
-   "qnh": 1021,
-   "time": "16:50Z",
-   "raw": "METAR EFIV 231650Z AUTO 24006KT 9999 OVC005 03/02 Q1021"
+   "dew": 3,
+   "qnh": 1020,
+   "time": "17:20Z",
+   "raw": "METAR EFIV 231720Z AUTO 24005KT 9999 OVC005 03/03 Q1020"
   },
   {
    "icao": "EFKS",
@@ -26,7 +26,7 @@
    "lat": 65.992,
    "lon": 29.236,
    "cat": "VFR",
-   "wdir": 80,
+   "wdir": 90,
    "wspd": 2,
    "wgst": null,
    "vis": 10000,
@@ -34,8 +34,8 @@
    "temp": 2,
    "dew": 1,
    "qnh": 1022,
-   "time": "16:50Z",
-   "raw": "METAR EFKS 231650Z AUTO 08003KT 060V120 CAVOK 02/01 Q1022"
+   "time": "17:20Z",
+   "raw": "METAR EFKS 231720Z AUTO 09004KT CAVOK 02/01 Q1022"
   },
   {
    "icao": "ENKR",
@@ -44,16 +44,16 @@
    "lat": 69.725,
    "lon": 29.898,
    "cat": "VFR",
-   "wdir": 160,
-   "wspd": 3,
+   "wdir": 180,
+   "wspd": 4,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
    "temp": 2,
    "dew": 1,
    "qnh": 1020,
-   "time": "16:50Z",
-   "raw": "METAR ENKR 231650Z 16005KT CAVOK 02/01 Q1020 RMK WIND 731FT 21017KT"
+   "time": "17:20Z",
+   "raw": "METAR ENKR 231720Z 18008KT CAVOK 02/01 Q1020 RMK WIND 731FT 20015KT"
   },
   {
    "icao": "ULMM",
@@ -63,15 +63,15 @@
    "lon": 32.749,
    "cat": "VFR",
    "wdir": 190,
-   "wspd": 2,
+   "wspd": 3,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
-   "temp": 4,
-   "dew": 1,
+   "temp": 1,
+   "dew": 0,
    "qnh": 1023,
-   "time": "17:00Z",
-   "raw": "METAR ULMM 231700Z 19002MPS CAVOK 04/01 Q1023 R13/290047 NOSIG RMK QFE760"
+   "time": "17:30Z",
+   "raw": "METAR ULMM 231730Z 19003MPS CAVOK 01/M00 Q1023 R13/290047 NOSIG RMK QFE760"
   }
  ],
  "synop": [
@@ -301,10 +301,10 @@
   }
  ],
  "taf": {
-  "EFIV": "TAF EFIV 231551Z 2315/2324 20005KT 9999 BKN006 TEMPO 2315/2318 SCT006 BECMG 2318/2320 CAVOK PROB30 2320/2324 4000 BR BKN004",
-  "EFKS": "TAF EFKS 231429Z 2315/2321 13006KT CAVOK PROB30 2317/2321 4000 BR BKN004",
-  "ENKR": "TAF ENKR 231400Z 2315/2324 20010KT 9999 BKN004 BECMG 2315/2318 FEW005 PROB40 2319/2324 3000 BR BKN004",
-  "ULMM": "TAF ULMM 231402Z 2315/2415 17003MPS 6000 SCT020 TEMPO 2400/2406 0300 FZFG VV002"
+  "EFIV": "TAF EFIV 231738Z 2318/2403 22005KT 9999 BKN005 TEMPO 2318/2319 SCT005 BECMG 2319/2321 CAVOK PROB30 2401/2403 4000 BR",
+  "EFKS": "TAF EFKS 231738Z 2318/2403 11004KT CAVOK PROB30 2401/2403 2000 BR",
+  "ENKR": "TAF ENKR 231700Z 2318/2403 18006KT 9999 FEW004 PROB30 2319/2403 3000 BR BKN004",
+  "ULMM": "TAF ULMM 231702Z 2318/2418 17003MPS 6000 SCT016 TEMPO 2321/2406 0300 FZFG VV002"
  },
  "sigmet": []
 }
