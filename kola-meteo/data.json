@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-23T23:22Z",
+ "generated": "2026-10-23T23:58Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -7,17 +7,17 @@
    "place": "Финляндия",
    "lat": 68.607,
    "lon": 27.405,
-   "cat": "IFR",
-   "wdir": 0,
-   "wspd": 1,
+   "cat": "MVFR",
+   "wdir": 230,
+   "wspd": 2,
    "wgst": null,
-   "vis": 1700,
+   "vis": 6000,
    "ceil": 99999,
    "temp": 0,
-   "dew": 0,
-   "qnh": 1019,
-   "time": "23:20Z",
-   "raw": "METAR EFIV 232320Z AUTO VRB02KT 1700 1100 R22/P2000U BCFG NSC M00/M00 Q1019"
+   "dew": -1,
+   "qnh": 1018,
+   "time": "23:50Z",
+   "raw": "METAR EFIV 232350Z AUTO 23003KT 210V270 6000 1200 R22/P2000D NSC M00/M01 Q1018"
   },
   {
    "icao": "EFKS",
@@ -27,15 +27,15 @@
    "lon": 29.236,
    "cat": "VFR",
    "wdir": 90,
-   "wspd": 2,
+   "wspd": 3,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
    "temp": 1,
    "dew": 1,
-   "qnh": 1020,
-   "time": "22:50Z",
-   "raw": "METAR EFKS 232250Z AUTO 09004KT 060V120 CAVOK 01/01 Q1020"
+   "qnh": 1019,
+   "time": "23:50Z",
+   "raw": "METAR EFKS 232350Z AUTO 09006KT CAVOK 01/01 Q1019"
   },
   {
    "icao": "ENKR",
@@ -44,16 +44,16 @@
    "lat": 69.725,
    "lon": 29.898,
    "cat": "VFR",
-   "wdir": 130,
-   "wspd": 2,
+   "wdir": 140,
+   "wspd": 3,
    "wgst": null,
    "vis": 9999,
    "ceil": 99999,
    "temp": 1,
    "dew": 0,
-   "qnh": 1020,
-   "time": "22:50Z",
-   "raw": "METAR ENKR 232250Z AUTO 13003KT 9999 NCD 01/00 Q1020 RMK WIND 731FT 23007KT"
+   "qnh": 1019,
+   "time": "23:50Z",
+   "raw": "METAR ENKR 232350Z AUTO 14005KT 9999 NCD 01/00 Q1019 RMK WIND 731FT 18007KT"
   },
   {
    "icao": "ULMM",
@@ -62,16 +62,16 @@
    "lat": 68.781,
    "lon": 32.749,
    "cat": "VFR",
-   "wdir": 190,
+   "wdir": 160,
    "wspd": 2,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
    "temp": 0,
-   "dew": 0,
-   "qnh": 1022,
-   "time": "23:00Z",
-   "raw": "METAR ULMM 232300Z 19002MPS 160V230 CAVOK M00/M00 Q1022 R13/290047 NOSIG RMK QFE760"
+   "dew": -1,
+   "qnh": 1021,
+   "time": "23:30Z",
+   "raw": "METAR ULMM 232330Z 16002MPS CAVOK M00/M01 Q1021 R13/290047 NOSIG RMK QFE759"
   }
  ],
  "synop": [
@@ -301,10 +301,10 @@
   }
  ],
  "taf": {
-  "EFKS": "TAF EFKS 232038Z 2321/2406 10003KT CAVOK PROB30 2401/2403 2000 BR BECMG 2403/2405 0300 FG VV001",
-  "ULMM": "TAF ULMM 232002Z 2321/2421 17003MPS 6000 SCT020 TEMPO 2400/2406 0300 FZFG VV002",
-  "ENKR": "TAF ENKR 232000Z 2321/2406 18006KT 9999 FEW005 PROB30 2321/2406 3000 BR BKN004",
-  "EFIV": "TAF EFIV 232038Z 2321/2406 22003KT CAVOK PROB30 2401/2406 4000 BR"
+  "EFIV": "TAF EFIV 232338Z 2400/2409 VRB02KT CAVOK TEMPO 2400/2406 1300 BR",
+  "EFKS": "TAF EFKS 232338Z 2400/2409 09003KT CAVOK PROB30 2401/2403 2000 BR BECMG 2403/2405 0300 FG VV001",
+  "ENKR": "TAF ENKR 232300Z 2400/2409 18006KT 9999 FEW005 PROB30 2400/2406 3000 BR BKN004",
+  "ULMM": "TAF ULMM 232302Z 2400/2424 17003MPS 6000 SCT020"
  },
  "sigmet": [
   {
