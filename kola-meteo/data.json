@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-24T16:56Z",
+ "generated": "2026-10-24T17:21Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -8,7 +8,7 @@
    "lat": 68.607,
    "lon": 27.405,
    "cat": "IFR",
-   "wdir": 190,
+   "wdir": 180,
    "wspd": 4,
    "wgst": null,
    "vis": 9999,
@@ -16,8 +16,8 @@
    "temp": 5,
    "dew": 4,
    "qnh": 1012,
-   "time": "16:50Z",
-   "raw": "METAR EFIV 241650Z AUTO 19007KT 160V220 9999 OVC007 05/04 Q1012"
+   "time": "17:20Z",
+   "raw": "METAR EFIV 241720Z AUTO 18007KT 9999 OVC007 05/04 Q1012"
   },
   {
    "icao": "EFKS",
@@ -48,12 +48,12 @@
    "wspd": 4,
    "wgst": null,
    "vis": 9999,
-   "ceil": 700,
+   "ceil": 800,
    "temp": 4,
    "dew": 3,
    "qnh": 1013,
-   "time": "16:20Z",
-   "raw": "METAR ENKR 241620Z 17008KT 9999 BKN007 04/03 Q1013 RMK WIND 731FT 20009KT"
+   "time": "16:50Z",
+   "raw": "METAR ENKR 241650Z 17008KT 9999 BKN008 04/03 Q1013 RMK WIND 731FT 20010KT"
   },
   {
    "icao": "ULMM",
@@ -62,16 +62,16 @@
    "lat": 68.781,
    "lon": 32.749,
    "cat": "MVFR",
-   "wdir": 180,
-   "wspd": 2,
+   "wdir": 160,
+   "wspd": 3,
    "wgst": null,
    "vis": 9999,
-   "ceil": 1100,
+   "ceil": 1000,
    "temp": 4,
    "dew": 3,
    "qnh": 1015,
-   "time": "16:30Z",
-   "raw": "METAR ULMM 241630Z 18002MPS 9999 BKN011 04/03 Q1015 R13/290050 NOSIG RMK QFE755"
+   "time": "17:00Z",
+   "raw": "METAR ULMM 241700Z 16003MPS 9999 BKN010 04/03 Q1015 R13/290050 NOSIG RMK QFE755"
   }
  ],
  "synop": [
