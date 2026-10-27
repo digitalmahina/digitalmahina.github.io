@@ -1,6 +1,6 @@
 /* Ganzhi layout: 6 rings x 60 days per layout year; ring I starts Dec 21 (day -11). Same math as the Ganzhi page. */
 var GZ=(function(){
-  var EL=[['#eaf3de','#639922'],['#faece7','#993c1d'],['#faeeda','#854f0b'],['#f1efe8','#5f5e5a'],['#e6f1fb','#185fa5']];
+  var EL=[['#d3e6dc','#2F6F6B'],['#f6d3c6','#AD4D26'],['#f3dfae','#8a5a12'],['#fffaf0','#5E5750'],['#d6d0c6','#2B2724']];
   var ELN=['Дерево','Огонь','Земля','Металл','Вода'], ROM=['I','II','III','IV','V','VI'];
   var MS=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
   function noon(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate(),12)}
