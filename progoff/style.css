@@ -11,7 +11,7 @@
 /* text */
 --ink:#2B2724;--ink-2:#5E5750;--line:#5E5750;--mark:#6B2A2A;--focus:#2F6F6B;
 /* keys */
---key:#E6DCC6;--tab-key:#D9CFB8;--on-key:#2B2724;--key-edge:rgba(0,0,0,.3);
+--key:#E6DCC6;--tab-key:#D9CFB8;--on-key:#2B2724;--key-edge:rgba(0,0,0,.45);
 --bar:#2B2724;--bar-edge:#2B2724;--tabs-gap:4px;--tab-ink:#2B2724;--tab-on:#AD4D26;--on-tab-on:#fff;
 --seg-bg:#2B2724;--seg-key:#E6DCC6;--seg-key-edge:rgba(0,0,0,.3);--card-edge:transparent;
 --accent:#AD4D26;--on-accent:#fff;--accent-2:#2F6F6B;--on-accent-2:#fff;
@@ -55,7 +55,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .leds{display:none;gap:10px;font:11px var(--mono);color:var(--ink-2);letter-spacing:.08em}
 .leds i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px;background:var(--led-ok);box-shadow:var(--glow) var(--led-ok),inset 0 -2px 2px rgba(0,0,0,.3)}
 .leds i.a{background:var(--led-warn);box-shadow:var(--glow) var(--led-warn),inset 0 -2px 2px rgba(0,0,0,.3)}
-main{flex:1;padding:20px 24px 112px;display:grid;gap:16px;align-content:start}
+main{flex:1;padding:20px 24px calc(132px + env(safe-area-inset-bottom,0));display:grid;gap:16px;align-content:start}
 h1{font:var(--t-h1);text-transform:var(--case);color:var(--ink);letter-spacing:.06em}
 h2{font:700 11px/16px var(--mono);text-transform:var(--case);letter-spacing:.1em;color:var(--ink-2);margin:12px 0 4px}
 .sub{font:var(--t-small);color:var(--ink-2)}
@@ -206,7 +206,8 @@ main[data-tab=quiet] .clock{border-left:8px solid transparent;border-image:var(-
 --el0-f:#eaf3de;--el0-s:#639922;--el1-f:#faece7;--el1-s:#993c1d;--el2-f:#faeeda;--el2-s:#854f0b;--el3-f:#f1efe8;--el3-s:#5f5e5a;--el4-f:#e6f1fb;--el4-s:#185fa5}
 [data-theme=clean] .dymo{background:none;color:var(--ink-2);padding:0;font-weight:600;letter-spacing:.08em}
 [data-theme=clean] .tabs{padding-top:0}
-[data-theme=clean] .tabs button.on{font-weight:700}
+[data-theme=clean] .tabs button.on{font-weight:700;box-shadow:inset 0 3px 0 var(--ink)}
+[data-theme=clean] .ghost,[data-theme=clean] .btn{border-color:#cfcbc0}
 [data-theme=clean] .seg{padding:2px;border-radius:20px}
 [data-theme=clean] .seg button.on{background:var(--paper);border-color:var(--line);color:var(--ink)}
 [data-theme=clean] .primary,[data-theme=clean] .ghost,[data-theme=clean] .btn,[data-theme=clean] .seg button,[data-theme=clean] .tabs button{letter-spacing:0;font-weight:600}
@@ -218,7 +219,7 @@ main[data-tab=quiet] .clock{border-left:8px solid transparent;border-image:var(-
 --surface:#0c0a1a;--panel:#151229;--panel-2:#1c1836;--paper:#110e22;--field:#0a0816;--veil:rgba(4,3,10,.75);
 --dark:#05040b;--on-dark:#e9e4ff;--on-dark-strong:#ff8fd0;
 --ink:#f1edff;--ink-2:#aaa3cf;--line:#3a3366;--mark:#ff3fa4;--focus:#22e4ff;
---key:#1c1836;--tab-key:#151229;--on-key:#e9e4ff;--key-edge:#3a3366;
+--key:#1c1836;--tab-key:#151229;--on-key:#e9e4ff;--key-edge:#6a5fb0;
 --bar:#05040b;--bar-edge:#ff3fa4;--tabs-gap:4px;--tab-ink:#aaa3cf;--tab-on:#ff3fa4;--on-tab-on:#0c0a1a;
 --seg-bg:#05040b;--seg-key:#151229;--seg-key-edge:#3a3366;--card-edge:#2a2450;
 --accent:#ff3fa4;--on-accent:#0c0a1a;--accent-2:#22e4ff;--on-accent-2:#0c0a1a;
