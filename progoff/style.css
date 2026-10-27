@@ -248,6 +248,41 @@ main[data-tab=quiet] .clock{border-left:8px solid transparent;border-image:var(-
 [data-theme=neon] .dymo{color:#ff8fd0;border:1px solid #ff3fa4}
 [data-theme=neon] .tabs button.on,[data-theme=neon] .primary{box-shadow:0 0 14px rgba(255,63,164,.55)}
 [data-theme=neon] .seg button.on,[data-theme=neon] #lay .primary{box-shadow:0 0 12px rgba(34,228,255,.5)}
+
+/* ===== Aspects (user, 2026-10-27): Чистый = минимализм, Ретро = кнопки/аналог, Неон = стекло/неон/дым ===== */
+/* Чистый: nothing but content and hairlines */
+[data-theme=clean] .plate{padding:18px 24px 0}
+[data-theme=clean] .dymo{font:500 12px/1 var(--sans);letter-spacing:.02em;text-transform:none;color:var(--ink-2)}
+[data-theme=clean] h1{font-weight:600;letter-spacing:-.01em}
+[data-theme=clean] h2{font-weight:500;letter-spacing:.04em;color:var(--ink-2)}
+[data-theme=clean] .card.soft{border-color:transparent}
+[data-theme=clean] .ring,[data-theme=clean] .yring,[data-theme=clean] .lifemap{background:none}
+[data-theme=clean] .primary{border:0}
+[data-theme=clean] .big{color:var(--ink)}
+
+/* Ретро: physical keys, deep travel, screwed panels, analog bezels */
+[data-theme=retro]{--raised:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -3px 0 rgba(0,0,0,.16),0 3px 0 #8f8676,0 4px 6px rgba(0,0,0,.18);--pressed:inset 0 2px 4px rgba(0,0,0,.3),0 1px 0 #8f8676;--press-y:3px}
+[data-theme=retro] .primary,[data-theme=retro] .ghost,[data-theme=retro] .btn,[data-theme=retro] .seg button,[data-theme=retro] .tabs button{background-image:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0) 55%,rgba(0,0,0,.06))}
+[data-theme=retro] .card{background-image:radial-gradient(circle at 9px 9px,#8f8676 0 2px,rgba(255,255,255,.5) 2px 3px,transparent 3px),radial-gradient(circle at calc(100% - 9px) 9px,#8f8676 0 2px,rgba(255,255,255,.5) 2px 3px,transparent 3px),radial-gradient(circle at 9px calc(100% - 9px),#8f8676 0 2px,rgba(255,255,255,.5) 2px 3px,transparent 3px),radial-gradient(circle at calc(100% - 9px) calc(100% - 9px),#8f8676 0 2px,rgba(255,255,255,.5) 2px 3px,transparent 3px)}
+[data-theme=retro] .seg button.on{background-image:linear-gradient(180deg,rgba(0,0,0,.12),rgba(255,255,255,.08))}
+[data-theme=retro] .seg button.on::after,[data-theme=retro] .tabs button.on::after{content:"";display:block;width:6px;height:6px;border-radius:50%;margin:3px auto 0;background:var(--led-ok);box-shadow:0 0 5px var(--led-ok)}
+[data-theme=retro] .seg button.on::after{display:inline-block;margin:0 0 1px 6px;vertical-align:middle}
+[data-theme=retro] .ring{box-shadow:0 0 0 6px #E6DCC6,0 0 0 8px #8f8676,0 0 0 12px #D9CFB8,0 0 0 13px rgba(0,0,0,.2),inset 0 2px 6px rgba(0,0,0,.35)}
+
+/* Неон: frosted glass over smoke, light as tubes */
+[data-theme=neon]{--panel:rgba(30,24,64,.42);--panel-2:rgba(40,32,84,.38);--paper:rgba(14,10,32,.55);--surface:rgba(10,8,24,.35);--key:rgba(255,255,255,.06);--tab-key:rgba(255,255,255,.05);--seg-key:rgba(255,255,255,.05);--seg-bg:rgba(0,0,0,.35);--field:rgba(0,0,0,.35);--card-edge:rgba(255,255,255,.14);--key-edge:rgba(255,255,255,.22);--seg-key-edge:rgba(255,255,255,.18);--bar:rgba(8,6,20,.55);--ring-paper:rgba(8,6,20,.55);
+--desk-texture:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='4' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .35 0 0 0 0 .75 0 0 0 .55 -.18'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E"),radial-gradient(60% 45% at 15% 10%,rgba(255,63,164,.32),transparent 70%),radial-gradient(55% 50% at 90% 85%,rgba(34,228,255,.24),transparent 70%),radial-gradient(40% 35% at 70% 30%,rgba(185,139,255,.20),transparent 70%)}
+[data-theme=neon] body{background-attachment:fixed;background-size:600px 600px,100% 100%,100% 100%,100% 100%}
+[data-theme=neon] .app{backdrop-filter:blur(2px)}
+[data-theme=neon] .card,[data-theme=neon] .sheet,[data-theme=neon] .tabs,[data-theme=neon] .entry.form,[data-theme=neon] .bub.they,[data-theme=neon] .ring,[data-theme=neon] .yring,[data-theme=neon] .lifemap{-webkit-backdrop-filter:blur(16px) saturate(150%);backdrop-filter:blur(16px) saturate(150%)}
+[data-theme=neon] .card{box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 30px rgba(0,0,0,.35)}
+[data-theme=neon] .primary,[data-theme=neon] .tabs button.on{background:rgba(255,63,164,.14);color:#ffe3f2;border:1.5px solid #ff3fa4;box-shadow:0 0 6px #ff3fa4,0 0 18px rgba(255,63,164,.55),inset 0 0 8px rgba(255,63,164,.55);text-shadow:0 0 6px #ff3fa4}
+[data-theme=neon] .seg button.on,[data-theme=neon] #lay .primary{background:rgba(34,228,255,.12);color:#dcfbff;border:1.5px solid #22e4ff;box-shadow:0 0 6px #22e4ff,0 0 16px rgba(34,228,255,.5),inset 0 0 8px rgba(34,228,255,.45);text-shadow:0 0 6px #22e4ff}
+[data-theme=neon] .ghost,[data-theme=neon] .btn{box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+[data-theme=neon] h1{color:#ffe3f2;text-shadow:0 0 4px #ff3fa4,0 0 14px rgba(255,63,164,.7),0 0 32px rgba(255,63,164,.4)}
+[data-theme=neon] h2{color:#9ff3ff;text-shadow:0 0 8px rgba(34,228,255,.6)}
+[data-theme=neon] .ring{box-shadow:0 0 0 1px rgba(255,255,255,.14),0 0 0 6px rgba(255,255,255,.03),0 0 0 7px rgba(34,228,255,.5),0 0 24px rgba(34,228,255,.35),inset 0 0 40px rgba(255,63,164,.12)}
+[data-theme=neon] .dymo{background:rgba(0,0,0,.3);color:#ffe3f2;border:1.5px solid #ff3fa4;box-shadow:0 0 6px #ff3fa4,inset 0 0 6px rgba(255,63,164,.5);text-shadow:0 0 6px #ff3fa4}
 /* skin picker */
 .skins button{display:grid;place-items:center;gap:4px;min-height:58px}
 .skins i{display:block;width:34px;height:12px;border-radius:3px;border:1px solid rgba(0,0,0,.25)}
