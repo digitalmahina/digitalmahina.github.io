@@ -4,7 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Дневник · по мотивам Прогоффа</title>
-<meta name="theme-color" content="#fbfaf8">
+<meta name="theme-color" content="#2B2724">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=IBM+Plex+Sans:wght@400;500;600&family=VT323&family=Space+Mono:wght@400;700&display=swap">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -12,10 +15,11 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Дневник">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="stylesheet" href="style.css?v=17">
+<link rel="stylesheet" href="style.css?v=18">
 </head>
 <body>
 <div class="app" id="app">
+  <div class="plate"><span class="dymo">ДНЕВНИК · ПРОГОФФ</span><span class="leds" id="leds"></span></div>
   <main id="screen"></main>
   <div class="veil" id="veil" hidden></div>
   <section class="sheet" id="sheet" hidden></section>
@@ -28,9 +32,9 @@
     <button data-tab="quiet">Тишина</button>
     <button data-tab="todo">Дела</button>
   </nav>
-<script src="ganzhi.js?v=1"></script>
+<script src="ganzhi.js?v=2"></script>
 <script src="store.js?v=2"></script>
 <script src="moon.js?v=2"></script>
-<script src="app.js?v=26"></script>
+<script src="app.js?v=27"></script>
 </body>
 </html>
