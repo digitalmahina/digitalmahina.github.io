@@ -1,5 +1,6 @@
 (function(){
   var $=function(s){return document.querySelector(s)};
+  var T=THEME.t;
   var screen=$('#screen'),sheet=$('#sheet'),veil=$('#veil');
   function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   var TODAY,TS,WIN;
@@ -20,16 +21,16 @@
   function setLayer(v){LAYER=v;try{localStorage.setItem('progoff.layer',v)}catch(e){}}
   function ringSVG(){
     var C=180,R=148,s='<svg class="ring" viewBox="0 0 360 360" role="img" aria-label="Круг 60 дней">';
-    s+='<circle cx="'+C+'" cy="'+C+'" r="'+R+'" fill="none" stroke="#c9bea4"/>';
+    s+='<circle cx="'+C+'" cy="'+C+'" r="'+R+'" fill="none" stroke="'+T('ring-line')+'"/>';
     var w0=GZ.key(WIN[0]),w1=GZ.key(WIN[59]),RA=R+17,pi=0;
     function pt(i,r){var a=2*Math.PI*i/60;return [(C+r*Math.sin(a)).toFixed(1),(C-r*Math.cos(a)).toFixed(1)]}
     periods().forEach(function(p){if(p.end<w0||p.start>w1)return;
-      var i0=Math.max(0,daysBetween(w0,p.start)),i1=Math.min(59,daysBetween(w0,p.end)),col=pi++%2?'#5E5750':'#2B2724',sw=p.cur?2.4:1.4;
+      var i0=Math.max(0,daysBetween(w0,p.start)),i1=Math.min(59,daysBetween(w0,p.end)),col=pi++%2?T('ring-ink-2'):T('ring-ink'),sw=p.cur?2.4:1.4;
       var a=pt(i0,RA),b=pt(i1,RA),big=(i1-i0)>30?1:0;
       if(i1>i0)s+='<path d="M'+a[0]+' '+a[1]+' A'+RA+' '+RA+' 0 '+big+' 1 '+b[0]+' '+b[1]+'" fill="none" stroke="'+col+'" stroke-width="'+sw+'" stroke-linecap="round"/>';
       if(p.start>=w0){var t0=pt(i0,RA-5),t1=pt(i0,RA+5);s+='<line x1="'+t0[0]+'" y1="'+t0[1]+'" x2="'+t1[0]+'" y2="'+t1[1]+'" stroke="'+col+'" stroke-width="1.6"/>'}
       else if(i1===i0)s+='<circle cx="'+a[0]+'" cy="'+a[1]+'" r="1.6" fill="'+col+'"/>'});
-    var OR='#D9A43B',VI='#6B2A2A',MA=20;
+    var OR=T('moon-full'),VI=T('ekadashi'),MA=20;
     if(LAYER!=='g'&&MOON.phase){var w0k=GZ.key(WIN[0]),P=[];
       for(var q=0;q<=236;q++){var u=q/4,r0=R-MA*Math.cos(MOON.phase(w0k,u)*Math.PI/180);P.push(pt(u,r0).join(' '))}
       s+='<path d="M'+P.join(' L')+'" fill="none" stroke="'+OR+'" stroke-width="1.4" stroke-linejoin="round"/>'}
@@ -40,24 +41,24 @@
         s+=e.kind==='dream'?'<circle cx="'+(C+rr*sx).toFixed(1)+'" cy="'+(C+rr*cy).toFixed(1)+'" r="3.6" fill="none" stroke="'+el[1]+'" stroke-width="1.6" data-day="'+k+'" style="cursor:pointer"/>'
           :'<circle cx="'+(C+rr*sx).toFixed(1)+'" cy="'+(C+rr*cy).toFixed(1)+'" r="3.4" fill="'+el[1]+'" data-day="'+k+'" style="cursor:pointer"/>'});
       if(LAYER!=='g'&&MOON.phase){var mr=R-MA*Math.cos(MOON.phase(k)*Math.PI/180),mx=+(C+mr*sx).toFixed(1),my=+(C+mr*cy).toFixed(1);
-        if(MOON.nm(k))s+='<circle cx="'+mx+'" cy="'+my+'" r="4.6" fill="#F2EBDC" stroke="#8f8676" stroke-width="1"/><circle cx="'+mx+'" cy="'+my+'" r="1.3" fill="#8f8676"/>';
+        if(MOON.nm(k))s+='<circle cx="'+mx+'" cy="'+my+'" r="4.6" fill="'+T('moon-new')+'" stroke="'+T('moon-new-edge')+'" stroke-width="1"/><circle cx="'+mx+'" cy="'+my+'" r="1.3" fill="'+T('moon-new-edge')+'"/>';
         else if(MOON.fm(k))s+='<circle cx="'+mx+'" cy="'+my+'" r="5" fill="'+OR+'"/>';
         if(LAYER==='e'&&MOON.ek(k)){var f=Store.byDate(k).some(function(e){return e.kind==='fast'}),q2=4.6;
-          s+='<path d="M'+mx+' '+(my-q2)+' L'+(mx+q2)+' '+my+' L'+mx+' '+(my+q2)+' L'+(mx-q2)+' '+my+' Z" fill="'+(f?VI:'#F2EBDC')+'" stroke="'+VI+'" stroke-width="1.3"/>'}}
+          s+='<path d="M'+mx+' '+(my-q2)+' L'+(mx+q2)+' '+my+' L'+mx+' '+(my+q2)+' L'+(mx-q2)+' '+my+' Z" fill="'+(f?VI:T('moon-new'))+'" stroke="'+VI+'" stroke-width="1.3"/>'}}
       var tds=Store.byDate(k).filter(function(e){return e.kind==='todo'});
       if(tds.length){var dn=tds.every(function(e){return e.done}),t0=[C+(R+22)*sx,C+(R+22)*cy],t1=[C+(R+30)*sx,C+(R+30)*cy];
-        s+='<line x1="'+t0[0].toFixed(1)+'" y1="'+t0[1].toFixed(1)+'" x2="'+t1[0].toFixed(1)+'" y2="'+t1[1].toFixed(1)+'" stroke="#2B2724" stroke-width="1" stroke-linecap="round"/><circle cx="'+(C+(R+33)*sx).toFixed(1)+'" cy="'+(C+(R+33)*cy).toFixed(1)+'" r="2.4" fill="'+(dn?'#2B2724':'#F2EBDC')+'" stroke="#2B2724" stroke-width="1"/>'}
+        s+='<line x1="'+t0[0].toFixed(1)+'" y1="'+t0[1].toFixed(1)+'" x2="'+t1[0].toFixed(1)+'" y2="'+t1[1].toFixed(1)+'" stroke="'+T('ring-ink')+'" stroke-width="1" stroke-linecap="round"/><circle cx="'+(C+(R+33)*sx).toFixed(1)+'" cy="'+(C+(R+33)*cy).toFixed(1)+'" r="2.4" fill="'+(dn?T('ring-ink'):T('moon-new'))+'" stroke="'+T('ring-ink')+'" stroke-width="1"/>'}
       var isT=k===GZ.key(TODAY);
       s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="6" fill="'+el[0]+'" stroke="'+el[1]+'" stroke-width=".9"/>';
       s+='<text x="'+x.toFixed(1)+'" y="'+(y+2).toFixed(1)+'" text-anchor="middle" font-size="'+(n>9?5.2:6)+'" font-weight="600" fill="'+el[1]+'" font-family="Space Mono,monospace" pointer-events="none">'+n+'</text>';
-      if(isT)s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="9.5" fill="none" stroke="#2B2724" stroke-width="1.5"/>';
+      if(isT)s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="9.5" fill="none" stroke="'+T('ring-ink')+'" stroke-width="1.5"/>';
       s+='<circle data-day="'+k+'" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="12" fill="transparent" style="cursor:pointer"/>';
     });
-    if(LAYER!=='g'&&MOON.pname){var tk=GZ.key(TODAY);s+='<circle cx="'+C+'" cy="'+C+'" r="46" fill="#E6DCC6" stroke="#c9bea4"/>'+
-      '<text x="'+C+'" y="'+(C-8)+'" text-anchor="middle" font-size="9" fill="#5E5750" font-family="Space Mono,monospace">сегодня</text>'+
-      '<text x="'+C+'" y="'+(C+5)+'" text-anchor="middle" font-size="10.5" font-weight="700" fill="#2B2724" font-family="Space Mono,monospace">'+GZ.short(TODAY)+'</text>'+
-      '<text x="'+C+'" y="'+(C+18)+'" text-anchor="middle" font-size="9" fill="#5E5750" font-family="Space Mono,monospace">'+MOON.pname(tk)+'</text>'}
-    else s+='<circle cx="'+C+'" cy="'+C+'" r="3" fill="#2B2724"/>';
+    if(LAYER!=='g'&&MOON.pname){var tk=GZ.key(TODAY);s+='<circle cx="'+C+'" cy="'+C+'" r="46" fill="'+T('ring-center')+'" stroke="'+T('ring-line')+'"/>'+
+      '<text x="'+C+'" y="'+(C-8)+'" text-anchor="middle" font-size="9" fill="'+T('ring-ink-2')+'" font-family="Space Mono,monospace">сегодня</text>'+
+      '<text x="'+C+'" y="'+(C+5)+'" text-anchor="middle" font-size="10.5" font-weight="700" fill="'+T('ring-ink')+'" font-family="Space Mono,monospace">'+GZ.short(TODAY)+'</text>'+
+      '<text x="'+C+'" y="'+(C+18)+'" text-anchor="middle" font-size="9" fill="'+T('ring-ink-2')+'" font-family="Space Mono,monospace">'+MOON.pname(tk)+'</text>'}
+    else s+='<circle cx="'+C+'" cy="'+C+'" r="3" fill="'+T('ring-ink')+'"/>';
     s+='</svg>';return s}
 
   /* Phase 5: rule-based hints, no AI. */
@@ -110,7 +111,7 @@
       '<button class="ghost" id="newp">Начался новый этап</button></div>';
     if(!TS.out)h+='<div class="card'+(nw?'':' soft')+'"><span class="label">Сейчас · начало круга '+GZ.ROM[TS.k]+'</span>'+(nw?'<p>'+esc(nw.text.slice(0,240))+(nw.text.length>240?'…':'')+'</p><p class="sub">записано '+GZ.short(GZ.parse(nw.date))+'</p>':'<p class="sub">Открытый момент: где ты стоишь на пороге этих 60 дней? Что уже есть, что только начинается?</p><button class="ghost" id="nowb">Записать «Сейчас»</button>')+'</div>';
     h+='<div class="row" id="lay">'+[['g','Ганьчжи'],['m','+ Луна'],['e','+ Экадаши']].map(function(x){return '<button class="'+(LAYER===x[0]?'primary':'ghost')+'" data-lay="'+x[0]+'">'+x[1]+'</button>'}).join('')+'</div>';
-    h+=ringSVG()+(LAYER!=='g'?'<p class="legend"><span style="color:#D9A43B">●</span> полнолуние &nbsp; ◦ новолуние'+(LAYER==='e'?' &nbsp; <span style="color:#6B2A2A">◇</span> экадаши (<span style="color:#6B2A2A">◆</span> пост)':'')+'<br>линия: наружу — к полнолунию, внутрь — к новолунию</p>':'')+'<p class="legend">● запись дня &nbsp; ○ сон / образ &nbsp; — этап &nbsp; · тап по точке — открыть день</p>';
+    h+=ringSVG()+(LAYER!=='g'?'<p class="legend"><span style="color:'+T('moon-full')+'">●</span> полнолуние &nbsp; ◦ новолуние'+(LAYER==='e'?' &nbsp; <span style="color:'+T('ekadashi')+'">◇</span> экадаши (<span style="color:'+T('ekadashi')+'">◆</span> пост)':'')+'<br>линия: наружу — к полнолунию, внутрь — к новолунию</p>':'')+'<p class="legend">● запись дня &nbsp; ○ сон / образ &nbsp; — этап &nbsp; · тап по точке — открыть день</p>';
     if(LAYER!=='g'&&MOON.ek){var ev=[],MN=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];for(var i1=0;i1<120&&ev.length<4;i1++){var d1=GZ.add(TODAY,i1),k1=GZ.key(d1),t1=MOON.nm(k1)?'новолуние':MOON.fm(k1)?'полнолуние':(LAYER==='e'&&MOON.ek(k1))?'экадаши':'';if(t1)ev.push(d1.getDate()+' '+MN[d1.getMonth()]+' — '+t1+(i1?' (через '+i1+' дн.)':' (сегодня)'))}
       if(ev.length)h+='<div class="legend" id="near"><b>Ближайшее</b><br>'+ev.join('<br>')+'</div>'}
     h+=hintsCard();
@@ -197,13 +198,13 @@
   function yearSVG(y){var C=150,s='<svg viewBox="0 0 300 300" class="yring" style="width:100%;max-width:520px;display:block;margin:0 auto" role="img" aria-label="Год: шесть колец">',tk=GZ.key(TODAY);
     var ents0=Store.entries();
     for(var k=0;k<6;k++){var R=140-k*20,cur=(!TS.out&&TS.year===y&&TS.k===k);
-      s+='<circle cx="'+C+'" cy="'+C+'" r="'+R+'" fill="none" stroke="'+(cur?'#5E5750':'#c9bea4')+'" stroke-width="'+(cur?1.2:.6)+'"/>';
+      s+='<circle cx="'+C+'" cy="'+C+'" r="'+R+'" fill="none" stroke="'+(cur?T('ring-ink-2'):T('ring-line'))+'" stroke-width="'+(cur?1.2:.6)+'"/>';
       for(var n=1;n<=60;n++){var d=GZ.dateOf(y,k,n),dk=GZ.key(d),a=(n-1)/60*2*Math.PI-Math.PI/2,x=(C+R*Math.cos(a)).toFixed(1),yy=(C+R*Math.sin(a)).toFixed(1),el=GZ.EL[GZ.elem(n)];
         var has=ents0.some(function(e){return e.date===dk&&e.kind!=='now'}),isT=dk===tk;
         var moon=LAYER!=='g'&&window.MOON&&MOON.fm&&MOON.fm(dk),ek=LAYER==='e'&&window.MOON&&MOON.ek&&MOON.ek(dk);
-        s+='<circle data-day="'+dk+'" cx="'+x+'" cy="'+yy+'" r="'+(isT?4.2:2.5)+'" fill="'+(has?el[1]:el[0])+'" stroke="'+(isT?'#2B2724':el[1])+'" stroke-width="'+(isT?1.5:.6)+'" style="cursor:pointer"/>';
-        if(moon)s+='<circle cx="'+x+'" cy="'+yy+'" r="4.5" fill="none" stroke="#D9A43B" stroke-width="1.2" pointer-events="none"/>';
-        if(ek)s+='<rect x="'+(x-2.5)+'" y="'+(yy-2.5)+'" width="5" height="5" fill="#6B2A2A" transform="rotate(45 '+x+' '+yy+')" pointer-events="none"/>'}}
+        s+='<circle data-day="'+dk+'" cx="'+x+'" cy="'+yy+'" r="'+(isT?4.2:2.5)+'" fill="'+(has?el[1]:el[0])+'" stroke="'+(isT?T('ring-ink'):el[1])+'" stroke-width="'+(isT?1.5:.6)+'" style="cursor:pointer"/>';
+        if(moon)s+='<circle cx="'+x+'" cy="'+yy+'" r="4.5" fill="none" stroke="'+T('moon-full')+'" stroke-width="1.2" pointer-events="none"/>';
+        if(ek)s+='<rect x="'+(x-2.5)+'" y="'+(yy-2.5)+'" width="5" height="5" fill="'+T('ekadashi')+'" transform="rotate(45 '+x+' '+yy+')" pointer-events="none"/>'}}
     return s+'</svg>'}
   function life(){
     if(LY===null)LY=TS.year;var y=LY,h='<div><h1>Жизнь</h1><p class="sub">Год '+y+' · шесть колец по 60 дней</p></div>';
@@ -217,10 +218,10 @@
     h+='</div>';
     var ss=ents('stone'),ys=ents('yearnote').filter(function(e){return e.year===y}),fs=ents('fork');
     var all=ss.concat(fs).sort(function(p,q){return p.date<q.date?-1:p.date>q.date?1:0});
-    if(all.length){var t0=GZ.parse(all[0].date).getTime(),t1=GZ.parse(all[all.length-1].date).getTime(),sp=Math.max(t1-t0,1),sn=0,sv='<svg viewBox="0 0 200 200" class="lifemap" role="img" aria-label="Схема жизни"><circle cx="100" cy="100" r="78" fill="none" stroke="#c9bea4"/>';
+    if(all.length){var t0=GZ.parse(all[0].date).getTime(),t1=GZ.parse(all[all.length-1].date).getTime(),sp=Math.max(t1-t0,1),sn=0,sv='<svg viewBox="0 0 200 200" class="lifemap" role="img" aria-label="Схема жизни"><circle cx="100" cy="100" r="78" fill="none" stroke="'+T('ring-line')+'"/>';
       all.forEach(function(e,i){var an=all.length>1?(GZ.parse(e.date).getTime()-t0)/sp*Math.PI*1.8-Math.PI/2:-Math.PI/2,x=(100+78*Math.cos(an)).toFixed(1),yy=(100+78*Math.sin(an)).toFixed(1);
-        if(e.kind==='stone'){sn++;sv+='<g data-go="'+e.id+'" style="cursor:pointer"><circle cx="'+x+'" cy="'+yy+'" r="9" fill="#f3dfae" stroke="#8a5a12"/><text x="'+x+'" y="'+(+yy+3.5)+'" font-size="10" text-anchor="middle" fill="#8a5a12">'+sn+'</text></g>'}
-        else sv+='<g data-go="'+e.id+'" style="cursor:pointer"><path d="M'+x+' '+(yy-9)+' l9 9 l-9 9 l-9 -9z" fill="#d6d0c6" stroke="#2B2724"/></g>'});
+        if(e.kind==='stone'){sn++;sv+='<g data-go="'+e.id+'" style="cursor:pointer"><circle cx="'+x+'" cy="'+yy+'" r="9" fill="'+T('el2-f')+'" stroke="'+T('el2-s')+'"/><text x="'+x+'" y="'+(+yy+3.5)+'" font-size="10" text-anchor="middle" fill="'+T('el2-s')+'">'+sn+'</text></g>'}
+        else sv+='<g data-go="'+e.id+'" style="cursor:pointer"><path d="M'+x+' '+(yy-9)+' l9 9 l-9 9 l-9 -9z" fill="'+T('el4-f')+'" stroke="'+T('ring-ink')+'"/></g>'});
       h+='<div class="card"><span class="label">Схема жизни</span>'+sv+'</svg><p class="sub">Точки — вехи по порядку, ромбы — развилки. Нажми, чтобы открыть запись.</p></div>'}
     h+='<div class="row"><button class="ghost" id="as2"'+(ss.length>=12?' disabled':'')+'>+ Веха</button><button class="ghost" id="af2">+ Развилка</button></div>';
     h+='<div class="row"><h2>Вехи</h2><span class="sub">'+ss.length+' из 12</span></div>';
@@ -235,7 +236,7 @@
     screen.innerHTML=h;
     screen.querySelectorAll('[data-day]').forEach(function(c){c.onclick=function(){day(c.getAttribute('data-day'))}});screen.querySelectorAll('[data-lay]').forEach(function(c){c.onclick=function(){setLayer(c.getAttribute('data-lay'));life()}});
     $('#yp').onclick=function(){LY=y-1;life()};$('#yn').onclick=function(){LY=y+1;life()};
-    screen.querySelectorAll('[data-go]').forEach(function(g){g.onclick=function(){var el=document.getElementById('e'+g.getAttribute('data-go'));if(el){el.scrollIntoView();el.style.outline='2px solid #8a5a12'}}});$('#as2').onclick=stoneEditor;$('#af2').onclick=forkEditor;    $('#as').onclick=stoneEditor;$('#ay').onclick=function(){yearEditor(y)};$('#af').onclick=forkEditor;
+    screen.querySelectorAll('[data-go]').forEach(function(g){g.onclick=function(){var el=document.getElementById('e'+g.getAttribute('data-go'));if(el){el.scrollIntoView();el.style.outline='2px solid '+T('el2-s')}}});$('#as2').onclick=stoneEditor;$('#af2').onclick=forkEditor;    $('#as').onclick=stoneEditor;$('#ay').onclick=function(){yearEditor(y)};$('#af').onclick=forkEditor;
     screen.querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){if(b.dataset.sure){Store.remove(b.getAttribute('data-del'));life()}else{b.dataset.sure='1';b.textContent='Точно удалить? Нажми ещё раз'}}});
   }
   function delBtn(id){return '<button class="link" data-del="'+id+'">Удалить</button>'}
@@ -363,6 +364,7 @@
       var f=document.activeElement;if(kb>80&&f&&sheet.contains(f))setTimeout(function(){f.scrollIntoView({block:'nearest'})},30)}
     vv.addEventListener('resize',fit);vv.addEventListener('scroll',fit);fit()})();
   sheet.addEventListener('focusin',function(e){setTimeout(function(){e.target.scrollIntoView({block:'nearest'})},300)});
+  THEME.on(function(){render()});
   render();
 })();
 (function(){var L=document.getElementById('leds');if(!L||!window.GZ)return;var t=GZ.slot(new Date());L.innerHTML=t.out?'<span><i class="a"></i>МЕЖДУ КРУГАМИ</span>':'<span><i></i>КРУГ '+GZ.ROM[t.k]+'</span><span><i class="a"></i>ДЕНЬ '+t.n+'</span>'})();
