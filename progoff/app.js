@@ -353,7 +353,7 @@
     screen.querySelectorAll('#lf button').forEach(function(b){b.onclick=function(){LF=b.getAttribute('data-f');lenta()}});
     screen.querySelectorAll('[data-day]').forEach(function(b){b.onclick=function(){day(b.getAttribute('data-day'))}});
   }
-  function render(){screen.classList.remove('wide');if(tab==='lenta')return lenta();if(tab==='krug')return krug();if(tab==='life')return life();if(tab==='dialogs')return dialogs();if(tab==='todo')return todos();return quiet()}
+  function render(){screen.dataset.tab=tab;screen.classList.remove('wide');if(tab==='lenta')return lenta();if(tab==='krug')return krug();if(tab==='life')return life();if(tab==='dialogs')return dialogs();if(tab==='todo')return todos();return quiet()}
   document.querySelectorAll('#tabs button').forEach(function(b){b.onclick=function(){tab=b.getAttribute('data-tab');DP=null;
     document.querySelectorAll('#tabs button').forEach(function(x){x.classList.toggle('on',x===b)});close();render()}});
   document.addEventListener('visibilitychange',function(){if(!document.hidden){var k=GZ.key(TODAY);refresh();if(GZ.key(TODAY)!==k)render()}});
