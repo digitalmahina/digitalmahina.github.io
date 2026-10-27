@@ -289,3 +289,11 @@ main[data-tab=quiet] .clock{border-left:8px solid transparent;border-image:var(-
 .skins [data-skin=clean] i{background:linear-gradient(90deg,#fbfaf8 0 50%,#2b2a27 50%)}
 .skins [data-skin=retro] i{background:linear-gradient(90deg,#F2EBDC 0 34%,#AD4D26 34% 67%,#E3B62B 67%)}
 .skins [data-skin=neon] i{background:linear-gradient(90deg,#0c0a1a 0 34%,#ff3fa4 34% 67%,#22e4ff 67%)}
+/* dreams */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chips .btn{min-height:32px;padding:0 10px;text-transform:none;letter-spacing:.02em}
+.chips .btn.on{background:var(--accent-2);color:var(--on-accent-2);box-shadow:var(--pressed)}
+.entry.dream{cursor:pointer}
+.entry.dream .sub{justify-self:start}
+.entry.dream.tw .ptitle{font-style:italic}
+[data-theme=clean] .field.crt{box-shadow:inset 0 0 0 1px var(--line);border-radius:var(--r-l)}
