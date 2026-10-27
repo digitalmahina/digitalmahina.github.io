@@ -3,7 +3,10 @@
    JS-drawn SVG reads its colours from tokens via THEME.t(name), refreshed on every apply(). */
 var THEME=(function(){
   var KEY='progoff.theme',root=document.documentElement;
-  var BUILTIN={retro:{name:'Ретро',deco:'tiles stripes cables scan leds numbers',meta:'#2B2724'}};
+  var BUILTIN={
+    clean:{name:'Чистый',deco:'',meta:'#fbfaf8'},
+    retro:{name:'Ретро',deco:'tiles stripes cables scan leds numbers',meta:'#2B2724'},
+    neon:{name:'Неон',deco:'tiles stripes cables scan leds',meta:'#0c0a1a'}};
   var cache={},subs=[];
   function read(){var cs=getComputedStyle(root);cache={};return cs}
   function t(name){if(!(name in cache)){cache[name]=getComputedStyle(root).getPropertyValue('--'+name).trim()}return cache[name]}
