@@ -1,62 +1,133 @@
 {
- "generated": "2026-10-27T20:57Z",
+ "generated": "2026-10-27T23:23Z",
  "note": "Автоматическая сверка для анализа, не официальная оценка оправдываемости. хуже = факт хуже прогноза.",
  "summary": {
   "vis": {
-   "хуже": 2,
+   "хуже": 3,
    "совпало": 21,
    "лучше": 1
   },
   "cld": {
-   "хуже": 24,
+   "хуже": 25,
    "совпало": 0,
    "лучше": 0
   },
   "qnh": {
    "хуже": 0,
-   "совпало": 24,
+   "совпало": 25,
    "лучше": 0
   },
   "wx": {
    "BR": {
-    "hit": 20,
+    "hit": 21,
     "miss": 0,
     "false": 4
+   },
+   "RA": {
+    "hit": 12,
+    "miss": 0,
+    "false": 1
+   },
+   "SH": {
+    "hit": 12,
+    "miss": 0,
+    "false": 1
+   },
+   "CB": {
+    "hit": 0,
+    "miss": 0,
+    "false": 20
+   },
+   "FG": {
+    "hit": 14,
+    "miss": 1,
+    "false": 8
    },
    "DZ": {
     "hit": 5,
     "miss": 4,
     "false": 0
    },
-   "FG": {
-    "hit": 14,
-    "miss": 0,
-    "false": 8
-   },
-   "CB": {
-    "hit": 0,
-    "miss": 0,
-    "false": 19
-   },
    "FZDZ": {
     "hit": 0,
     "miss": 0,
     "false": 1
-   },
-   "RA": {
-    "hit": 11,
-    "miss": 0,
-    "false": 1
-   },
-   "SH": {
-    "hit": 11,
-    "miss": 0,
-    "false": 1
    }
   },
-  "bulletins": 24
+  "bulletins": 25
  },
  "items": [
+  {
+   "header": "ULLL GAMET VALID 280000/280600 ULMM- ULLL SANKT-PETERBURG FIR/MURMANSK 1-12,1A,4A,5A,6A,9A,10A,10B,12A,13M BLW FL150",
+   "valid_from": "2026-09-28T00:00Z",
+   "valid_to": "2026-09-28T06:00Z",
+   "obs": 48,
+   "vis": {
+    "fc": 2000,
+    "fc_lca": 2000,
+    "obs_min": 200.0,
+    "obs_station": "22101",
+    "stations": 16,
+    "verdict": "хуже"
+   },
+   "cld": {
+    "fc_min": 300,
+    "obs_min": 41,
+    "obs_station": "22003",
+    "stations": 15,
+    "verdict": "хуже"
+   },
+   "qnh": {
+    "fc": 1003,
+    "obs_min": 1019.9,
+    "obs_station": "22003",
+    "verdict": "совпало"
+   },
+   "wx": {
+    "fc": [
+     "BR",
+     "CB",
+     "RA",
+     "SH"
+    ],
+    "obs": [
+     "BR",
+     "FG",
+     "RA",
+     "SH"
+    ],
+    "hit": [
+     "BR",
+     "RA",
+     "SH"
+    ],
+    "miss": [
+     "FG"
+    ],
+    "false": [
+     "CB"
+    ]
+   },
+   "stations": [
+    "22003",
+    "22004",
+    "22028",
+    "22101",
+    "22106",
+    "22113",
+    "22127",
+    "22212",
+    "22213",
+    "22217",
+    "22235",
+    "22249",
+    "22312",
+    "22324",
+    "22334",
+    "22349"
+   ],
+   "status": "ok"
+  },
   {
    "header": "ULLL GAMET VALID 210800/211200 ULMM- ULLL SANKT-PETERBURG FIR/15M,16M BLW FL100",
    "valid_from": "2026-10-21T08:00Z",
