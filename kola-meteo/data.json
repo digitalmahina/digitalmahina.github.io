@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-27T16:33Z",
+ "generated": "2026-10-27T17:25Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -11,13 +11,13 @@
    "wdir": 220,
    "wspd": 4,
    "wgst": null,
-   "vis": 9999,
-   "ceil": 1300,
+   "vis": 5000,
+   "ceil": 1200,
    "temp": 6,
-   "dew": 5,
-   "qnh": 1002,
-   "time": "16:20Z",
-   "raw": "METAR EFIV 271620Z AUTO 22007KT 9999 BKN013 06/05 Q1002"
+   "dew": 6,
+   "qnh": 1003,
+   "time": "17:20Z",
+   "raw": "METAR EFIV 271720Z AUTO 22007KT 5000 -SHRA BKN012 06/06 Q1003"
   },
   {
    "icao": "EFKS",
@@ -25,17 +25,17 @@
    "place": "Финляндия",
    "lat": 65.992,
    "lon": 29.236,
-   "cat": "MVFR",
-   "wdir": 220,
+   "cat": "IFR",
+   "wdir": 230,
    "wspd": 5,
    "wgst": null,
    "vis": 9999,
-   "ceil": 2700,
+   "ceil": 800,
    "temp": 7,
    "dew": 6,
    "qnh": 1008,
-   "time": "16:20Z",
-   "raw": "METAR EFKS 271620Z AUTO 22010KT 9999 FEW010 OVC027 07/06 Q1008"
+   "time": "17:20Z",
+   "raw": "METAR EFKS 271720Z AUTO 23010KT 9999 -SHRA BKN008 07/06 Q1008 REDZ"
   },
   {
    "icao": "ENKR",
@@ -45,15 +45,15 @@
    "lon": 29.898,
    "cat": "MVFR",
    "wdir": 230,
-   "wspd": 5,
+   "wspd": 3,
    "wgst": null,
    "vis": 9999,
-   "ceil": 1700,
+   "ceil": 1400,
    "temp": 7,
    "dew": 6,
    "qnh": 1001,
-   "time": "16:20Z",
-   "raw": "METAR ENKR 271620Z 23009KT 9999 FEW008 SCT012 BKN017 07/06 Q1001 RMK WIND 731FT 24020KT"
+   "time": "16:50Z",
+   "raw": "METAR ENKR 271650Z 23006KT 9999 FEW005 SCT010 BKN014 07/06 Q1001 RMK WIND 731FT 25016KT"
   },
   {
    "icao": "ULMM",
@@ -61,17 +61,17 @@
    "place": "Мурмаши",
    "lat": 68.781,
    "lon": 32.749,
-   "cat": "VFR",
+   "cat": "MVFR",
    "wdir": 200,
    "wspd": 3,
    "wgst": null,
    "vis": 9999,
-   "ceil": 99999,
+   "ceil": 1800,
    "temp": 8,
    "dew": 6,
    "qnh": 1003,
-   "time": "16:00Z",
-   "raw": "METAR ULMM 271600Z 20003MPS 150V230 9999 SCT026 08/06 Q1003 R13/190059 NOSIG RMK QFE745"
+   "time": "17:00Z",
+   "raw": "METAR ULMM 271700Z 20003MPS 180V240 9999 BKN018 08/06 Q1003 R13/190059 NOSIG RMK QFE746"
   }
  ],
  "synop": [
