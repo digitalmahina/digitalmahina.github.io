@@ -14,5 +14,7 @@ var GZ=(function(){
   function dateOf(year,k,n){return new Date(year,0,1+k*60+(n-1)-11,12)}
   function elem(n){return Math.floor(((n-1)%10)/2)}
   function short(d){return d.getDate()+' '+MS[d.getMonth()]}
-  return {EL:EL,ELN:ELN,ROM:ROM,noon:noon,add:add,key:key,parse:parse,slot:slot,dateOf:dateOf,elem:elem,short:short};
+  /* Element colours come from theme tokens --elN-f/--elN-s; EL keeps the retro values as fallback. */
+  function retheme(t){for(var i=0;i<5;i++){var f=t('el'+i+'-f'),s=t('el'+i+'-s');if(f)EL[i][0]=f;if(s)EL[i][1]=s}}
+  return {EL:EL,retheme:retheme,ELN:ELN,ROM:ROM,noon:noon,add:add,key:key,parse:parse,slot:slot,dateOf:dateOf,elem:elem,short:short};
 })();
