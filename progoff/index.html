@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" data-theme="retro" data-deco="tiles stripes cables scan leds numbers">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
@@ -15,11 +15,11 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Дневник">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="stylesheet" href="style.css?v=19">
+<link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
 <div class="app" id="app">
-  <div class="plate"><span class="dymo">ДНЕВНИК · ПРОГОФФ</span><svg class="cables" viewBox="0 0 120 28" aria-hidden="true"><g fill="none" stroke-linecap="round"><path d="M0 22 C30 22 40 6 70 6 S110 14 120 14" stroke="#EE6FAE" stroke-width="3"/><path d="M0 26 C32 26 42 10 72 10 S110 18 120 18" stroke="#F49AC8" stroke-width="3"/><path d="M0 18 C28 18 38 2 68 2 S110 10 120 10" stroke="#E8569F" stroke-width="3"/></g></svg><span class="leds" id="leds"></span></div>
+  <div class="plate"><span class="dymo">ДНЕВНИК · ПРОГОФФ</span><svg class="cables" viewBox="0 0 120 28" aria-hidden="true"><g fill="none" stroke-linecap="round"><path d="M0 22 C30 22 40 6 70 6 S110 14 120 14" style="stroke:var(--cable-1)" stroke-width="3"/><path d="M0 26 C32 26 42 10 72 10 S110 18 120 18" style="stroke:var(--cable-2)" stroke-width="3"/><path d="M0 18 C28 18 38 2 68 2 S110 10 120 10" style="stroke:var(--cable-3)" stroke-width="3"/></g></svg><span class="leds" id="leds"></span></div>
   <div class="stripes" aria-hidden="true"><i></i><i></i><i></i></div>
   <main id="screen"></main>
   <div class="veil" id="veil" hidden></div>
@@ -33,9 +33,10 @@
     <button data-tab="quiet">Тишина</button>
     <button data-tab="todo">Дела</button>
   </nav>
-<script src="ganzhi.js?v=2"></script>
+<script src="ganzhi.js?v=3"></script>
+<script src="theme.js?v=1"></script>
 <script src="store.js?v=2"></script>
 <script src="moon.js?v=2"></script>
-<script src="app.js?v=28"></script>
+<script src="app.js?v=29"></script>
 </body>
 </html>
