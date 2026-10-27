@@ -72,7 +72,7 @@
     if(!TS.out&&TS.n>=53&&ents('stone').length<12)H.push('Круг подходит к концу. Была ли в нём веха — событие, которое поменяло направление?');
     var cp=curPeriod();if(!cp)H.push('Этап жизни не назван. Одно слово тоже подойдёт.');else if(daysBetween(cp.start,tk)>120)H.push('Этап «'+(cp.e.title||'')+'» идёт больше 120 дней. Он всё ещё тот же?');
     var dr=es.filter(function(e){return e.kind==='dream'&&daysBetween(e.date,tk)<=14}).length;
-    var rec=dreamImages().filter(function(x){return x.n>=2})[0];if(rec)H.push('Образ «'+rec.w+'» приходит уже '+rec.n+'-й раз. Не толкуй его — разверни последний сон с ним.');
+    var rec=dreamImages().filter(function(x){return x.n>=2})[0];if(rec)H.unshift('Образ «'+rec.w+'» приходит уже '+rec.n+'-й раз. Не толкуй его — разверни последний сон с ним.');
     if(dr>=3)H.push('За две недели накопились сны и образы. Не расшифровывай, просто заведи диалог с одним из них.');
     if(window.Moon&&Moon.ekadashi&&LAYER==='e'){}
     return H.slice(0,2)}
@@ -347,8 +347,11 @@
   function dreams(){return Store.entries().filter(function(e){return e.kind==='dream'}).sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:((a.created||'')<(b.created||'')?-1:1)})}
   function dreamById(id){return Store.entries().filter(function(e){return e.id===id})[0]||null}
   function enl(id){return Store.entries().filter(function(e){return e.kind==='dreamx'&&e.parent===id}).sort(function(a,b){return (a.created||'')<(b.created||'')?-1:1})}
-  function dreamImages(){var c={};dreams().forEach(function(d){var seen={};(d.title||'').toLowerCase().replace(/ё/g,'е').split(/[^a-zа-я0-9-]+/).forEach(function(w){if(w.length<3||STOP[w]||seen[w])return;seen[w]=1;c[w]=(c[w]||0)+1})});
-    return Object.keys(c).map(function(w){return {w:w,n:c[w]}}).sort(function(a,b){return b.n-a.n||(a.w<b.w?-1:1)})}
+  var END=['ами','ями','ого','его','ому','ему','ыми','ими','ой','ей','ий','ый','ая','яя','ое','ее','ую','юю','ов','ев','ах','ях','ам','ям','ом','ем','ы','и','а','я','о','е','у','ю','ь'];
+  function stem(w){for(var i=0;i<END.length;i++){var x=END[i];if(w.length-x.length>=3&&w.slice(-x.length)===x)return w.slice(0,-x.length)}return w}
+  function words(t){return (t||'').toLowerCase().replace(/ё/g,'е').split(/[^a-zа-я0-9-]+/).filter(function(w){return w.length>=3&&!STOP[w]})}
+  function dreamImages(){var c={},f={};dreams().forEach(function(d){var seen={};words(d.title).forEach(function(w){var s=stem(w);if(seen[s])return;seen[s]=1;c[s]=(c[s]||0)+1;f[s]=f[s]||{};f[s][w]=(f[s][w]||0)+1})});
+    return Object.keys(c).map(function(s){var best=Object.keys(f[s]).sort(function(a,b){return f[s][b]-f[s][a]||a.length-b.length})[0];return {w:best,s:s,n:c[s]}}).sort(function(a,b){return b.n-a.n||(a.w<b.w?-1:1)})}
   function dreamNo(id){var ds=dreams();for(var i=0;i<ds.length;i++)if(ds[i].id===id)return i+1;return 0}
   function dreamRow(e,cls,no){
     if(e.kind==='dreamx'){var p=dreamById(e.parent);
@@ -361,7 +364,7 @@
   function dreamSeriesHead(){var ds=dreams(),im=dreamImages().filter(function(x){return x.n>=2}).slice(0,8);
     var inRing=TS.out?0:ds.filter(function(d){var s=GZ.slot(GZ.parse(d.date));return !s.out&&s.year===TS.year&&s.k===TS.k}).length;
     return '<div class="card soft"><span class="label">Серия снов</span><p class="sub">'+(ds.length?'Всего '+ds.length+(TS.out?'':' · в этом круге '+inRing)+'. Сны читаются подряд, как одна длинная история.':'Прогофф советует не толковать сны, а записывать их подряд и возвращаться к ним.')+'</p>'+
-      (im.length?'<p class="sub">Повторяющиеся образы:</p><div class="chips">'+im.map(function(x){return '<button class="btn" data-img="'+esc(x.w)+'"'+(LQ===x.w?' style="outline:2px solid var(--focus)"':'')+'>'+esc(x.w)+' ×'+x.n+'</button>'}).join('')+'</div>':'')+
+      (im.length?'<p class="sub">Повторяющиеся образы:</p><div class="chips">'+im.map(function(x){return '<button class="btn" data-img="'+esc(x.s)+'"'+(LQ===x.s?' style="outline:2px solid var(--focus)"':'')+'>'+esc(x.w)+' ×'+x.n+'</button>'}).join('')+'</div>':'')+
       '<button class="primary" id="newdream">Записать сон</button></div>'}
   function dreamEditor(k,id,pre){var e=id?dreamById(id):null,mode=e?e.mode||'sleep':'sleep',feel=e?e.feel||'':'';
     open('<div><h1>'+(e?'Сон № '+dreamNo(e.id):'Сон')+'</h1><p class="sub">'+GZ.short(GZ.parse(k))+' · записывай сразу, как пришло, без толкования</p></div>'+
@@ -377,7 +380,7 @@
       var p={mode:mode,title:ti,feel:feel,text:t};
       if(e){Store.update(e.id,p);render();dreamView(e.id)}else{var n=Store.add({kind:'dream',date:k,mode:mode,title:ti,feel:feel,text:t});if(n){render();dreamView(n.id)}}}}
   function dreamView(id){var e=dreamById(id);if(!e)return;var xs=enl(id),d=GZ.parse(e.date),s=GZ.slot(d);
-    var same=e.title?dreamImages().filter(function(x){return x.n>=2&&(e.title||'').toLowerCase().replace(/ё/g,'е').indexOf(x.w)>=0}):[];
+    var same=e.title?(function(){var my=words(e.title).map(stem);return dreamImages().filter(function(x){return x.n>=2&&my.indexOf(x.s)>=0})})():[];
     open('<div><h1>'+(e.mode==='twilight'?'Образ':'Сон')+' № '+dreamNo(id)+'</h1><p class="sub">'+GZ.short(d)+(s.out?'':' · круг '+GZ.ROM[s.k]+', день '+s.n)+(e.feel?' · '+esc(e.feel):'')+'</p></div>'+
       (e.title?'<p class="ptitle">'+esc(e.title)+'</p>':'')+(e.text?'<p style="white-space:pre-wrap">'+esc(e.text)+'</p>':'')+
       (same.length?'<p class="sub">Этот образ уже приходил: '+same.map(function(x){return '«'+esc(x.w)+'» ×'+x.n}).join(', ')+'.</p>':'')+
