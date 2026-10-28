@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-28T05:21Z",
+ "generated": "2026-10-28T06:16Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -16,8 +16,8 @@
    "temp": 8,
    "dew": 6,
    "qnh": 1004,
-   "time": "05:20Z",
-   "raw": "METAR EFIV 280520Z AUTO 19006KT 160V230 9999 BKN010 OVC030 08/06 Q1004"
+   "time": "05:50Z",
+   "raw": "METAR EFIV 280550Z AUTO 19006KT 150V210 9999 OVC010 08/06 Q1004"
   },
   {
    "icao": "EFKS",
@@ -26,16 +26,16 @@
    "lat": 65.992,
    "lon": 29.236,
    "cat": "IFR",
-   "wdir": 200,
-   "wspd": 5,
+   "wdir": 210,
+   "wspd": 7,
    "wgst": null,
    "vis": 6000,
    "ceil": 600,
-   "temp": 8,
-   "dew": 7,
-   "qnh": 1009,
-   "time": "04:50Z",
-   "raw": "METAR EFKS 280450Z AUTO 20010KT 6000 -DZ OVC006 08/07 Q1009"
+   "temp": 9,
+   "dew": 8,
+   "qnh": 1010,
+   "time": "05:50Z",
+   "raw": "METAR EFKS 280550Z AUTO 21014KT 6000 -DZ OVC006 09/08 Q1010"
   },
   {
    "icao": "ENKR",
@@ -43,17 +43,17 @@
    "place": "Норвегия",
    "lat": 69.725,
    "lon": 29.898,
-   "cat": "MVFR",
+   "cat": "IFR",
    "wdir": 160,
-   "wspd": 3,
+   "wspd": 4,
    "wgst": null,
    "vis": 9999,
-   "ceil": 1700,
-   "temp": 5,
+   "ceil": 900,
+   "temp": 6,
    "dew": 4,
    "qnh": 1005,
-   "time": "04:50Z",
-   "raw": "METAR ENKR 280450Z 16006KT 9999 BKN017 05/04 Q1005 RMK WIND 731FT 18012KT"
+   "time": "05:50Z",
+   "raw": "METAR ENKR 280550Z AUTO 16008KT 9999 BKN009/// OVC022/// 06/04 Q1005 RMK WIND 731FT 18015KT"
   },
   {
    "icao": "ULMM",
@@ -62,16 +62,16 @@
    "lat": 68.781,
    "lon": 32.749,
    "cat": "MVFR",
-   "wdir": 170,
+   "wdir": 160,
    "wspd": 3,
    "wgst": null,
    "vis": 9999,
    "ceil": 1900,
    "temp": 8,
-   "dew": 5,
+   "dew": 6,
    "qnh": 1007,
-   "time": "05:00Z",
-   "raw": "METAR ULMM 280500Z 17003MPS 9999 BKN019 08/05 Q1007 R13/190060 NOSIG RMK QFE749"
+   "time": "06:00Z",
+   "raw": "METAR ULMM 280600Z 16003MPS 9999 BKN019 08/06 Q1007 R13/190060 NOSIG RMK QFE749"
   }
  ],
  "synop": [
@@ -301,10 +301,10 @@
   }
  ],
  "taf": {
-  "EFKS": "TAF EFKS 280238Z 2803/2812 20011KT 8000 -DZ OVC006 TEMPO 2803/2812 4000 DZ OVC004",
-  "ENKR": "TAF AMD ENKR 280333Z 2803/2812 20006KT 9999 BKN012 TEMPO 2803/2809 FEW012 BKN020",
-  "ULMM": "TAF ULMM 280202Z 2803/2903 20003MPS 9999 BKN016 BECMG 2815/2817 22006G12MPS",
-  "EFIV": "TAF EFIV 280238Z 2803/2812 20006KT 9999 OVC009 TEMPO 2803/2809 6000 -DZ BKN010 BECMG 2809/2810 21016KT TEMPO 2810/2812 22018G28KT"
+  "EFIV": "TAF EFIV 280529Z 2806/2815 20006KT 9999 OVC009 TEMPO 2806/2809 6000 -DZ BKN011 BECMG 2809/2810 21016KT TEMPO 2810/2813 22018G28KT BECMG 2813/2815 BKN015",
+  "EFKS": "TAF EFKS 280529Z 2806/2815 20011KT 8000 -DZ OVC006 TEMPO 2806/2815 4000 DZ OVC004",
+  "ENKR": "TAF ENKR 280500Z 2806/2815 17008KT 9999 BKN018 TEMPO 2806/2815 BKN012 TEMPO 2812/2815 21018KT",
+  "ULMM": "TAF ULMM 280501Z 2806/2906 19003MPS 6000 BKN016 BECMG 2815/2817 22006G12MPS BECMG 2902/2904 19003G08MPS"
  },
  "sigmet": []
 }
