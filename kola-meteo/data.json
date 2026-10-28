@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-28T23:12Z",
+ "generated": "2026-10-28T23:22Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -7,17 +7,35 @@
    "place": "Финляндия",
    "lat": 68.607,
    "lon": 27.405,
+   "cat": "VFR",
+   "wdir": 210,
+   "wspd": 4,
+   "wgst": null,
+   "vis": 9999,
+   "ceil": 99999,
+   "temp": 7,
+   "dew": 6,
+   "qnh": 1008,
+   "time": "23:20Z",
+   "raw": "METAR EFIV 282320Z AUTO 21008KT 9999 FEW014 07/06 Q1008"
+  },
+  {
+   "icao": "EFKS",
+   "name": "Куусамо",
+   "place": "Финляндия",
+   "lat": 65.992,
+   "lon": 29.236,
    "cat": "MVFR",
-   "wdir": 190,
+   "wdir": 210,
    "wspd": 3,
    "wgst": null,
    "vis": 9999,
-   "ceil": 1200,
+   "ceil": 1600,
    "temp": 8,
    "dew": 6,
-   "qnh": 1008,
+   "qnh": 1014,
    "time": "22:50Z",
-   "raw": "METAR EFIV 282250Z AUTO 19006KT 9999 BKN012 08/06 Q1008"
+   "raw": "METAR EFKS 282250Z AUTO 21006KT 9999 BKN016 BKN043 08/06 Q1014"
   },
   {
    "icao": "ENKR",
@@ -54,24 +72,6 @@
    "qnh": 1010,
    "time": "23:00Z",
    "raw": "METAR ULMM 282300Z 24002MPS 190V300 9999 BKN018 09/06 Q1010 R13/190065 NOSIG RMK QFE751"
-  },
-  {
-   "icao": "EFKS",
-   "name": "Куусамо",
-   "place": "Финляндия",
-   "lat": 65.992,
-   "lon": 29.236,
-   "cat": "MVFR",
-   "wdir": 210,
-   "wspd": 3,
-   "wgst": null,
-   "vis": 9999,
-   "ceil": 1600,
-   "temp": 8,
-   "dew": 6,
-   "qnh": 1014,
-   "time": "22:50Z",
-   "raw": "METAR EFKS 282250Z AUTO 21006KT 9999 BKN016 BKN043 08/06 Q1014"
   }
  ],
  "synop": [
