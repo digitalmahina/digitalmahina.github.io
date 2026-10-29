@@ -28,7 +28,7 @@ var VOICE=(function(){
   function modelCached(){if(!window.caches)return Promise.resolve(false);return caches.open('transformers-cache').then(function(c){return c.keys()}).then(function(ks){
     var u=ks.map(function(r){return r.url});return MODEL_FILES.every(function(f){return u.some(function(x){return x.indexOf('whisper-small')>=0&&x.indexOf(f)>=0})})}).catch(function(){return false})}
   var W=null,Q={},prog={},onProg=null,readyCbs=[];
-  function worker(){if(W)return W;W=new Worker('stt-worker.js?v=1',{type:'module'});
+  function worker(){if(W)return W;W=new Worker('stt-worker.js?v=2',{type:'module'});
     W.onmessage=function(e){var m=e.data;
       if(m.type==='progress'){prog[m.file]={l:m.loaded||0,t:m.total||0};var L=0,T=0;for(var k in prog){L+=prog[k].l;T+=prog[k].t}if(onProg)onProg(L,T)}
       else if(m.type==='ready'){var c=readyCbs;readyCbs=[];c.forEach(function(f){f[0]()})}
