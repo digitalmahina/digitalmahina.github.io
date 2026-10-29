@@ -193,6 +193,7 @@
     line('Записи',snap.entries.length+' шт., localStorage '+Math.round(lsBytes/1024)+' КБ');
     var sw=navigator.serviceWorker&&navigator.serviceWorker.controller?'активен':'нет';line('Офлайн-кэш (SW)',sw);
     var si=SYNC.info();line('Банк',si.on?(si.err?'ошибка: '+si.err:si.busy?'синхронизирую':si.last?'синхронизировано '+new Date(si.last).toLocaleTimeString('ru-RU'):'подключён'):'не подключён');
+    var longBefore=D.long.length,longMaxBefore=D.long.length?Math.max.apply(null,D.long.map(function(l){return l.d})):0;
     var tabs=['krug','lenta','life','dialogs','quiet','todo'],RT={};
     tabs.forEach(function(t){RT[t]=[];tab=t;for(var i=0;i<3;i++){var t0=performance.now();render0();void screen.offsetHeight;RT[t].push(performance.now()-t0)}});
     tab=keep;render0();
@@ -200,7 +201,7 @@
     var past=Object.keys(D.renders).map(function(t){return t+' '+ms(D.renders[t])}).join('; ');if(past)line('Отрисовки за сеанс',past);
     var est=navigator.storage&&navigator.storage.estimate?navigator.storage.estimate().catch(function(){return null}):Promise.resolve(null);
     var clips=VOICE.keys?VOICE.keys().then(function(k){return k.length}).catch(function(){return '?'}):Promise.resolve('?');
-    return D.frames(1500).then(function(idle){L.push('— Плавность —');line('  покой',idle.fps+' к/с, худший кадр '+idle.worst+' мс, рывков '+idle.jank+' из '+idle.n);if(idle.fps<50)warn.push('Даже в покое меньше 50 кадров в секунду');
+    return new Promise(function(ok){setTimeout(ok,700)}).then(function(){return D.frames(1500)}).then(function(idle){L.push('— Плавность —');line('  покой',idle.fps+' к/с, худший кадр '+idle.worst+' мс, рывков '+idle.jank+' из '+idle.n);if(idle.fps<50)warn.push('Даже в покое меньше 50 кадров в секунду');
         var sc=document.scrollingElement||document.documentElement,top=sc.scrollTop,max=Math.max(0,sc.scrollHeight-innerHeight),dir=1,p=top;
         return D.frames(1500,function(){p+=dir*14;if(p>max||p<0){dir=-dir;p=Math.max(0,Math.min(max,p))}sc.scrollTop=p}).then(function(s){sc.scrollTop=top;
           line('  прокрутка',s.fps+' к/с, худший кадр '+s.worst+' мс, рывков '+s.jank+' из '+s.n);if(s.jank>s.n*.1)warn.push('Прокрутка дёргается: '+s.jank+' рывков из '+s.n+' кадров');return s})})
@@ -208,7 +209,7 @@
         var pr=D.frames(500);requestAnimationFrame(function(){sheet.classList.remove('off');veil.classList.remove('off')});
         return pr.then(function(a){line('  шторка',a.fps+' к/с, худший кадр '+a.worst+' мс');if(a.worst>60)warn.push('Шторка выезжает с рывком ('+a.worst+' мс)')})})
       .then(function(){return Promise.all([est,clips])}).then(function(x){var e=x[0];if(e)line('Хранилище',Math.round((e.usage||0)/1048576)+' МБ из '+Math.round((e.quota||0)/1048576)+' МБ');line('Голосовые клипы',x[1]);
-        L.push('— Подвисания (>50 мс) —');if(D.noLongtask)L.push('  браузер не сообщает (так ведёт себя Safari)');else{line('  всего',D.long.length+(D.long.length?', самое долгое '+Math.max.apply(null,D.long.map(function(l){return l.d}))+' мс':''));}
+        L.push('— Подвисания (>50 мс) —');if(D.noLongtask)L.push('  браузер не сообщает (так ведёт себя Safari)');else{line('  при обычной работе',longBefore+(longBefore?', самое долгое '+longMaxBefore+' мс':''));line('  во время проверки',(D.long.length-longBefore)+' (это сам тест отрисовки, норма)');}
         L.push('— Ошибки —');if(!D.errs.length)L.push('  нет');D.errs.slice(-10).forEach(function(r){L.push('  '+Math.round(r.t/1000)+'с: '+r.m)});if(D.errs.length)warn.push('Есть ошибки: '+D.errs.length);
         return (warn.length?'⚠ '+warn.join('\n⚠ '):'✓ Явных проблем не видно')+'\n\n'+L.join('\n')})}
   /* Home-screen install: a slim banner on phones and tablets, one tap where the browser allows, picture steps elsewhere. */
