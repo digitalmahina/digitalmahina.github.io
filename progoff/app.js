@@ -187,7 +187,7 @@
     var lsBytes=0;try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);lsBytes+=(k.length+(localStorage.getItem(k)||'').length)*2}}catch(e){}
     var cs=getComputedStyle(document.querySelector('.card')||document.body),bf=cs.backdropFilter||cs.webkitBackdropFilter||'';
     line('Время',new Date().toLocaleString('ru-RU'));line('Версия','app '+((document.querySelector('script[src*="app.js"]')||{}).src||'').split('v=')[1]);
-    line('Устройство',navigator.userAgent);line('Экран',screen.width+'×'+screen.height+' @'+(window.devicePixelRatio||1)+'x, окно '+innerWidth+'×'+innerHeight);
+    line('Устройство',navigator.userAgent);line('Экран',window.screen.width+'×'+window.screen.height+' @'+(window.devicePixelRatio||1)+'x, окно '+innerWidth+'×'+innerHeight);
     line('Процессор/память',(navigator.hardwareConcurrency||'?')+' ядер, '+(navigator.deviceMemory||'?')+' ГБ');
     line('Режим',(STANDALONE?'приложение (с экрана Домой)':'вкладка браузера')+', скин '+THEME.current()+(bf&&bf!=='none'?' (стекло: '+bf+')':'')+(RM?', анимации выключены системой':''));
     line('Записи',snap.entries.length+' шт., localStorage '+Math.round(lsBytes/1024)+' КБ');
