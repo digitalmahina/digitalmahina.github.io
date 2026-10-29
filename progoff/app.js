@@ -20,7 +20,7 @@
   var LAYER=(function(){try{return localStorage.getItem('progoff.layer')||'g'}catch(e){return 'g'}})();
   function setLayer(v){LAYER=v;try{localStorage.setItem('progoff.layer',v)}catch(e){}}
   function ringSVG(){
-    var C=180,R=148,s='<svg class="ring" viewBox="0 0 360 360" role="img" aria-label="Круг 60 дней">';
+    var TH='',C=180,R=148,s='<svg class="ring" viewBox="0 0 360 360" role="img" aria-label="Круг 60 дней">';
     s+='<circle cx="'+C+'" cy="'+C+'" r="'+R+'" fill="none" stroke="'+T('ring-line')+'"/>';
     var w0=GZ.key(WIN[0]),w1=GZ.key(WIN[59]),RA=R+17,pi=0;
     function pt(i,r){var a=2*Math.PI*i/60;return [(C+r*Math.sin(a)).toFixed(1),(C-r*Math.cos(a)).toFixed(1)]}
@@ -53,14 +53,15 @@
       s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="6" fill="'+el[0]+'" stroke="'+el[1]+'" stroke-width=".9"/>';
       s+='<text x="'+x.toFixed(1)+'" y="'+(y+2).toFixed(1)+'" text-anchor="middle" font-size="'+(n>9?5.2:6)+'" font-weight="600" fill="'+el[1]+'" font-family="Space Mono,monospace" pointer-events="none">'+n+'</text>';
       if(isT)s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="9.5" fill="none" stroke="'+T('ring-ink')+'" stroke-width="1.5"/>';
-      s+='<circle data-day="'+k+'" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="12" fill="transparent" style="cursor:pointer"/>';
+      if(isT)TH='<circle data-day="'+k+'" class="todayhit" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="17" fill="transparent" style="cursor:pointer" aria-label="Сегодня"/>';
+      else s+='<circle data-day="'+k+'" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="12" fill="transparent" style="cursor:pointer"/>';
     });
     if(LAYER!=='g'&&MOON.pname){var tk=GZ.key(TODAY);s+='<circle cx="'+C+'" cy="'+C+'" r="46" fill="'+T('ring-center')+'" stroke="'+T('ring-line')+'"/>'+
       '<text x="'+C+'" y="'+(C-8)+'" text-anchor="middle" font-size="9" fill="'+T('ring-ink-2')+'" font-family="Space Mono,monospace">сегодня</text>'+
       '<text x="'+C+'" y="'+(C+5)+'" text-anchor="middle" font-size="10.5" font-weight="700" fill="'+T('ring-ink')+'" font-family="Space Mono,monospace">'+GZ.short(TODAY)+'</text>'+
       '<text x="'+C+'" y="'+(C+18)+'" text-anchor="middle" font-size="9" fill="'+T('ring-ink-2')+'" font-family="Space Mono,monospace">'+MOON.pname(tk)+'</text>'}
     else s+='<circle cx="'+C+'" cy="'+C+'" r="3" fill="'+T('ring-ink')+'"/>';
-    s+='</svg>';return s}
+    s+=TH+'</svg>';return s}
 
   /* Phase 5: rule-based hints, no AI. */
   function hints(){var H=[],es=Store.entries(),tk=GZ.key(TODAY);
@@ -110,6 +111,65 @@
   SYNC.onRemote(function(){if(sheet.hidden)render()});
   SYNC.boot();
   document.addEventListener('visibilitychange',function(){if(!document.hidden&&SYNC.info().on)SYNC.sync()});
+
+  /* Settings live under the CENTRAL avatar in the header. */
+  function settings(){var h='<div><h1>Настройки</h1></div>'+bankCard();
+    h+='<h2>Скин</h2><div class="seg skins" id="skins">'+THEME.list().map(function(t){return '<button data-skin="'+t.id+'"'+(t.id===THEME.current()?' class="on"':'')+'><i></i>'+t.name+'</button>'}).join('')+'</div>';
+    h+='<div class="row"><button class="link" id="exp">Скачать копию</button><button class="link" id="imp">Загрузить копию</button><button class="link" id="pdf">PDF кольца</button></div>';
+    if(!STANDALONE)h+='<button class="ghost" id="a2hs">На экран «Домой»</button>';
+    open(h);bindBank();
+    sheet.querySelectorAll('[data-skin]').forEach(function(b){b.onclick=function(){THEME.apply(b.getAttribute('data-skin'));sheet.querySelectorAll('[data-skin]').forEach(function(x){x.classList.toggle('on',x===b)})}});
+    var ah=$('#a2hs');if(ah)ah.onclick=addHome;
+    $('#exp').onclick=function(){var o=JSON.parse(Store.exportJSON()),ids=o.entries.filter(function(e){return e.audio}).map(function(e){return e.audio});
+      (ids.length?VOICE.exportAll(ids):Promise.resolve(null)).then(function(au){if(au)o.audio=au;var b=new Blob([JSON.stringify(o)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='dnevnik-'+GZ.key(TODAY)+'.json';a.click()})};
+    $('#pdf').onclick=function(){close();setTimeout(function(){window.print()},50)};
+    $('#imp').onclick=function(){var i=document.createElement('input');i.type='file';i.accept='.json,application/json';i.onchange=function(){var f=i.files[0];if(!f)return;f.text().then(function(t){importAsk(t)})};i.click()};
+  }
+  var BR=document.getElementById('brand');if(BR){BR.onclick=settings;BR.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();settings()}}}
+  function syncDot(i){var d=document.getElementById('sdot');if(!d)return;d.hidden=!i.on;d.className='sdot'+(!i.on?'':i.err?' err':i.busy?' busy':i.last?' ok':' busy');
+    d.title=i.on?syncLine(i):'Банк не подключён'}
+  SYNC.on(syncDot);setTimeout(function(){syncDot(SYNC.info())},0);
+
+  /* The main «+» button: tap opens the choice, long-press records voice right away. */
+  function plusSheet(){var k=GZ.key(TODAY);
+    open('<div><h1>Новая запись</h1><p class="sub">'+GZ.short(TODAY)+'</p></div><div class="plusgrid">'+
+      '<button class="pk" data-p="text"><b>Текст</b><span>запись дня</span></button>'+
+      (VOICE.supported()?'<button class="pk" data-p="voice"><b>Голос</b><span>надиктовать</span></button>':'')+
+      '<button class="pk" data-p="dream"><b>Сон</b><span>или образ</span></button>'+
+      '<button class="pk" data-p="todo"><b>Дело</b><span>в список</span></button></div>'+
+      (VOICE.supported()?'<p class="sub">Подсказка: долгое нажатие на «+» сразу начинает голосовую запись.</p>':''));
+    sheet.querySelectorAll('[data-p]').forEach(function(b){b.onclick=function(){var w=b.getAttribute('data-p');
+      if(w==='text')editor(k);else if(w==='voice')voiceSheet(k,'day');else if(w==='dream')dreamEditor(k);else todoEditor()}})}
+  (function(){var f=document.getElementById('fab');if(!f)return;var t=null,long=false;
+    function down(e){long=false;clearTimeout(t);t=setTimeout(function(){long=true;if(navigator.vibrate)navigator.vibrate(20);if(VOICE.supported())voiceSheet(GZ.key(TODAY),'day',null,true);else plusSheet()},480)}
+    function up(){clearTimeout(t)}
+    f.addEventListener('pointerdown',down);f.addEventListener('pointerup',up);f.addEventListener('pointerleave',up);f.addEventListener('pointercancel',up);
+    f.addEventListener('contextmenu',function(e){e.preventDefault()});
+    f.onclick=function(e){if(long){long=false;e.preventDefault();return}plusSheet()}})();
+
+  /* Undo instead of «нажми ещё раз»: remove at once, offer «Вернуть» for 8 seconds. */
+  var TO=null;
+  function toast(msg,act,fn){var el=document.getElementById('toast');if(!el){el=document.createElement('div');el.id='toast';el.className='toast';el.setAttribute('role','status');document.body.appendChild(el)}
+    el.innerHTML='<span>'+esc(msg)+'</span>'+(act?'<button class="tact">'+esc(act)+'</button>':'');el.hidden=false;clearTimeout(TO);
+    var b=el.querySelector('.tact');if(b)b.onclick=function(){el.hidden=true;clearTimeout(TO);fn()};TO=setTimeout(function(){el.hidden=true},8000)}
+  function undoDel(ids,after,msg){var gone=[];ids.forEach(function(i){gone=gone.concat(Store.remove(i)||[])});after();
+    toast(msg||'Удалено',gone.length?'Вернуть':null,function(){Store.restore(gone);after()})}
+
+  /* Drafts: every field in a sheet is kept as you type; reopening the same form brings it back. */
+  var DK=null,DRAFT='progoff.draft:';
+  function hsh(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return (h>>>0).toString(36)}
+  function draftFields(){return [].slice.call(sheet.querySelectorAll('textarea,input.field:not([type=date]):not([type=file])')).filter(function(f){return f.id})}
+  function draftBind(){var fs=draftFields();DK=null;if(!fs.length)return;var h1=sheet.querySelector('h1'),sub=sheet.querySelector('h1+.sub');
+    DK=DRAFT+hsh((h1?h1.textContent:'')+'|'+(sub?sub.textContent:'')+'|'+fs.map(function(f){return f.id+'='+f.value}).join('|'));
+    var d=null;try{d=JSON.parse(localStorage.getItem(DK)||'null')}catch(e){}
+    if(d&&Date.now()-d.t<14*864e5&&fs.some(function(f){return d.v[f.id]&&d.v[f.id]!==f.value})){var orig={};fs.forEach(function(f){orig[f.id]=f.value;if(d.v[f.id]!=null)f.value=d.v[f.id]});
+      var n=document.createElement('p');n.className='sub draftnote';n.innerHTML='Восстановлен черновик · <button class="link" id="drx">Начать заново</button>';
+      var first=fs[0];first.parentNode.insertBefore(n,first);
+      n.querySelector('#drx').onclick=function(){fs.forEach(function(f){f.value=orig[f.id]});localStorage.removeItem(dk);n.remove();fs[0].focus()}}
+    var dk=DK;fs.forEach(function(f){f.addEventListener('input',function(){var v={};fs.forEach(function(x){v[x.id]=x.value});
+      if(fs.every(function(x){return !x.value.trim()}))localStorage.removeItem(dk);else localStorage.setItem(dk,JSON.stringify({t:Date.now(),v:v}))})})}
+  Store.onChange(function(){if(DK&&!sheet.hidden){localStorage.removeItem(DK)}});
+  (function(){try{for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(k&&k.indexOf(DRAFT)===0){var d=JSON.parse(localStorage.getItem(k)||'{}');if(!d.t||Date.now()-d.t>14*864e5)localStorage.removeItem(k)}}}catch(e){}})();
   function addHome(){
     if(BIP){var p=BIP;BIP=null;p.prompt();p.userChoice.then(function(c){if(c&&c.outcome==='accepted'){STANDALONE=true;close();if(tab==='krug')render()}}).catch(function(){});return}
     var ua=navigator.userAgent,ios=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),
@@ -147,26 +207,13 @@
     h+=hintsCard();
     h+='<div class="card"><span class="label">60 дней назад на этой точке</span>'+
       (back.length?back.map(function(e){return '<p>«'+esc((e.text||e.title||'').slice(0,140))+'»</p>'}).join('')+'<p class="sub">Что из этого продолжается? Продолжи:</p><div class="row"><button class="ghost" id="rd">Диалогом</button><button class="ghost" id="rs">Вехой</button><button class="ghost" id="rp">Этапом</button></div>':'<p class="sub">Пока пусто. Через 60 дней здесь появится то, что ты пишешь сегодня.</p>')+'</div>';
-    h+='<button class="primary" id="write">Написать сегодня</button><button class="ghost" id="dreamb">Записать сон</button>'+(VOICE.supported()?'<button class="ghost" id="voiceb">Голосом</button>':'');
-    if(!STANDALONE)h+='<button class="ghost" id="a2hs">На экран «Домой»</button>';
-    h+=bankCard();
-    h+='<h2>Скин</h2><div class="seg skins" id="skins">'+THEME.list().map(function(t){return '<button data-skin="'+t.id+'"'+(t.id===THEME.current()?' class="on"':'')+'><i></i>'+t.name+'</button>'}).join('')+'</div>';
-    h+='<div class="row"><button class="link" id="exp">Скачать копию</button><button class="link" id="imp">Загрузить копию</button><button class="link" id="pdf">PDF кольца</button></div>';
     screen.innerHTML=h;
-    $('#write').onclick=function(){editor(GZ.key(TODAY))};$('#dreamb').onclick=function(){dreamEditor(GZ.key(TODAY))};var vb=$('#voiceb');if(vb)vb.onclick=function(){voiceSheet(GZ.key(TODAY),'day')};
-    var ah=$('#a2hs');if(ah)ah.onclick=addHome;
     $('#newp').onclick=periodEditor;
     screen.querySelectorAll('[data-lay]').forEach(function(b){b.onclick=function(){setLayer(b.getAttribute('data-lay'));krug()}});
     var rd=$('#rd');if(rd){rd.onclick=function(){document.querySelector('#tabs [data-tab=dialogs]').onclick()};$('#rs').onclick=stoneEditor;$('#rp').onclick=periodEditor}
     var nb=$('#nowb');if(nb)nb.onclick=nowEditor;
     screen.querySelectorAll('[data-day]').forEach(function(c){c.onclick=function(){day(c.getAttribute('data-day'))}});
-    $('#exp').onclick=function(){var o=JSON.parse(Store.exportJSON()),ids=o.entries.filter(function(e){return e.audio}).map(function(e){return e.audio});
-      (ids.length?VOICE.exportAll(ids):Promise.resolve(null)).then(function(au){if(au)o.audio=au;var b=new Blob([JSON.stringify(o)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='dnevnik-'+GZ.key(TODAY)+'.json';a.click()})};
-    $('#pdf').onclick=function(){window.print()};
-    screen.querySelectorAll('[data-skin]').forEach(function(b){b.onclick=function(){THEME.apply(b.getAttribute('data-skin'))}});
-    bindBank();
     wideKrug();
-    $('#imp').onclick=function(){var i=document.createElement('input');i.type='file';i.accept='.json,application/json';i.onchange=function(){var f=i.files[0];if(!f)return;f.text().then(function(t){importAsk(t)})};i.click()};
   }
 
   function importAsk(t){
@@ -191,8 +238,8 @@
     $('#ns').onclick=function(){var t=ta.value.trim();if(!t){ta.focus();return}
       if(Store.add({kind:'now',date:GZ.key(TODAY),ring:id,text:t})){close();render()}}}
 
-  function open(h){sheet.innerHTML='<div class="grab"></div>'+h;sheet.hidden=false;veil.hidden=false}
-  function close(){sheet.hidden=true;veil.hidden=true;sheet.innerHTML=''}
+  function open(h){sheet.innerHTML='<div class="grab"></div>'+h;sheet.hidden=false;veil.hidden=false;draftBind()}
+  function close(){sheet.hidden=true;veil.hidden=true;sheet.innerHTML='';DK=null}
   veil.onclick=close;
   document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
 
@@ -211,7 +258,7 @@
     hydrate(sheet,function(){render();day(k)});
     sheet.querySelectorAll('[data-dtg]').forEach(function(b){b.onclick=function(){var id=b.getAttribute('data-dtg'),e=tds.filter(function(x){return x.id===id})[0];Store.update(id,{done:!e.done});render();day(k)}});
     var fb=$('#fast');if(fb)fb.onclick=function(){if(Store.add({kind:'fast',date:k,text:''})){render();day(k)}};
-    sheet.querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){if(b.dataset.sure){Store.remove(b.getAttribute('data-del'));render();day(k)}else{b.dataset.sure='1';b.textContent='Точно удалить? Нажми ещё раз'}}});
+    sheet.querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){var f=function(){render();day(k)};undoDel([b.getAttribute('data-del')],f)}});
   }
 
   function editor(k){
@@ -274,7 +321,7 @@
     screen.querySelectorAll('[data-day]').forEach(function(c){c.onclick=function(){day(c.getAttribute('data-day'))}});screen.querySelectorAll('[data-lay]').forEach(function(c){c.onclick=function(){setLayer(c.getAttribute('data-lay'));life()}});
     $('#yp').onclick=function(){LY=y-1;life()};$('#yn').onclick=function(){LY=y+1;life()};
     screen.querySelectorAll('[data-go]').forEach(function(g){g.onclick=function(){var el=document.getElementById('e'+g.getAttribute('data-go'));if(el){el.scrollIntoView();el.style.outline='2px solid '+T('el2-s')}}});$('#as2').onclick=stoneEditor;$('#af2').onclick=forkEditor;    $('#as').onclick=stoneEditor;$('#ay').onclick=function(){yearEditor(y)};$('#af').onclick=forkEditor;
-    screen.querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){if(b.dataset.sure){Store.remove(b.getAttribute('data-del'));life()}else{b.dataset.sure='1';b.textContent='Точно удалить? Нажми ещё раз'}}});
+    screen.querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){undoDel([b.getAttribute('data-del')],life)}});
   }
   function delBtn(id){return '<button class="link" data-del="'+id+'">Удалить</button>'}
   function stoneEditor(){var tk=GZ.key(TODAY);
@@ -310,9 +357,9 @@
     h+=ds.length?ds.map(function(d){return '<div class="entry"><span class="kind">'+GZ.short(GZ.parse(d.date))+' '+GZ.parse(d.date).getFullYear()+'</span>'+'<div class="chat">'+d.lines.map(function(l){return '<div class="bub '+(l.who==='me'?'me':'they')+'">'+esc(l.text)+'</div>'}).join('')+'</div>'+delBtn(d.id)+'</div>'}).join(''):'<p class="empty">Диалогов пока нет.</p>';
     h+='<button class="primary" id="nd">Новый диалог</button><button class="link" data-del="'+p.id+'">Удалить собеседника и его диалоги</button>';
     screen.innerHTML=h;$('#pb').onclick=function(){DP=null;dialogs()};$('#nd').onclick=function(){dialogEditor(p)};
-    screen.querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){if(b.dataset.sure){var i=b.getAttribute('data-del');
-      if(i===p.id){ents('dialog').filter(function(d){return d.partner===i}).forEach(function(d){Store.remove(d.id)});DP=null}
-      Store.remove(i);dialogs();render()}else{b.dataset.sure='1';b.textContent='Точно удалить? Нажми ещё раз'}}});
+    screen.querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){var i=b.getAttribute('data-del'),ids=[i];
+      if(i===p.id){ids=ents('dialog').filter(function(d){return d.partner===i}).map(function(d){return d.id}).concat([i]);DP=null}
+      undoDel(ids,function(){render()})}});
   }
   function partnerEditor(){
     open('<div><h1>Собеседник</h1></div><input id="pn" class="field" maxlength="60" placeholder="Имя или название"><div class="seg" id="pt">'+Object.keys(PT).map(function(k,i){return '<button data-t="'+k+'"'+(i?'':' class="on"')+'>'+PT[k]+'</button>'}).join('')+'</div><button class="primary" id="ps">Сохранить</button>');
@@ -362,7 +409,7 @@
     if(dn.length)h+='<details><summary class="sub">Сделано ('+dn.length+')</summary><div class="stack">'+dn.map(todoRow).join('')+'</div></details>';
     screen.innerHTML=h;$('#tn').onclick=todoEditor;
     screen.querySelectorAll('[data-tg]').forEach(function(b){b.onclick=function(){var id=b.getAttribute('data-tg'),e=all.filter(function(x){return x.id===id})[0];Store.update(id,{done:!e.done});todos()}});
-    screen.querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){if(b.dataset.sure){Store.remove(b.getAttribute('data-del'));todos()}else{b.dataset.sure='1';b.textContent='Точно? Ещё раз'}}})}
+    screen.querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){undoDel([b.getAttribute('data-del')],todos)}})}
   function todoEditor(){var cases=partners().filter(function(p){return p.ptype==='work'});
     open('<div><h1>Новое дело</h1></div><input id="tx" class="field" maxlength="200" placeholder="Что сделать"><label class="sub">Срок (необязательно)</label><input id="td" class="field" type="date">'+(cases.length?'<label class="sub">Собеседник-дело</label><select id="tp" class="field"><option value="">—</option>'+cases.map(function(p){return '<option value="'+p.id+'">'+esc(p.title)+'</option>'}).join('')+'</select>':'')+'<button class="primary" id="ts">Сохранить</button>');
     $('#tx').focus();$('#ts').onclick=function(){var t=$('#tx').value.trim();if(!t){$('#tx').focus();return}
@@ -424,8 +471,8 @@
     $('#xsave').onclick=function(){var t=$('#xtx').value.trim();if(!t){$('#xtx').focus();return}if(Store.add({kind:'dreamx',date:GZ.key(TODAY),parent:id,text:t})){render();dreamView(id)}};
     $('#dedit').onclick=function(){dreamEditor(e.date,id)};
     $('#dday').onclick=function(){day(e.date)};
-    sheet.querySelectorAll('[data-xdel]').forEach(function(b){b.onclick=function(){if(b.dataset.sure){Store.remove(b.getAttribute('data-xdel'));render();dreamView(id)}else{b.dataset.sure='1';b.textContent='Точно? Нажми ещё раз'}}});
-    var dd=$('#ddel');dd.onclick=function(){if(dd.dataset.sure){xs.forEach(function(x){Store.remove(x.id)});Store.remove(id);close();render()}else{dd.dataset.sure='1';dd.textContent=xs.length?'Удалить вместе с развёртками? Нажми ещё раз':'Точно удалить? Нажми ещё раз'}}}
+    sheet.querySelectorAll('[data-xdel]').forEach(function(b){b.onclick=function(){undoDel([b.getAttribute('data-xdel')],function(){render();dreamView(id)})}});
+    var dd=$('#ddel');dd.onclick=function(){undoDel(xs.map(function(x){return x.id}).concat([id]),function(){close();render()},xs.length?'Сон и развёртки удалены':'Сон удалён')}}
 
   /* Voice notes: audio lives in IndexedDB (VOICE), the entry keeps audio id, dur, mime; text = transcript (editable). */
   function audioHTML(e,tools){if(!e.audio)return '';
@@ -446,7 +493,7 @@
       .then(function(txt){STT_BUSY=false;var cur=Store.entries().filter(function(x){return x.id===eid})[0];if(!cur)return;
         Store.update(eid,{text:txt||cur.text||'',stt:'whisper-small'});if(after)after()},
         function(err){STT_BUSY=false;btn.disabled=false;st.textContent='Не получилось: '+err.message+'. Запись сохранена, можно попробовать ещё раз.'})})}
-  function voiceSheet(k,kind,extra){var rec=null,tm=null;
+  function voiceSheet(k,kind,extra,auto){var rec=null,tm=null;
     open('<div><h1>Голосом</h1><p class="sub">'+GZ.short(GZ.parse(k))+' · '+(kind==='dream'?'сон, как он пришёл':'запись дня')+'</p></div>'+
       '<div class="vrec"><button class="primary" id="vgo">Начать запись</button><p class="clock-sm" id="vt">0:00</p></div>'+
       '<p class="sub" id="vmsg">Запись хранится только на этом устройстве и попадает в «Скачать копию». Расшифровать в текст можно потом, без интернета.</p>'+
@@ -460,7 +507,8 @@
       stopT();b.disabled=true;rec.stop().then(function(res){var aid=VOICE.nid();return VOICE.put(aid,res.blob).then(function(){VOICE.persist();
           var en={kind:kind,date:k,text:'',audio:aid,dur:res.dur,mime:res.mime};if(kind==='dream'){var x=extra||{};en.mode=x.mode||'sleep';en.title=x.title||'';en.feel=x.feel||''}
           var n=Store.add(en);render();if(n){if(kind==='dream')dreamView(n.id);else day(k)}})})
-        .catch(function(err){b.disabled=false;$('#vmsg').textContent='Не удалось сохранить запись: '+err.message})}}
+        .catch(function(err){b.disabled=false;$('#vmsg').textContent='Не удалось сохранить запись: '+err.message})}
+    if(auto)$('#vgo').click()}
   var LF='all',LQ='';
   function lenta(){
     var F={all:'Все',day:'Дни',dream:'Сны',voice:'Голос',dialog:'Диалоги',life:'Жизнь'},grp={day:'day',now:'day',dream:'dream',dreamx:'dream',dialog:'dialog',period:'life',stone:'life',yearnote:'life',fork:'life'};
