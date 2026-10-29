@@ -331,3 +331,13 @@ body.sheeton .fab{display:none}
 .link{min-height:44px;padding:0 4px}
 .seg button,.btn{min-height:44px}
 .ghost{min-height:44px}
+
+/* Home-screen banner and picture steps */
+.a2b{display:grid;grid-template-columns:40px 1fr auto 44px;align-items:center;gap:10px;padding:8px 4px 8px 10px;border:1px solid var(--card-edge,var(--line));border-radius:var(--r-m);background:var(--panel)}
+.a2b img{border-radius:10px}.a2b b{display:block;font:700 13px var(--sans);color:var(--ink)}.a2b span{display:block;font:12px var(--sans);color:var(--ink-2)}
+.a2b .primary{width:auto;min-height:44px;padding:0 14px;font-size:12px}
+.a2x{appearance:none;border:0;background:none;color:var(--ink-2);font:22px/1 var(--sans);min-height:44px;min-width:44px}
+.a2steps{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.a2steps li{display:grid;grid-template-columns:28px 44px 1fr;align-items:center;gap:10px;font:15px var(--sans);color:var(--ink)}
+.a2n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font:700 13px var(--mono)}
+.a2i{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--paper);color:#0a7aff;display:flex;align-items:center;justify-content:center;font:13px var(--sans)}
