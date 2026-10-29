@@ -275,7 +275,9 @@ main[data-tab=quiet] .clock{border-left:8px solid transparent;border-image:var(-
 /* Smoke on its own fixed layer: no repaint on scroll (background-attachment:fixed and a whole-app blur made scrolling heavy). */
 [data-theme=neon] body{background-image:none}
 [data-theme=neon] body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-color:var(--desk);background-image:var(--desk-texture);background-size:600px 600px,100% 100%,100% 100%,100% 100%;transform:translateZ(0)}
-[data-theme=neon] .card,[data-theme=neon] .sheet,[data-theme=neon] .tabs,[data-theme=neon] .entry.form,[data-theme=neon] .bub.they,[data-theme=neon] .ring,[data-theme=neon] .yring,[data-theme=neon] .lifemap{-webkit-backdrop-filter:blur(10px) saturate(140%);backdrop-filter:blur(10px) saturate(140%)}
+/* Glass blur only on the two fixed layers; scrolling cards get a denser tint instead (blur on every card cost ~20 fps on a mid Android, 2026-10-29). */
+[data-theme=neon] .sheet,[data-theme=neon] .tabs{-webkit-backdrop-filter:blur(10px) saturate(140%);backdrop-filter:blur(10px) saturate(140%)}
+[data-theme=neon] .card,[data-theme=neon] .entry.form,[data-theme=neon] .bub.they{background-color:rgba(30,24,64,.62)}
 [data-theme=neon] .card{box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 30px rgba(0,0,0,.35)}
 [data-theme=neon] .primary,[data-theme=neon] .tabs button.on{background:rgba(255,63,164,.14);color:#ffe3f2;border:1.5px solid #ff3fa4;box-shadow:0 0 6px #ff3fa4,0 0 18px rgba(255,63,164,.55),inset 0 0 8px rgba(255,63,164,.55);text-shadow:0 0 6px #ff3fa4}
 [data-theme=neon] .seg button.on,[data-theme=neon] #lay .primary{background:rgba(34,228,255,.12);color:#dcfbff;border:1.5px solid #22e4ff;box-shadow:0 0 6px #22e4ff,0 0 16px rgba(34,228,255,.5),inset 0 0 8px rgba(34,228,255,.45);text-shadow:0 0 6px #22e4ff}
