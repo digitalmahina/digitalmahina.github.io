@@ -90,11 +90,11 @@
       '<p class="sub" id="syncst">'+esc(syncLine(i))+'</p><div class="row"><button class="ghost" id="bsync">Синхронизировать</button><button class="ghost" id="bcode">Код для устройства</button></div><button class="link" id="bout">Отключить это устройство</button>':
       '<p class="sub">Твой банк: записи и голосовые шифруются на устройстве, сервер видит только шифр. Другие устройства подключаются одним кодом.</p><button class="primary" id="bnew">Создать банк</button><button class="ghost" id="bjoin">Подключить по коду</button>')+'</div>'}
   function bindBank(){var b;
-    if((b=$('#bnew')))b.onclick=function(){b.disabled=true;b.textContent='Создаю…';SYNC.open(null,true).then(function(){showCode(true)},function(e){b.disabled=false;b.textContent='Создать банк';alertSheet(e.message)})};
+    if((b=$('#bnew')))b.onclick=function(){var b=this;b.disabled=true;b.textContent='Создаю…';SYNC.open(null,true).then(function(){showCode(true)},function(e){b.disabled=false;b.textContent='Создать банк';alertSheet(e.message)})};
     if((b=$('#bjoin')))b.onclick=joinSheet;
     if((b=$('#bsync')))b.onclick=function(){SYNC.sync()};
     if((b=$('#bcode')))b.onclick=function(){showCode(false)};
-    if((b=$('#bout')))b.onclick=function(){if(b.dataset.sure){SYNC.forget();render()}else{b.dataset.sure='1';b.textContent='Записи останутся на устройстве, но перестанут сходиться. Нажми ещё раз'}}}
+    if((b=$('#bout')))b.onclick=function(){var b=this;if(b.dataset.sure){SYNC.forget();render()}else{b.dataset.sure='1';b.textContent='Записи останутся на устройстве, но перестанут сходиться. Нажми ещё раз'}}}
   function alertSheet(t){open('<div><h1>Банк</h1></div><p>'+esc(t)+'</p><button class="primary" id="aok">Понятно</button>');$('#aok').onclick=close}
   function showCode(fresh){var c=SYNC.pretty(SYNC.info().code);
     open('<div><h1>'+(fresh?'Банк создан':'Код банка')+'</h1><p class="sub">Введи его на другом устройстве: Круг → «Подключить по коду».</p></div>'+
