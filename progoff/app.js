@@ -238,8 +238,8 @@
     $('#ns').onclick=function(){var t=ta.value.trim();if(!t){ta.focus();return}
       if(Store.add({kind:'now',date:GZ.key(TODAY),ring:id,text:t})){close();render()}}}
 
-  function open(h){sheet.innerHTML='<div class="grab"></div>'+h;sheet.hidden=false;veil.hidden=false;draftBind()}
-  function close(){sheet.hidden=true;veil.hidden=true;sheet.innerHTML='';DK=null}
+  function open(h){sheet.innerHTML='<div class="grab"></div>'+h;sheet.hidden=false;veil.hidden=false;document.body.classList.add('sheeton');draftBind()}
+  function close(){sheet.hidden=true;veil.hidden=true;sheet.innerHTML='';DK=null;document.body.classList.remove('sheeton')}
   veil.onclick=close;
   document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
 
