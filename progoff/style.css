@@ -305,3 +305,4 @@ main[data-tab=quiet] .clock{border-left:8px solid transparent;border-image:var(-
 .clock-sm{font-family:"Space Mono",monospace;font-size:28px;margin:0;color:var(--ink)}
 /* bank */
 .bankcode{font-family:"Space Mono",monospace;font-size:22px;font-weight:700;letter-spacing:.06em;text-align:center;word-break:break-all;margin:6px 0;padding:12px;border:1px dashed var(--line);border-radius:var(--r-m);color:var(--ink);user-select:all}
+.brand{display:inline-flex;align-items:center;gap:10px}.brand img{width:32px;height:32px;border-radius:8px;display:block}
