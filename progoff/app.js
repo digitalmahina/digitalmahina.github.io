@@ -82,6 +82,34 @@
   window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();BIP=e});
   window.addEventListener('appinstalled',function(){STANDALONE=true;BIP=null;if(tab==='krug')render()});
   if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});
+  /* Bank (vault sync): E2E-encrypted, one code joins devices. */
+  function syncLine(i){if(!i.on)return '';if(i.busy)return 'Синхронизирую…';if(i.err)return i.err;
+    if(!i.last)return 'Ещё не синхронизировано';var d=new Date(i.last);return 'Синхронизировано '+GZ.short(d)+', '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+  function bankCard(){var i=SYNC.info();
+    return '<div class="card" id="bank"><span class="label">Банк · синхронизация</span>'+(i.on?
+      '<p class="sub" id="syncst">'+esc(syncLine(i))+'</p><div class="row"><button class="ghost" id="bsync">Синхронизировать</button><button class="ghost" id="bcode">Код для устройства</button></div><button class="link" id="bout">Отключить это устройство</button>':
+      '<p class="sub">Твой банк: записи и голосовые шифруются на устройстве, сервер видит только шифр. Другие устройства подключаются одним кодом.</p><button class="primary" id="bnew">Создать банк</button><button class="ghost" id="bjoin">Подключить по коду</button>')+'</div>'}
+  function bindBank(){var b;
+    if((b=$('#bnew')))b.onclick=function(){b.disabled=true;b.textContent='Создаю…';SYNC.open(null,true).then(function(){showCode(true)},function(e){b.disabled=false;b.textContent='Создать банк';alertSheet(e.message)})};
+    if((b=$('#bjoin')))b.onclick=joinSheet;
+    if((b=$('#bsync')))b.onclick=function(){SYNC.sync()};
+    if((b=$('#bcode')))b.onclick=function(){showCode(false)};
+    if((b=$('#bout')))b.onclick=function(){if(b.dataset.sure){SYNC.forget();render()}else{b.dataset.sure='1';b.textContent='Записи останутся на устройстве, но перестанут сходиться. Нажми ещё раз'}}}
+  function alertSheet(t){open('<div><h1>Банк</h1></div><p>'+esc(t)+'</p><button class="primary" id="aok">Понятно</button>');$('#aok').onclick=close}
+  function showCode(fresh){var c=SYNC.pretty(SYNC.info().code);
+    open('<div><h1>'+(fresh?'Банк создан':'Код банка')+'</h1><p class="sub">Введи его на другом устройстве: Круг → «Подключить по коду».</p></div>'+
+      '<p class="bankcode" id="bc">'+c+'</p><p class="sub">Сохрани код в надёжном месте. Без него банк не открыть, восстановить его нельзя: ключ есть только у тебя.</p>'+
+      '<button class="ghost" id="bcp">Скопировать</button><button class="primary" id="bok">Готово</button>');
+    $('#bcp').onclick=function(){try{navigator.clipboard.writeText(c).then(function(){$('#bcp').textContent='Скопировано'})}catch(e){}};$('#bok').onclick=function(){close();render()}}
+  function joinSheet(){open('<div><h1>Подключить по коду</h1><p class="sub">Код банка — 20 знаков, его показывает устройство, где банк создан.</p></div>'+
+      '<input id="jc" class="field" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXXX-XXXXX-XXXXX-XXXXX"><p class="sub" id="jerr"></p>'+
+      '<p class="sub">Записи этого устройства не пропадут: они сольются с банком.</p><button class="primary" id="jok">Подключить</button><button class="link" id="jno">Отмена</button>');
+    $('#jno').onclick=close;$('#jok').onclick=function(){var b=$('#jok');b.disabled=true;b.textContent='Подключаю…';
+      SYNC.open($('#jc').value,false).then(function(){close();render()},function(e){b.disabled=false;b.textContent='Подключить';$('#jerr').textContent=e.message})}}
+  SYNC.on(function(i){var s=document.getElementById('syncst');if(s)s.textContent=syncLine(i)});
+  SYNC.onRemote(function(){if(sheet.hidden)render()});
+  SYNC.boot();
+  document.addEventListener('visibilitychange',function(){if(!document.hidden&&SYNC.info().on)SYNC.sync()});
   function addHome(){
     if(BIP){var p=BIP;BIP=null;p.prompt();p.userChoice.then(function(c){if(c&&c.outcome==='accepted'){STANDALONE=true;close();if(tab==='krug')render()}}).catch(function(){});return}
     var ua=navigator.userAgent,ios=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),
@@ -121,6 +149,7 @@
       (back.length?back.map(function(e){return '<p>«'+esc((e.text||e.title||'').slice(0,140))+'»</p>'}).join('')+'<p class="sub">Что из этого продолжается? Продолжи:</p><div class="row"><button class="ghost" id="rd">Диалогом</button><button class="ghost" id="rs">Вехой</button><button class="ghost" id="rp">Этапом</button></div>':'<p class="sub">Пока пусто. Через 60 дней здесь появится то, что ты пишешь сегодня.</p>')+'</div>';
     h+='<button class="primary" id="write">Написать сегодня</button><button class="ghost" id="dreamb">Записать сон</button>'+(VOICE.supported()?'<button class="ghost" id="voiceb">Голосом</button>':'');
     if(!STANDALONE)h+='<button class="ghost" id="a2hs">На экран «Домой»</button>';
+    h+=bankCard();
     h+='<h2>Скин</h2><div class="seg skins" id="skins">'+THEME.list().map(function(t){return '<button data-skin="'+t.id+'"'+(t.id===THEME.current()?' class="on"':'')+'><i></i>'+t.name+'</button>'}).join('')+'</div>';
     h+='<div class="row"><button class="link" id="exp">Скачать копию</button><button class="link" id="imp">Загрузить копию</button><button class="link" id="pdf">PDF кольца</button></div>';
     screen.innerHTML=h;
@@ -135,6 +164,7 @@
       (ids.length?VOICE.exportAll(ids):Promise.resolve(null)).then(function(au){if(au)o.audio=au;var b=new Blob([JSON.stringify(o)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='dnevnik-'+GZ.key(TODAY)+'.json';a.click()})};
     $('#pdf').onclick=function(){window.print()};
     screen.querySelectorAll('[data-skin]').forEach(function(b){b.onclick=function(){THEME.apply(b.getAttribute('data-skin'))}});
+    bindBank();
     wideKrug();
     $('#imp').onclick=function(){var i=document.createElement('input');i.type='file';i.accept='.json,application/json';i.onchange=function(){var f=i.files[0];if(!f)return;f.text().then(function(t){importAsk(t)})};i.click()};
   }
