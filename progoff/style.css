@@ -317,7 +317,7 @@ main[data-tab=quiet] .clock{border-left:8px solid transparent;border-image:var(-
   border:1px solid var(--key-edge);background:var(--accent);color:var(--on-accent);font:400 34px/1 var(--sans);box-shadow:var(--raised),0 6px 18px rgba(0,0,0,.22);
   display:flex;align-items:center;justify-content:center;padding:0 0 3px;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .fab:active{box-shadow:var(--pressed);transform:translateY(var(--press-y))}
-body:has(.sheet:not([hidden])) .fab{display:none}
+body.sheeton .fab{display:none}
 .plusgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .pk{appearance:none;min-height:84px;border:1px solid var(--key-edge);border-radius:var(--r-m);background:var(--key);color:var(--on-key);box-shadow:var(--raised);
   display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;padding:12px 14px;text-align:left}
