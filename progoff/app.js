@@ -120,7 +120,8 @@
     h+='<h2>Скин</h2><div class="seg skins" id="skins">'+THEME.list().map(function(t){return '<button data-skin="'+t.id+'"'+(t.id===THEME.current()?' class="on"':'')+'><i></i>'+t.name+'</button>'}).join('')+'</div>';
     h+='<div class="row"><button class="link" id="exp">Скачать копию</button><button class="link" id="imp">Загрузить копию</button><button class="link" id="pdf">PDF кольца</button></div>';
     if(!STANDALONE)h+='<button class="ghost" id="a2hs">На экран «Домой»</button>';
-    open(h);bindBank();
+    h+='<button class="ghost" id="diagb">Диагностика</button>';
+    open(h);bindBank();$('#diagb').onclick=diagSheet;
     sheet.querySelectorAll('[data-skin]').forEach(function(b){b.onclick=function(){THEME.apply(b.getAttribute('data-skin'));sheet.querySelectorAll('[data-skin]').forEach(function(x){x.classList.toggle('on',x===b)})}});
     var ah=$('#a2hs');if(ah)ah.onclick=addHome;
     $('#exp').onclick=function(){var o=JSON.parse(Store.exportJSON()),ids=o.entries.filter(function(e){return e.audio}).map(function(e){return e.audio});
@@ -173,6 +174,43 @@
       if(fs.every(function(x){return !x.value.trim()}))localStorage.removeItem(dk);else localStorage.setItem(dk,JSON.stringify({t:Date.now(),v:v}))})})}
   Store.onChange(function(){if(DK&&!sheet.hidden){localStorage.removeItem(DK)}});
   (function(){try{for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(k&&k.indexOf(DRAFT)===0){var d=JSON.parse(localStorage.getItem(k)||'{}');if(!d.t||Date.now()-d.t>14*864e5)localStorage.removeItem(k)}}}catch(e){}})();
+
+  /* Diagnostics: a 10-second check on this device, with a report to copy or share. */
+  function diagSheet(){
+    open('<div><h1>Диагностика</h1><p class="sub">Около 10 секунд. Экран будет немного мигать: я перерисовываю вкладки и мерю плавность.</p></div><button class="primary" id="dgo">Проверить</button><pre class="diagout" id="dout" hidden></pre><div class="row" id="drow" hidden><button class="primary" id="dcp">Скопировать отчёт</button>'+(navigator.share?'<button class="ghost" id="dsh">Поделиться</button>':'')+'</div>');
+    $('#dgo').onclick=function(){var b=this;b.disabled=true;b.textContent='Проверяю…';runDiag().then(function(r){var o=$('#dout');if(!o)return;o.hidden=false;o.textContent=r;$('#drow').hidden=false;b.remove();
+      $('#dcp').onclick=function(){var c=this;(navigator.clipboard?navigator.clipboard.writeText(r):Promise.reject()).then(function(){c.textContent='Скопировано'},function(){var s=getSelection(),g=document.createRange();g.selectNodeContents(o);s.removeAllRanges();s.addRange(g);c.textContent='Выделено, скопируй вручную'})};
+      var sh=$('#dsh');if(sh)sh.onclick=function(){navigator.share({title:'CENTRAL · диагностика',text:r}).catch(function(){})}})}}
+  function ms(a){if(!a||!a.length)return '—';var s=a.slice().sort(function(x,y){return x-y});return Math.round(s[Math.floor(s.length/2)])+' мс (макс '+Math.round(s[s.length-1])+')'}
+  function runDiag(){var D=window.DIAG||{errs:[],long:[],renders:{}},L=[],warn=[],keep=tab,snap=Store.snapshot();
+    function line(k,v){L.push(k+': '+v)}
+    var lsBytes=0;try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);lsBytes+=(k.length+(localStorage.getItem(k)||'').length)*2}}catch(e){}
+    var cs=getComputedStyle(document.querySelector('.card')||document.body),bf=cs.backdropFilter||cs.webkitBackdropFilter||'';
+    line('Время',new Date().toLocaleString('ru-RU'));line('Версия','app '+((document.querySelector('script[src*="app.js"]')||{}).src||'').split('v=')[1]);
+    line('Устройство',navigator.userAgent);line('Экран',screen.width+'×'+screen.height+' @'+(window.devicePixelRatio||1)+'x, окно '+innerWidth+'×'+innerHeight);
+    line('Процессор/память',(navigator.hardwareConcurrency||'?')+' ядер, '+(navigator.deviceMemory||'?')+' ГБ');
+    line('Режим',(STANDALONE?'приложение (с экрана Домой)':'вкладка браузера')+', скин '+THEME.current()+(bf&&bf!=='none'?' (стекло: '+bf+')':'')+(RM?', анимации выключены системой':''));
+    line('Записи',snap.entries.length+' шт., localStorage '+Math.round(lsBytes/1024)+' КБ');
+    var sw=navigator.serviceWorker&&navigator.serviceWorker.controller?'активен':'нет';line('Офлайн-кэш (SW)',sw);
+    var si=SYNC.info();line('Банк',si.on?(si.err?'ошибка: '+si.err:si.busy?'синхронизирую':si.last?'синхронизировано '+new Date(si.last).toLocaleTimeString('ru-RU'):'подключён'):'не подключён');
+    var tabs=['krug','lenta','life','dialogs','quiet','todo'],RT={};
+    tabs.forEach(function(t){RT[t]=[];tab=t;for(var i=0;i<3;i++){var t0=performance.now();render0();void screen.offsetHeight;RT[t].push(performance.now()-t0)}});
+    tab=keep;render0();
+    L.push('— Отрисовка вкладок (медиана из 3) —');tabs.forEach(function(t){line('  '+t,ms(RT[t]));if(Math.max.apply(null,RT[t])>120)warn.push('Вкладка «'+t+'» рисуется дольше 120 мс')});
+    var past=Object.keys(D.renders).map(function(t){return t+' '+ms(D.renders[t])}).join('; ');if(past)line('Отрисовки за сеанс',past);
+    var est=navigator.storage&&navigator.storage.estimate?navigator.storage.estimate().catch(function(){return null}):Promise.resolve(null);
+    var clips=VOICE.keys?VOICE.keys().then(function(k){return k.length}).catch(function(){return '?'}):Promise.resolve('?');
+    return D.frames(1500).then(function(idle){L.push('— Плавность —');line('  покой',idle.fps+' к/с, худший кадр '+idle.worst+' мс, рывков '+idle.jank+' из '+idle.n);if(idle.fps<50)warn.push('Даже в покое меньше 50 кадров в секунду');
+        var sc=document.scrollingElement||document.documentElement,top=sc.scrollTop,max=Math.max(0,sc.scrollHeight-innerHeight),dir=1,p=top;
+        return D.frames(1500,function(){p+=dir*14;if(p>max||p<0){dir=-dir;p=Math.max(0,Math.min(max,p))}sc.scrollTop=p}).then(function(s){sc.scrollTop=top;
+          line('  прокрутка',s.fps+' к/с, худший кадр '+s.worst+' мс, рывков '+s.jank+' из '+s.n);if(s.jank>s.n*.1)warn.push('Прокрутка дёргается: '+s.jank+' рывков из '+s.n+' кадров');return s})})
+      .then(function(){var o=$('#dout');var hold=sheet.innerHTML;sheet.classList.add('off');veil.classList.add('off');void sheet.offsetHeight;
+        var pr=D.frames(500);requestAnimationFrame(function(){sheet.classList.remove('off');veil.classList.remove('off')});
+        return pr.then(function(a){line('  шторка',a.fps+' к/с, худший кадр '+a.worst+' мс');if(a.worst>60)warn.push('Шторка выезжает с рывком ('+a.worst+' мс)')})})
+      .then(function(){return Promise.all([est,clips])}).then(function(x){var e=x[0];if(e)line('Хранилище',Math.round((e.usage||0)/1048576)+' МБ из '+Math.round((e.quota||0)/1048576)+' МБ');line('Голосовые клипы',x[1]);
+        L.push('— Подвисания (>50 мс) —');if(D.noLongtask)L.push('  браузер не сообщает (так ведёт себя Safari)');else{line('  всего',D.long.length+(D.long.length?', самое долгое '+Math.max.apply(null,D.long.map(function(l){return l.d}))+' мс':''));}
+        L.push('— Ошибки —');if(!D.errs.length)L.push('  нет');D.errs.slice(-10).forEach(function(r){L.push('  '+Math.round(r.t/1000)+'с: '+r.m)});if(D.errs.length)warn.push('Есть ошибки: '+D.errs.length);
+        return (warn.length?'⚠ '+warn.join('\n⚠ '):'✓ Явных проблем не видно')+'\n\n'+L.join('\n')})}
   /* Home-screen install: a slim banner on phones and tablets, one tap where the browser allows, picture steps elsewhere. */
   function a2Banner(){if(STANDALONE||!TOUCH)return '';var x=+localStorage.getItem('progoff.a2x')||0;if(Date.now()-x<14*864e5)return '';
     return '<div class="a2b" id="a2b"><img src="icon-192.png?v=3" width="40" height="40" alt=""><div><b>CENTRAL на экран «Домой»</b><span>Открывается как приложение, без браузера</span></div>'+
@@ -251,10 +289,34 @@
     $('#ns').onclick=function(){var t=ta.value.trim();if(!t){ta.focus();return}
       if(Store.add({kind:'now',date:GZ.key(TODAY),ring:id,text:t})){close();render()}}}
 
-  function open(h){sheet.innerHTML='<div class="grab"></div>'+h;sheet.hidden=false;veil.hidden=false;document.body.classList.add('sheeton');draftBind()}
-  function close(){sheet.hidden=true;veil.hidden=true;sheet.innerHTML='';DK=null;document.body.classList.remove('sheeton')}
-  veil.onclick=close;
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
+  var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,SHT=null;
+  function open(h){var was=!sheet.hidden&&!sheet.classList.contains('off');clearTimeout(SHT);
+    sheet.innerHTML='<div class="grab" aria-label="Потяни вниз, чтобы закрыть"></div>'+h;sheet.style.transform='';sheet.scrollTop=0;
+    if(!was&&!RM){sheet.classList.add('off');veil.classList.add('off')}
+    sheet.hidden=false;veil.hidden=false;document.body.classList.add('sheeton');
+    if(!was&&!RM){void sheet.offsetHeight;sheet.classList.remove('off');veil.classList.remove('off')}
+    draftBind()}
+  function close(){clearTimeout(SHT);sheet.hidden=true;veil.hidden=true;sheet.classList.remove('off','drag');veil.classList.remove('off');sheet.style.transform='';veil.style.opacity='';
+    sheet.innerHTML='';DK=null;document.body.classList.remove('sheeton')}
+  /* User dismissal slides the sheet down first; code that closes and reopens stays instant. */
+  function dismiss(){if(sheet.hidden)return;if(RM)return close();sheet.classList.remove('drag');sheet.style.transform='';veil.style.opacity='';
+    sheet.classList.add('off');veil.classList.add('off');SHT=setTimeout(close,260)}
+  veil.onclick=dismiss;
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')dismiss()});
+  /* Drag down to close: from the handle anywhere, or from the sheet when it is scrolled to the top. */
+  (function(){var y0=null,dy=0,t0=0,on=false,fromGrab=false;
+    function start(y,target){if(sheet.hidden)return;fromGrab=!!(target.closest&&target.closest('.grab'));
+      if(!fromGrab&&(sheet.scrollTop>0||(target.closest&&target.closest('textarea,input,select,svg'))))return;y0=y;dy=0;t0=Date.now();on=false}
+    function move(y,e){if(y0==null)return;dy=y-y0;if(!on){if(dy>8){on=true;sheet.classList.add('drag')}else if(dy<-4&&!fromGrab){y0=null;return}else return}
+      if(e.cancelable)e.preventDefault();var d=Math.max(0,dy);sheet.style.transform='translate(-50%,'+d+'px)';veil.style.opacity=String(Math.max(0,1-d/400))}
+    function end(){if(y0==null)return;var v=dy/Math.max(1,Date.now()-t0);y0=null;if(!on)return;sheet.classList.remove('drag');
+      if(dy>110||v>.6){sheet.style.transform='';veil.style.opacity='';dismiss()}else{sheet.style.transform='';veil.style.opacity=''}
+      var k=function(ev){ev.stopPropagation();ev.preventDefault();sheet.removeEventListener('click',k,true)};sheet.addEventListener('click',k,true);setTimeout(function(){sheet.removeEventListener('click',k,true);on=false},400)}
+    sheet.addEventListener('touchstart',function(e){start(e.touches[0].clientY,e.target)},{passive:true});
+    sheet.addEventListener('touchmove',function(e){move(e.touches[0].clientY,e)},{passive:false});
+    sheet.addEventListener('touchend',end);sheet.addEventListener('touchcancel',end);
+    sheet.addEventListener('mousedown',function(e){if(e.target.closest('.grab')){start(e.clientY,e.target);e.preventDefault()}});
+    window.addEventListener('mousemove',function(e){if(y0!=null)move(e.clientY,e)});window.addEventListener('mouseup',end)})();
 
   function day(k){
     var d=GZ.parse(k),all=Store.byDate(k),es=all.filter(function(e){return e.kind!=='todo'}),tds=all.filter(function(e){return e.kind==='todo'}),future=d>TODAY,s=GZ.slot(d);
@@ -549,7 +611,8 @@
     var nd=$('#newdream');if(nd)nd.onclick=function(){dreamEditor(GZ.key(TODAY))};
     screen.querySelectorAll('[data-day]').forEach(function(b){b.onclick=function(){day(b.getAttribute('data-day'))}});
   }
-  function render(){screen.dataset.tab=tab;screen.classList.remove('wide');if(tab==='lenta')return lenta();if(tab==='krug')return krug();if(tab==='life')return life();if(tab==='dialogs')return dialogs();if(tab==='todo')return todos();return quiet()}
+  function render(){var t0=performance.now();try{return render0()}finally{if(window.DIAG)DIAG.rec(tab,performance.now()-t0)}}
+  function render0(){screen.dataset.tab=tab;screen.classList.remove('wide');if(tab==='lenta')return lenta();if(tab==='krug')return krug();if(tab==='life')return life();if(tab==='dialogs')return dialogs();if(tab==='todo')return todos();return quiet()}
   document.querySelectorAll('#tabs button').forEach(function(b){b.onclick=function(){tab=b.getAttribute('data-tab');DP=null;
     document.querySelectorAll('#tabs button').forEach(function(x){x.classList.toggle('on',x===b)});close();render()}});
   document.addEventListener('visibilitychange',function(){if(!document.hidden){var k=GZ.key(TODAY);refresh();if(GZ.key(TODAY)!==k)render()}});
