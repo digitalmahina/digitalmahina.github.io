@@ -14,7 +14,7 @@ var Store=(function(){
     byDate:function(k){return this.entries().filter(function(e){return e.date===k}).sort(function(a,b){return (a.created||'')<(b.created||'')?-1:1})},
     add:function(e){e.id=id();e.created=new Date().toISOString();e.vis='private';db.entries.push(e);return save()?e:null},
     update:function(eid,p){db.entries.forEach(function(e){if(e.id===eid)for(var k in p)e[k]=p[k]});save()},
-    remove:function(eid){db.entries=db.entries.filter(function(e){return e.id!==eid});save()},
+    remove:function(eid){db.entries.forEach(function(e){if(e.id===eid&&e.audio&&window.VOICE)VOICE.del(e.audio)});db.entries=db.entries.filter(function(e){return e.id!==eid});save()},
     exportJSON:function(){return JSON.stringify(db,null,2)},
     importJSON:function(txt){var d=JSON.parse(txt);if(!d||!Array.isArray(d.entries))throw new Error('Не тот файл');db=d;save()}
   };
