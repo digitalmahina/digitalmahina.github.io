@@ -119,19 +119,20 @@
     h+=hintsCard();
     h+='<div class="card"><span class="label">60 дней назад на этой точке</span>'+
       (back.length?back.map(function(e){return '<p>«'+esc((e.text||e.title||'').slice(0,140))+'»</p>'}).join('')+'<p class="sub">Что из этого продолжается? Продолжи:</p><div class="row"><button class="ghost" id="rd">Диалогом</button><button class="ghost" id="rs">Вехой</button><button class="ghost" id="rp">Этапом</button></div>':'<p class="sub">Пока пусто. Через 60 дней здесь появится то, что ты пишешь сегодня.</p>')+'</div>';
-    h+='<button class="primary" id="write">Написать сегодня</button><button class="ghost" id="dreamb">Записать сон</button>';
+    h+='<button class="primary" id="write">Написать сегодня</button><button class="ghost" id="dreamb">Записать сон</button>'+(VOICE.supported()?'<button class="ghost" id="voiceb">Голосом</button>':'');
     if(!STANDALONE)h+='<button class="ghost" id="a2hs">На экран «Домой»</button>';
     h+='<h2>Скин</h2><div class="seg skins" id="skins">'+THEME.list().map(function(t){return '<button data-skin="'+t.id+'"'+(t.id===THEME.current()?' class="on"':'')+'><i></i>'+t.name+'</button>'}).join('')+'</div>';
     h+='<div class="row"><button class="link" id="exp">Скачать копию</button><button class="link" id="imp">Загрузить копию</button><button class="link" id="pdf">PDF кольца</button></div>';
     screen.innerHTML=h;
-    $('#write').onclick=function(){editor(GZ.key(TODAY))};$('#dreamb').onclick=function(){dreamEditor(GZ.key(TODAY))};
+    $('#write').onclick=function(){editor(GZ.key(TODAY))};$('#dreamb').onclick=function(){dreamEditor(GZ.key(TODAY))};var vb=$('#voiceb');if(vb)vb.onclick=function(){voiceSheet(GZ.key(TODAY),'day')};
     var ah=$('#a2hs');if(ah)ah.onclick=addHome;
     $('#newp').onclick=periodEditor;
     screen.querySelectorAll('[data-lay]').forEach(function(b){b.onclick=function(){setLayer(b.getAttribute('data-lay'));krug()}});
     var rd=$('#rd');if(rd){rd.onclick=function(){document.querySelector('#tabs [data-tab=dialogs]').onclick()};$('#rs').onclick=stoneEditor;$('#rp').onclick=periodEditor}
     var nb=$('#nowb');if(nb)nb.onclick=nowEditor;
     screen.querySelectorAll('[data-day]').forEach(function(c){c.onclick=function(){day(c.getAttribute('data-day'))}});
-    $('#exp').onclick=function(){var b=new Blob([Store.exportJSON()],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='dnevnik-'+GZ.key(TODAY)+'.json';a.click()};
+    $('#exp').onclick=function(){var o=JSON.parse(Store.exportJSON()),ids=o.entries.filter(function(e){return e.audio}).map(function(e){return e.audio});
+      (ids.length?VOICE.exportAll(ids):Promise.resolve(null)).then(function(au){if(au)o.audio=au;var b=new Blob([JSON.stringify(o)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='dnevnik-'+GZ.key(TODAY)+'.json';a.click()})};
     $('#pdf').onclick=function(){window.print()};
     screen.querySelectorAll('[data-skin]').forEach(function(b){b.onclick=function(){THEME.apply(b.getAttribute('data-skin'))}});
     wideKrug();
@@ -140,7 +141,7 @@
 
   function importAsk(t){
     open('<div><h1>Загрузить копию</h1><p class="sub">Записи на этом устройстве заменятся записями из файла.</p></div><p class="sub" id="ierr"></p><button class="primary" id="iok">Заменить</button><button class="link" id="ino">Отмена</button>');
-    $('#ino').onclick=close;$('#iok').onclick=function(){try{Store.importJSON(t);close();render()}catch(e){$('#ierr').textContent=e.message}}}
+    $('#ino').onclick=close;$('#iok').onclick=function(){try{var d=JSON.parse(t),au=d.audio;delete d.audio;Store.importJSON(JSON.stringify(d));(au&&window.indexedDB?VOICE.importAll(au):Promise.resolve()).then(function(){close();render()},function(e){$('#ierr').textContent='Записи загружены, но голосовые не сохранились: '+e.message})}catch(e){$('#ierr').textContent=e.message}}}
 
   function periodEditor(){var tk=GZ.key(TODAY);
     open('<div><h1>Новый этап</h1><p class="sub">Прошлый этап закончится накануне.</p></div>'+
@@ -168,7 +169,7 @@
   function day(k){
     var d=GZ.parse(k),all=Store.byDate(k),es=all.filter(function(e){return e.kind!=='todo'}),tds=all.filter(function(e){return e.kind==='todo'}),future=d>TODAY,s=GZ.slot(d);
     var h='<div><h1>'+GZ.short(d)+'</h1><p class="sub">'+(s.out?'':'Круг '+GZ.ROM[s.k]+' · день '+s.n+' · ')+GZ.ELN[GZ.elem(s.n||1)]+'</p></div>';
-    h+='<div>'+(es.length?es.map(function(e){if(e.kind==='dream'||e.kind==='dreamx')return dreamRow(e);return '<div class="entry"><span class="kind">'+KIND[e.kind]+(e.src==='ganzhi'?' · из Ганьчжи':'')+'</span>'+(e.kind==='period'?'<p class="ptitle">'+esc(e.title||'')+'</p>':'')+(e.text?'<p>'+esc(e.text)+'</p>':'')+(e.src?'':'<button class="link" data-del="'+e.id+'">Удалить</button>')+'</div>'}).join(''):'<p class="empty">'+(future?'Этот день ещё впереди.':'В этот день записей нет.')+'</p>')+'</div>';
+    h+='<div>'+(es.length?es.map(function(e){if(e.kind==='dream'||e.kind==='dreamx')return dreamRow(e);return '<div class="entry"><span class="kind">'+KIND[e.kind]+(e.audio?' · голос':'')+(e.src==='ganzhi'?' · из Ганьчжи':'')+'</span>'+(e.kind==='period'?'<p class="ptitle">'+esc(e.title||'')+'</p>':'')+audioHTML(e,true)+(e.text?'<p>'+esc(e.text)+'</p>':'')+(e.src?'':'<button class="link" data-del="'+e.id+'">Удалить</button>')+'</div>'}).join(''):'<p class="empty">'+(future?'Этот день ещё впереди.':'В этот день записей нет.')+'</p>')+'</div>';
     if(tds.length)h+='<div><span class="label">Дела</span>'+tds.map(function(e){return '<p><button class="btn" data-dtg="'+e.id+'" style="padding:0 8px;margin-right:6px">'+(e.done?'✓':'○')+'</button>'+esc(e.text)+'</p>'}).join('')+'</div>';
     var ti=MOON.tithi(k);
     if(ti){h+='<p class="sub">Лунный день (титхи) '+ti+(MOON.nm(k)?' · новолуние':'')+(MOON.fm(k)?' · полнолуние':'')+(MOON.ek(k)?' · экадаши':'')+'</p>';
@@ -177,6 +178,7 @@
     open(h);
     var a=$('#add');if(a)a.onclick=function(){editor(k)};
     sheet.querySelectorAll('[data-dream]').forEach(function(b){b.onclick=function(){dreamView(b.getAttribute('data-dream'))}});
+    hydrate(sheet,function(){render();day(k)});
     sheet.querySelectorAll('[data-dtg]').forEach(function(b){b.onclick=function(){var id=b.getAttribute('data-dtg'),e=tds.filter(function(x){return x.id===id})[0];Store.update(id,{done:!e.done});render();day(k)}});
     var fb=$('#fast');if(fb)fb.onclick=function(){if(Store.add({kind:'fast',date:k,text:''})){render();day(k)}};
     sheet.querySelectorAll('[data-del]').forEach(function(b){b.onclick=function(){if(b.dataset.sure){Store.remove(b.getAttribute('data-del'));render();day(k)}else{b.dataset.sure='1';b.textContent='Точно удалить? Нажми ещё раз'}}});
@@ -188,8 +190,8 @@
       '<div class="seg" id="kinds"><button data-k="day" class="on">День</button><button data-k="dream">Сон / образ</button><button disabled title="Фаза 4">Диалог</button></div>'+
       '<textarea id="txt" placeholder="Что сегодня происходит внутри и вокруг?"></textarea>'+
       '<p class="sub">Видишь только ты. Записи хранятся на этом устройстве; «Скачать копию» сохраняет их в файл.</p>'+
-      '<button class="primary" id="save">Сохранить</button>');
-    var ta=$('#txt');ta.focus();
+      '<button class="primary" id="save">Сохранить</button>'+(VOICE.supported()?'<button class="ghost" id="vrec">Голосом</button>':''));
+    var ta=$('#txt');ta.focus();var vr=$('#vrec');if(vr)vr.onclick=function(){voiceSheet(k,kind)};
     sheet.querySelectorAll('#kinds [data-k]').forEach(function(b){b.onclick=function(){kind=b.getAttribute('data-k');if(kind==='dream')return dreamEditor(k,null,ta.value);
       sheet.querySelectorAll('#kinds [data-k]').forEach(function(x){x.classList.toggle('on',x===b)});
       ta.placeholder=kind==='dream'?'Сон или образ, как он пришёл. Без толкования.':'Что сегодня происходит внутри и вокруг?'}});
@@ -359,7 +361,7 @@
     var n=enl(e.id).length;
     return '<div class="entry dream'+(cls?' '+cls:'')+(e.mode==='twilight'?' tw':'')+'" data-dream="'+e.id+'" role="button" tabindex="0">'+(no?'<span class="no">'+no+'</span>':'')+
       '<span class="kind">'+(e.mode==='twilight'?'образ в полусне':'сон')+' № '+dreamNo(e.id)+(e.feel?' · '+esc(e.feel):'')+'</span>'+
-      (e.title?'<p class="ptitle">'+esc(e.title)+'</p>':'')+(e.text?'<p>'+esc(e.text.length>320?e.text.slice(0,320)+'…':e.text)+'</p>':'')+
+      (e.title?'<p class="ptitle">'+esc(e.title)+'</p>':'')+audioHTML(e)+(e.text?'<p>'+esc(e.text.length>320?e.text.slice(0,320)+'…':e.text)+'</p>':'')+
       '<span class="sub">'+(n?'развёрток: '+n+' · ':'')+'открыть ›</span></div>'}
   function dreamSeriesHead(){var ds=dreams(),im=dreamImages().filter(function(x){return x.n>=2}).slice(0,8);
     var inRing=TS.out?0:ds.filter(function(d){var s=GZ.slot(GZ.parse(d.date));return !s.out&&s.year===TS.year&&s.k===TS.k}).length;
@@ -372,7 +374,8 @@
       '<label class="sub">Главный образ — одно-два слова<input id="dt" class="field" maxlength="60" placeholder="например: дом у воды" value="'+esc(e?e.title||'':'')+'"></label>'+
       '<textarea id="dtx" placeholder="Что было, по порядку. Обрывок тоже годится.">'+esc(e?e.text||'':(pre||''))+'</textarea>'+
       '<div><span class="sub">Чувство при пробуждении</span><div class="chips" id="dfeel">'+FEELS.map(function(f){return '<button class="btn'+(f===feel?' on':'')+'" data-f="'+f+'">'+f+'</button>'}).join('')+'</div></div>'+
-      '<button class="primary" id="dsave">Сохранить сон</button>');
+      '<button class="primary" id="dsave">Сохранить сон</button>'+(!e&&VOICE.supported()?'<button class="ghost" id="dvoice">Надиктовать сон</button>':''));
+    var dv=$('#dvoice');if(dv)dv.onclick=function(){voiceSheet(k,'dream',{mode:mode,title:$('#dt').value.trim(),feel:feel})};
     var tx=$('#dtx');if(!e)tx.focus();
     sheet.querySelectorAll('#dmode [data-m]').forEach(function(b){b.onclick=function(){mode=b.getAttribute('data-m');sheet.querySelectorAll('#dmode [data-m]').forEach(function(x){x.classList.toggle('on',x===b)})}});
     sheet.querySelectorAll('#dfeel [data-f]').forEach(function(b){b.onclick=function(){feel=feel===b.getAttribute('data-f')?'':b.getAttribute('data-f');sheet.querySelectorAll('#dfeel [data-f]').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-f')===feel)})}});
@@ -382,39 +385,76 @@
   function dreamView(id){var e=dreamById(id);if(!e)return;var xs=enl(id),d=GZ.parse(e.date),s=GZ.slot(d);
     var same=e.title?(function(){var my=words(e.title).map(stem);return dreamImages().filter(function(x){return x.n>=2&&my.indexOf(x.s)>=0})})():[];
     open('<div><h1>'+(e.mode==='twilight'?'Образ':'Сон')+' № '+dreamNo(id)+'</h1><p class="sub">'+GZ.short(d)+(s.out?'':' · круг '+GZ.ROM[s.k]+', день '+s.n)+(e.feel?' · '+esc(e.feel):'')+'</p></div>'+
-      (e.title?'<p class="ptitle">'+esc(e.title)+'</p>':'')+(e.text?'<p style="white-space:pre-wrap">'+esc(e.text)+'</p>':'')+
+      (e.title?'<p class="ptitle">'+esc(e.title)+'</p>':'')+audioHTML(e,true)+(e.text?'<p style="white-space:pre-wrap">'+esc(e.text)+'</p>':'')+
       (same.length?'<p class="sub">Этот образ уже приходил: '+same.map(function(x){return '«'+esc(x.w)+'» ×'+x.n}).join(', ')+'.</p>':'')+
       (xs.length?'<div><span class="label">Развёртки</span>'+xs.map(function(x){return '<div class="entry"><span class="kind">'+GZ.short(GZ.parse(x.date))+'</span><p>'+esc(x.text)+'</p><button class="link" data-xdel="'+x.id+'">Удалить</button></div>'}).join('')+'</div>':'')+
       '<div class="card soft"><span class="label">Развернуть сон</span><p class="sub">Вернись в сон. Побудь в нём с закрытыми глазами и дай образу двигаться дальше. Запиши, что произошло, не объясняя.</p><textarea id="xtx" style="min-height:120px" placeholder="Образ продолжается…"></textarea><button class="primary" id="xsave">Добавить развёртку</button></div>'+
       '<div class="row"><button class="ghost" id="dedit">Изменить</button><button class="ghost" id="dday">Открыть день</button><button class="link" id="ddel">Удалить сон</button></div>');
+    hydrate(sheet,function(){render();dreamView(id)});
     $('#xsave').onclick=function(){var t=$('#xtx').value.trim();if(!t){$('#xtx').focus();return}if(Store.add({kind:'dreamx',date:GZ.key(TODAY),parent:id,text:t})){render();dreamView(id)}};
     $('#dedit').onclick=function(){dreamEditor(e.date,id)};
     $('#dday').onclick=function(){day(e.date)};
     sheet.querySelectorAll('[data-xdel]').forEach(function(b){b.onclick=function(){if(b.dataset.sure){Store.remove(b.getAttribute('data-xdel'));render();dreamView(id)}else{b.dataset.sure='1';b.textContent='Точно? Нажми ещё раз'}}});
     var dd=$('#ddel');dd.onclick=function(){if(dd.dataset.sure){xs.forEach(function(x){Store.remove(x.id)});Store.remove(id);close();render()}else{dd.dataset.sure='1';dd.textContent=xs.length?'Удалить вместе с развёртками? Нажми ещё раз':'Точно удалить? Нажми ещё раз'}}}
+
+  /* Voice notes: audio lives in IndexedDB (VOICE), the entry keeps audio id, dur, mime; text = transcript (editable). */
+  function audioHTML(e,tools){if(!e.audio)return '';
+    return '<div class="voice"><audio controls preload="metadata" data-aud="'+e.audio+'"></audio><span class="sub">'+VOICE.fmt(e.dur)+'</span>'+
+      (tools?'<button class="link" data-stt="'+e.id+'">'+(e.text?'Расшифровать заново':'Расшифровать в текст')+'</button>':'')+'<span class="sub" data-stts="'+e.id+'"></span></div>'}
+  function hydrate(root,after){root.querySelectorAll('audio[data-aud]').forEach(function(au){au.onclick=function(ev){ev.stopPropagation()};
+      VOICE.get(au.getAttribute('data-aud')).then(function(b){if(b)au.src=URL.createObjectURL(b);else au.replaceWith(Object.assign(document.createElement('span'),{className:'sub',textContent:'аудио нет на этом устройстве'}))})});
+    root.querySelectorAll('.voice').forEach(function(v){v.onclick=function(ev){ev.stopPropagation()}});
+    root.querySelectorAll('[data-stt]').forEach(function(b){b.onclick=function(ev){ev.stopPropagation();sttFlow(b.getAttribute('data-stt'),root.querySelector('[data-stts="'+b.getAttribute('data-stt')+'"]'),b,after)}})}
+  var STT_BUSY=false;
+  function sttFlow(eid,st,btn,after){if(STT_BUSY){st.textContent='Уже идёт расшифровка другой записи.';return}
+    var e=Store.entries().filter(function(x){return x.id===eid})[0];if(!e)return;
+    VOICE.modelCached().then(function(have){
+      if(!have&&!btn.dataset.ok){btn.dataset.ok='1';btn.textContent='Скачать модель и расшифровать';st.textContent='Один раз скачается модель распознавания, около '+VOICE.MB+' МБ, лучше по Wi-Fi. Дальше работает без интернета, звук никуда не уходит.';return}
+      STT_BUSY=true;btn.disabled=true;st.textContent=have?'Загружаю модель…':'Скачиваю модель… 0%';
+      VOICE.loadModel(function(L,T){if(T)st.textContent='Скачиваю модель… '+Math.min(99,Math.round(L/T*100))+'%'}).then(function(){
+        st.textContent='Расшифровываю… обычно не дольше самой записи, на телефоне дольше.';return VOICE.transcribe(e.audio)})
+      .then(function(txt){STT_BUSY=false;var cur=Store.entries().filter(function(x){return x.id===eid})[0];if(!cur)return;
+        Store.update(eid,{text:txt||cur.text||'',stt:'whisper-small'});if(after)after()},
+        function(err){STT_BUSY=false;btn.disabled=false;st.textContent='Не получилось: '+err.message+'. Запись сохранена, можно попробовать ещё раз.'})})}
+  function voiceSheet(k,kind,extra){var rec=null,tm=null;
+    open('<div><h1>Голосом</h1><p class="sub">'+GZ.short(GZ.parse(k))+' · '+(kind==='dream'?'сон, как он пришёл':'запись дня')+'</p></div>'+
+      '<div class="vrec"><button class="primary" id="vgo">Начать запись</button><p class="clock-sm" id="vt">0:00</p></div>'+
+      '<p class="sub" id="vmsg">Запись хранится только на этом устройстве и попадает в «Скачать копию». Расшифровать в текст можно потом, без интернета.</p>'+
+      '<button class="link" id="vno">Отмена</button>');
+    function stopT(){if(tm){clearInterval(tm);tm=null}}
+    $('#vno').onclick=function(){stopT();if(rec)rec.cancel();close()};
+    $('#vgo').onclick=function(){var b=$('#vgo');
+      if(!rec){b.disabled=true;VOICE.record().then(function(r){rec=r;b.disabled=false;b.textContent='Остановить и сохранить';b.classList.add('rec');
+          tm=setInterval(function(){var t=$('#vt');if(t)t.textContent=VOICE.fmt(Math.round((Date.now()-r.t0)/1000))},500)},
+        function(err){b.disabled=false;$('#vmsg').textContent='Нет доступа к микрофону. Разреши его в настройках браузера. ('+(err&&err.name||'')+')'});return}
+      stopT();b.disabled=true;rec.stop().then(function(res){var aid=VOICE.nid();return VOICE.put(aid,res.blob).then(function(){VOICE.persist();
+          var en={kind:kind,date:k,text:'',audio:aid,dur:res.dur,mime:res.mime};if(kind==='dream'){var x=extra||{};en.mode=x.mode||'sleep';en.title=x.title||'';en.feel=x.feel||''}
+          var n=Store.add(en);render();if(n){if(kind==='dream')dreamView(n.id);else day(k)}})})
+        .catch(function(err){b.disabled=false;$('#vmsg').textContent='Не удалось сохранить запись: '+err.message})}}
   var LF='all',LQ='';
   function lenta(){
-    var F={all:'Все',day:'Дни',dream:'Сны',dialog:'Диалоги',life:'Жизнь'},grp={day:'day',now:'day',dream:'dream',dreamx:'dream',dialog:'dialog',period:'life',stone:'life',yearnote:'life',fork:'life'};
+    var F={all:'Все',day:'Дни',dream:'Сны',voice:'Голос',dialog:'Диалоги',life:'Жизнь'},grp={day:'day',now:'day',dream:'dream',dreamx:'dream',dialog:'dialog',period:'life',stone:'life',yearnote:'life',fork:'life'};
     var pn={};Store.entries().forEach(function(e){if(e.kind==='partner')pn[e.id]=e.title});
-    var es=Store.entries().filter(function(e){return grp[e.kind]&&(LF==='all'||grp[e.kind]===LF)});
+    var es=Store.entries().filter(function(e){return grp[e.kind]&&(LF==='all'||(LF==='voice'?!!e.audio:grp[e.kind]===LF))});
     if(LQ){var q=LQ.toLowerCase();es=es.filter(function(e){return ((e.text||'')+' '+(e.title||'')).toLowerCase().indexOf(q)>=0})}
     es.sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:((a.created||'')<(b.created||'')?1:-1)});
     var h='<div><h1>Лента</h1><p class="sub">Все записи, от новых к старым</p></div>';
     h+='<input id="lq" class="field crt" type="search" placeholder="&gt; поиск по записям" value="'+esc(LQ)+'">';
     h+='<div class="seg" id="lf">'+Object.keys(F).map(function(k){return '<button data-f="'+k+'"'+(LF===k?' class="on"':'')+'>'+F[k]+'</button>'}).join('')+'</div>';
     if(LF==='dream')h+=dreamSeriesHead();
-    if(!es.length)h+='<p class="empty">'+(LF==='dream'&&!LQ?'Снов пока нет. Записывай сразу после пробуждения, даже обрывок.':LQ||LF!=='all'?'Ничего не нашлось.':'Пока нет записей. Начни с круга: «Написать сегодня».')+'</p>';
+    if(!es.length)h+='<p class="empty">'+(LF==='voice'&&!LQ?'Голосовых пока нет. Кнопка «Голосом» есть на Круге и в записи.':LF==='dream'&&!LQ?'Снов пока нет. Записывай сразу после пробуждения, даже обрывок.':LQ||LF!=='all'?'Ничего не нашлось.':'Пока нет записей. Начни с круга: «Написать сегодня».')+'</p>';
     var last='',NN=es.length;
     es.forEach(function(e,ix){
       if(e.date!==last){last=e.date;var d=GZ.parse(e.date),s=GZ.slot(d);h+='<button class="link lday" data-day="'+e.date+'">'+GZ.short(d)+(s.out?'':' · круг '+GZ.ROM[s.k]+', день '+s.n)+'</button>'}
       var k=KIND[e.kind]+(e.kind==='dialog'&&pn[e.partner]?' · '+esc(pn[e.partner]):'')+(e.src==='ganzhi'?' · из Ганьчжи':'');
       if(e.kind==='dream'||e.kind==='dreamx'){h+=dreamRow(e,'form','№ '+String(NN-ix).padStart(4,'0'));return}
-      h+='<div class="entry form"><span class="no">№ '+String(NN-ix).padStart(4,'0')+'</span><span class="kind">'+k+'</span>'+(e.title&&e.kind!=='dialog'?'<p class="ptitle">'+esc(e.title)+'</p>':'')+(e.text?'<p>'+esc(e.text)+'</p>':'')+'</div>'});
+      h+='<div class="entry form"><span class="no">№ '+String(NN-ix).padStart(4,'0')+'</span><span class="kind">'+k+'</span>'+(e.title&&e.kind!=='dialog'?'<p class="ptitle">'+esc(e.title)+'</p>':'')+audioHTML(e)+(e.text?'<p>'+esc(e.text)+'</p>':'')+'</div>'});
     screen.innerHTML=h;
     var qi=$('#lq');qi.oninput=function(){LQ=qi.value;var p=qi.selectionStart;lenta();var n=$('#lq');n.focus();try{n.setSelectionRange(p,p)}catch(x){}};
     screen.querySelectorAll('#lf button').forEach(function(b){b.onclick=function(){LF=b.getAttribute('data-f');lenta()}});
     screen.querySelectorAll('[data-dream]').forEach(function(b){b.onclick=function(){dreamView(b.getAttribute('data-dream'))}});
     screen.querySelectorAll('[data-img]').forEach(function(b){b.onclick=function(){LQ=LQ===b.getAttribute('data-img')?'':b.getAttribute('data-img');lenta()}});
+    hydrate(screen,function(){lenta()});
     var nd=$('#newdream');if(nd)nd.onclick=function(){dreamEditor(GZ.key(TODAY))};
     screen.querySelectorAll('[data-day]').forEach(function(b){b.onclick=function(){day(b.getAttribute('data-day'))}});
   }
