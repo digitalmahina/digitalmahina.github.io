@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-29T21:45Z",
+ "generated": "2026-10-29T23:20Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -8,16 +8,16 @@
    "lat": 68.607,
    "lon": 27.405,
    "cat": "MVFR",
-   "wdir": 200,
+   "wdir": 240,
    "wspd": 3,
    "wgst": null,
    "vis": 9999,
-   "ceil": 1700,
+   "ceil": 1600,
    "temp": 6,
    "dew": 3,
-   "qnh": 1009,
-   "time": "21:20Z",
-   "raw": "METAR EFIV 292120Z AUTO 20005KT 9999 OVC017 06/03 Q1009"
+   "qnh": 1010,
+   "time": "22:50Z",
+   "raw": "METAR EFIV 292250Z AUTO 24006KT 9999 OVC016 06/03 Q1010"
   },
   {
    "icao": "EFKS",
@@ -25,17 +25,17 @@
    "place": "Финляндия",
    "lat": 65.992,
    "lon": 29.236,
-   "cat": "IFR",
-   "wdir": 210,
+   "cat": "MVFR",
+   "wdir": 190,
    "wspd": 3,
    "wgst": null,
    "vis": 9999,
-   "ceil": 700,
+   "ceil": 2100,
    "temp": 6,
    "dew": 5,
    "qnh": 1012,
-   "time": "21:20Z",
-   "raw": "METAR EFKS 292120Z AUTO 21006KT 9999 -SHRA OVC007 06/05 Q1012"
+   "time": "22:50Z",
+   "raw": "METAR EFKS 292250Z AUTO 19006KT 9999 FEW007 OVC021 06/05 Q1012"
   },
   {
    "icao": "ENKR",
@@ -44,16 +44,16 @@
    "lat": 69.725,
    "lon": 29.898,
    "cat": "MVFR",
-   "wdir": 240,
-   "wspd": 4,
+   "wdir": 260,
+   "wspd": 3,
    "wgst": null,
    "vis": 9999,
-   "ceil": 2200,
+   "ceil": 1900,
    "temp": 6,
    "dew": 3,
-   "qnh": 1009,
-   "time": "21:20Z",
-   "raw": "METAR ENKR 292120Z 24007KT 9999 BKN022 06/03 Q1009 RMK WIND 731FT 25014KT"
+   "qnh": 1010,
+   "time": "22:50Z",
+   "raw": "METAR ENKR 292250Z 26005KT 9999 BKN019 06/03 Q1010 RMK WIND 731FT 28008KT"
   },
   {
    "icao": "ULMM",
@@ -66,12 +66,12 @@
    "wspd": 2,
    "wgst": null,
    "vis": 9999,
-   "ceil": 2300,
+   "ceil": 2100,
    "temp": 6,
    "dew": 3,
    "qnh": 1011,
-   "time": "21:30Z",
-   "raw": "METAR ULMM 292130Z 16002MPS 9999 BKN023 06/03 Q1011 R13/150065 NOSIG RMK QFE751"
+   "time": "23:00Z",
+   "raw": "METAR ULMM 292300Z 16002MPS 9999 BKN021 06/03 Q1011 R13/150065 NOSIG RMK QFE752"
   }
  ],
  "synop": [
@@ -302,7 +302,7 @@
  ],
  "taf": {
   "EFIV": "TAF EFIV 291433Z 2915/2918 18006KT 9999 BKN020",
-  "EFKS": "TAF EFKS 292037Z 2921/2924 21006KT 9999 BKN006 TEMPO 2921/2924 3000 -DZ BKN004",
+  "EFKS": "TAF AMD EFKS 292205Z 2922/2924 21006KT 9999 BKN006 BECMG 2922/2924 SCT006 BKN020",
   "ENKR": "TAF ENKR 292000Z 2921/3006 21010KT 9999 BKN025 BECMG 3000/3002 27008KT",
   "ULMM": "TAF ULMM 292001Z 2921/3021 21003G08MPS 9999 BKN016CB BECMG 3007/3009 30003G08MPS"
  },
