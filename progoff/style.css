@@ -2,7 +2,7 @@
    Layer 1 = semantic tokens (this block, one set per theme: html[data-theme]).
    Layer 2 = components below use ONLY these tokens, never raw colours.
    Decor is opt-in per theme through html[data-deco~=name]: tiles stripes cables scan leds numbers.
-   A custom theme is the same token set as JSON, applied as inline custom properties. No animation by design. */
+   A custom theme is the same token set as JSON, applied as inline custom properties. No animation by design, except the sheet sliding (user asked for smooth sheet movement, 2026-10-29). */
 :root,[data-theme=retro]{
 /* surfaces */
 --desk:#D9CFB8;--desk-texture:repeating-linear-gradient(0deg,rgba(0,0,0,.025) 0 1px,transparent 1px 3px);
@@ -341,3 +341,14 @@ body.sheeton .fab{display:none}
 .a2steps li{display:grid;grid-template-columns:28px 44px 1fr;align-items:center;gap:10px;font:15px var(--sans);color:var(--ink)}
 .a2n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font:700 13px var(--mono)}
 .a2i{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--paper);color:#0a7aff;display:flex;align-items:center;justify-content:center;font:13px var(--sans)}
+
+/* Sheet motion: slides up on open, follows the finger, slides down on dismiss */
+.sheet{transition:transform .26s cubic-bezier(.2,.8,.2,1);will-change:transform}
+.sheet.off{transform:translate(-50%,105%)}
+.sheet.drag{transition:none}
+.veil{transition:opacity .26s ease}
+.veil.off{opacity:0}
+.grab{touch-action:none;cursor:grab;position:relative}
+.grab::after{content:"";position:absolute;left:-30px;right:-30px;top:-14px;bottom:-14px}
+@media (prefers-reduced-motion:reduce){.sheet,.veil{transition:none}}
+.diagout{white-space:pre-wrap;word-break:break-word;font:11px/1.45 var(--mono);background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-s);padding:12px;margin:0;max-height:46vh;overflow:auto;-webkit-user-select:text;user-select:text}
