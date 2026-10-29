@@ -79,6 +79,9 @@
     return H.slice(0,2)}
   function hintsCard(){var H=hints();return H.length?'<div class="card soft"><span class="label">Подсказка</span>'+H.map(function(t){return '<p>'+esc(t)+'</p>'}).join('')+'</div>':''}
 
+  var UA=navigator.userAgent,IOS=/iPhone|iPad|iPod/.test(UA)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),
+      IPAD=/iPad/.test(UA)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),AND=/Android/.test(UA),
+      TG=/Telegram/i.test(UA)||!!window.TelegramWebviewProxy,TOUCH=IOS||AND||(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
   var STANDALONE=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true,BIP=null;
   window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();BIP=e});
   window.addEventListener('appinstalled',function(){STANDALONE=true;BIP=null;if(tab==='krug')render()});
@@ -170,22 +173,31 @@
       if(fs.every(function(x){return !x.value.trim()}))localStorage.removeItem(dk);else localStorage.setItem(dk,JSON.stringify({t:Date.now(),v:v}))})})}
   Store.onChange(function(){if(DK&&!sheet.hidden){localStorage.removeItem(DK)}});
   (function(){try{for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(k&&k.indexOf(DRAFT)===0){var d=JSON.parse(localStorage.getItem(k)||'{}');if(!d.t||Date.now()-d.t>14*864e5)localStorage.removeItem(k)}}}catch(e){}})();
+  /* Home-screen install: a slim banner on phones and tablets, one tap where the browser allows, picture steps elsewhere. */
+  function a2Banner(){if(STANDALONE||!TOUCH)return '';var x=+localStorage.getItem('progoff.a2x')||0;if(Date.now()-x<14*864e5)return '';
+    return '<div class="a2b" id="a2b"><img src="icon-192.png?v=3" width="40" height="40" alt=""><div><b>CENTRAL на экран «Домой»</b><span>Открывается как приложение, без браузера</span></div>'+
+      '<button class="primary" id="a2go">'+(BIP?'Установить':'Как?')+'</button><button class="a2x" id="a2x" aria-label="Скрыть">×</button></div>'}
+  var SHARE='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 10H6v10h12V10h-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
+      PLUSQ='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+      DOTS='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="5" cy="12" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="19" cy="12" r="2" fill="currentColor"/></svg>',
+      VDOTS='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="5" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="12" cy="19" r="2" fill="currentColor"/></svg>';
+  function steps(list){return '<ol class="a2steps">'+list.map(function(s,i){return '<li><span class="a2n">'+(i+1)+'</span><span class="a2i">'+s[0]+'</span><span>'+s[1]+'</span></li>'}).join('')+'</ol>'}
   function addHome(){
     if(BIP){var p=BIP;BIP=null;p.prompt();p.userChoice.then(function(c){if(c&&c.outcome==='accepted'){STANDALONE=true;close();if(tab==='krug')render()}}).catch(function(){});return}
-    var ua=navigator.userAgent,ios=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),
-        and=/Android/.test(ua),mac=/Macintosh/.test(ua)&&!ios,saf=/Safari/.test(ua)&&!/Chrome|Chromium|Edg|CriOS|FxiOS|Firefox/.test(ua),fx=/Firefox|FxiOS/.test(ua),
-        tg=/Telegram/i.test(ua)||!!window.TelegramWebviewProxy;
-    var how=tg?'<p>Ты открыл дневник внутри Telegram, отсюда иконку не добавить. Нажми ⋮ → «Открыть в браузере», а там снова эту кнопку.</p>'
-      :ios?'<p>На iPhone и iPad браузер не разрешает сайтам ставить иконку самим. В Safari нажми «Поделиться» (квадрат со стрелкой) → «На экран „Домой“» → «Добавить».</p><p class="sub">В других браузерах на iPhone этого пункта может не быть, тогда открой страницу в Safari.</p>'
-      :and?(fx?'<p>В Firefox: меню ⋮ → «Установить» или «Добавить на главный экран».</p>':'<p>Ещё секунду. Если окно установки не появится само, открой меню ⋮ справа вверху → «Установить приложение» или «Добавить на главный экран».</p>')
-      :mac&&saf?'<p>В Safari на Mac: меню «Файл» → «Добавить в Dock».</p>'
+    var mac=/Macintosh/.test(UA)&&!IOS,saf=/Safari/.test(UA)&&!/Chrome|Chromium|Edg|CriOS|FxiOS|Firefox/.test(UA),fx=/Firefox|FxiOS/.test(UA),ichrome=/CriOS|EdgiOS/.test(UA);
+    var how=TG?steps([[VDOTS,'Нажми ⋮ или ⋯ вверху справа'],[SHARE,'«Открыть в браузере»'],[PLUSQ,'Там снова нажми «На экран Домой»']])
+      :IOS?steps(ichrome?[[SHARE,'Нажми «Поделиться» в адресной строке'],[PLUSQ,'«На экран „Домой“»'],['<b>OK</b>','«Добавить»']]
+        :[[SHARE,IPAD?'Нажми «Поделиться» вверху справа':'Нажми «Поделиться» внизу. Не видно? Сначала ⋯'],[PLUSQ,'Пролистай вниз → «На экран „Домой“»'],['<b>OK</b>','«Добавить» вверху справа']])
+      :AND?steps(fx?[[VDOTS,'Меню ⋮'],[PLUSQ,'«Установить»']]:[[VDOTS,'Меню ⋮ вверху справа'],[PLUSQ,'«Установить приложение» или «Добавить на гл. экран»'],['<b>OK</b>','«Установить»']])
+      :mac&&saf?steps([[SHARE,'Меню «Файл»'],[PLUSQ,'«Добавить в Dock»']])
       :fx?'<p>Firefox на компьютере не устанавливает такие приложения. Открой страницу в Chrome или Edge.</p>'
-      :'<p>Ещё секунду. Если окно установки не появится само, нажми значок установки (монитор со стрелкой) справа в адресной строке или меню ⋮ → «Установить».</p>';
-    open('<h2>На экран «Домой»</h2>'+how+'<p class="sub">Записи останутся в этом браузере на этом устройстве. Иконка откроет тот же дневник.</p><button class="primary" id="a2ok">Понятно</button>');
+      :steps([[PLUSQ,'Значок установки справа в адресной строке'],[VDOTS,'или меню ⋮ → «Установить»']]);
+    open('<div><h1>На экран «Домой»</h1><p class="sub">Три касания, один раз.</p></div>'+how+'<p class="sub">Записи останутся те же. Иконка откроет CENTRAL как приложение.</p><button class="primary" id="a2ok">Понятно</button>');
     $('#a2ok').onclick=close;
     /* Chrome may hand over the install prompt a moment later: switch to the one-tap button. */
-    if(!ios&&!tg){var t0=Date.now(),iv=setInterval(function(){if(BIP&&$('#a2ok')){clearInterval(iv);var b=$('#a2ok');b.textContent='Установить';b.onclick=function(){addHome()}}else if(Date.now()-t0>15000||!$('#a2ok'))clearInterval(iv)},300)}
+    if(!IOS&&!TG){var t0=Date.now(),iv=setInterval(function(){if(BIP&&$('#a2ok')){clearInterval(iv);var b=$('#a2ok');b.textContent='Установить одним касанием';b.onclick=function(){addHome()}}else if(Date.now()-t0>15000||!$('#a2ok'))clearInterval(iv)},300)}
   }
+  window.addEventListener('beforeinstallprompt',function(){setTimeout(function(){var b=$('#a2go');if(b)b.textContent='Установить'},0)});
   /* Wide screens (desktop app window): ring on the left, everything else on the right. */
   var WIDE=window.matchMedia?matchMedia('(min-width: 860px)'):{matches:false};
   function wideKrug(){if(!WIDE.matches)return;var L=document.createElement('div'),Rt=document.createElement('div');L.className='kl';Rt.className='kr';
@@ -196,7 +208,7 @@
     var sub=TS.out?'Новый круг I начнётся '+GZ.short(WIN[0]):GZ.short(WIN[0])+' – '+GZ.short(WIN[59])+' · день '+TS.n+' из 60';
     var back=Store.byDate(GZ.key(GZ.add(TODAY,-60)));
     var cp=curPeriod(),nw=nowEntry();
-    var h='<div><h1>'+head+'</h1><p class="sub">'+sub+'</p></div>';
+    var h=a2Banner()+'<div><h1>'+head+'</h1><p class="sub">'+sub+'</p></div>';
     h+='<div class="card"><span class="label">Текущий этап</span>'+(cp?'<p class="ptitle">'+esc(cp.e.title||'Без названия')+'</p><p class="sub">с '+GZ.short(GZ.parse(cp.start))+' · '+(daysBetween(cp.start,GZ.key(TODAY))+1)+'-й день</p>'+(cp.e.text?'<p>'+esc(cp.e.text.slice(0,180))+(cp.e.text.length>180?'…':'')+'</p>':''):'<p class="sub">Этап — отрезок жизни со своим настроением. Назови тот, в котором ты сейчас.</p>')+
       '<button class="ghost" id="newp">Начался новый этап</button></div>';
     if(!TS.out)h+='<div class="card'+(nw?'':' soft')+'"><span class="label">Сейчас · начало круга '+GZ.ROM[TS.k]+'</span>'+(nw?'<p>'+esc(nw.text.slice(0,240))+(nw.text.length>240?'…':'')+'</p><p class="sub">записано '+GZ.short(GZ.parse(nw.date))+'</p>':'<p class="sub">Открытый момент: где ты стоишь на пороге этих 60 дней? Что уже есть, что только начинается?</p><button class="ghost" id="nowb">Записать «Сейчас»</button>')+'</div>';
@@ -213,6 +225,7 @@
     var rd=$('#rd');if(rd){rd.onclick=function(){document.querySelector('#tabs [data-tab=dialogs]').onclick()};$('#rs').onclick=stoneEditor;$('#rp').onclick=periodEditor}
     var nb=$('#nowb');if(nb)nb.onclick=nowEditor;
     screen.querySelectorAll('[data-day]').forEach(function(c){c.onclick=function(){day(c.getAttribute('data-day'))}});
+    var a2=$('#a2go');if(a2)a2.onclick=addHome;var a2x=$('#a2x');if(a2x)a2x.onclick=function(){localStorage.setItem('progoff.a2x',Date.now());$('#a2b').remove()};
     wideKrug();
   }
 
