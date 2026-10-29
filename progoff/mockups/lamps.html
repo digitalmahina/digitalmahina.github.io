@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Макет · Машина думает лампочками</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Michroma&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--wash:#c9567f;--wall:#f2c9d6;--wall-2:#e7b4c4;--edge:#b98798;--blue:#3b4fd8;--navy:#1d1838;--lamp:#fff6ea;--lamp-glow:rgba(255,240,220,.9);--off:#d9a3b5;--orange:#f0603f;--ink:#3a1b28}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#2a1220;color:var(--ink);font-family:"Space Mono",monospace;display:flex;flex-direction:column;align-items:center;gap:28px;padding:28px 14px 60px}
+h1{font-family:Michroma,sans-serif;font-size:15px;letter-spacing:.18em;color:#f6c8d8;margin:0;text-transform:uppercase}
+.cap{font-size:12px;color:#e8a9c0;max-width:900px;text-align:center;line-height:1.5;margin:-14px 0 0}
+/* room */
+.room{position:relative;width:min(1100px,100%);aspect-ratio:16/8;background:var(--wall);border-radius:6px;overflow:hidden;display:flex;align-items:stretch;gap:2%;padding:3% 3% 0}
+.room:after{content:"";position:absolute;inset:0;background:var(--wash);mix-blend-mode:multiply;opacity:.55;pointer-events:none}
+.room:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 35%,rgba(255,220,235,.35),transparent 60%);pointer-events:none;z-index:2}
+.rack{flex:0 0 15%;border:5px solid var(--blue);background:var(--navy);display:flex;flex-direction:column;justify-content:flex-end;padding:6px;align-self:flex-end;height:78%}
+.rack i{display:block;height:9%;margin-top:6%;background:#2b2a60;border-top:2px solid #6e7cff}
+.wallp{flex:1;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);gap:2.4%;padding:1.6%;background:var(--wall-2);border:1px solid var(--edge);align-self:flex-start;height:82%}
+.desk{position:absolute;left:18%;right:18%;bottom:0;height:9%;background:#f7dbe4;border-top:3px solid var(--edge);z-index:1}
+.desk b{position:absolute;top:-3px;width:5%;height:6px;background:var(--orange)}
+.pillar{position:absolute;top:0;bottom:0;width:4%;background:#2f3b3a;z-index:3}
+/* module */
+.mod{background:#f6d5df;border:1px solid var(--edge);display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr auto;gap:6%;padding:5%;position:relative}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14%;align-content:center}
+.l{aspect-ratio:1;border-radius:50%;background:var(--off);box-shadow:inset 0 0 0 1px rgba(90,30,50,.25)}
+.l.on{background:var(--lamp);box-shadow:0 0 3px 1px var(--lamp-glow),0 0 8px 2px rgba(255,210,230,.55)}
+.foot{grid-column:1/-1;display:flex;gap:4%;align-items:center}
+.foot .sq{flex:1;height:5px;background:var(--off)}
+.foot .sq.on{background:var(--orange);box-shadow:0 0 4px var(--orange)}
+.handle{position:absolute;left:44%;top:40%;width:12%;height:7%;background:#5a2c3a;border-radius:2px}
+/* app widget */
+.panel{width:min(420px,100%);background:#fbeef3;border-radius:14px;padding:18px;box-shadow:0 2px 0 #c58aa0,0 10px 30px rgba(0,0,0,.35)}
+.panel .lab{font-family:Michroma,sans-serif;font-size:10px;letter-spacing:.2em;color:#8e3b5c;text-transform:uppercase;display:flex;justify-content:space-between}
+.panel .row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.panel .grid{gap:3px}
+.panel .l{width:100%}
+.panel p{font-size:12px;margin:8px 0 0;color:#6b3047}
+.btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+button{font-family:"Space Mono",monospace;font-size:12px;padding:8px 14px;border-radius:6px;border:0;background:#f6c8d8;color:#3a1b28;box-shadow:0 3px 0 #a5607a;cursor:pointer}
+button.on{background:var(--orange);color:#fff;box-shadow:0 1px 0 #7a2c16;transform:translateY(2px)}
+.two{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;width:min(1100px,100%)}
+</style></head><body>
+<h1>Машина думает лампочками</h1>
+<p class="cap">Макет по кадрам из «Маньяка»: розовая заливка комнаты, стена модулей, в каждом три матрицы 5×5 и строка индикаторов. В режиме «думает» лампы перебирают узоры; «ждёт» — редкое мерцание; «узор дня» — неподвижный рисунок, свой для каждой даты.</p>
+<div class="btns" id="modes"><button data-m="think" class="on">Думает</button><button data-m="idle">Ждёт</button><button data-m="day">Узор дня</button></div>
+
+<div class="room" id="room">
+  <div class="rack"><i></i><i></i><i></i></div>
+  <div class="wallp" id="wall"></div>
+  <div class="rack"><i></i><i></i></div>
+  <div class="desk"><b style="left:12%"></b><b style="left:80%"></b></div>
+  <div class="pillar" style="left:20%"></div><div class="pillar" style="left:73%"></div>
+</div>
+
+<div class="two">
+  <div class="panel"><div class="lab"><span>A · Круг VI</span><span id="st">думает…</span></div>
+    <div class="row" id="mini"></div>
+    <p>Вариант для приложения: одна панель над кольцом. Пока сохраняется запись или идёт поиск, лампы «думают», потом застывают узором дня.</p></div>
+</div>
+
+<script>
+var MODE='think',mods=[],mini=null;
+function seed(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return function(){h^=h<<13;h^=h>>>17;h^=h<<5;return ((h>>>0)%10000)/10000}}
+function mkGrid(){var g=document.createElement('div');g.className='grid';var ls=[];for(var i=0;i<25;i++){var l=document.createElement('i');l.className='l';g.appendChild(l);ls.push(l)}return {el:g,ls:ls}}
+function mkMod(parent,withFoot){var m=document.createElement('div');m.className='mod';var gs=[mkGrid(),mkGrid(),mkGrid()];gs.forEach(function(g){m.appendChild(g.el)});
+  var foot=null;if(withFoot){foot=document.createElement('div');foot.className='foot';var sq=[];for(var i=0;i<8;i++){var s=document.createElement('i');s.className='sq';foot.appendChild(s);sq.push(s)}m.appendChild(foot);foot=sq;
+  var h=document.createElement('i');h.className='handle';m.appendChild(h)}
+  parent.appendChild(m);return {gs:gs,foot:foot,kind:Math.floor(Math.random()*4),t:Math.floor(Math.random()*50)}}
+var wall=document.getElementById('wall');for(var i=0;i<12;i++)mods.push(mkMod(wall,true));
+var miniWrap=document.getElementById('mini');mini={gs:[mkGrid(),mkGrid(),mkGrid()],kind:0,t:0};mini.gs.forEach(function(g){var w=document.createElement('div');w.appendChild(g.el);miniWrap.appendChild(w)});
+function set(ls,f){ls.forEach(function(l,i){l.classList.toggle('on',!!f(i%5,Math.floor(i/5),i))})}
+/* patterns: random bits, row scan, shifting register, sparse sparkle */
+function step(m){m.t++;var t=m.t;
+  m.gs.forEach(function(g,gi){var k=(m.kind+gi)%4;
+    if(k===0)set(g.ls,function(){return Math.random()<.32});
+    else if(k===1)set(g.ls,function(x,y){return y===t%5||(x+t)%7===0});
+    else if(k===2)set(g.ls,function(x,y,i){return ((i*7+t*3)%11)<3});
+    else set(g.ls,function(x,y){return ((x*31+y*17+t*13)%23)<4})});
+  if(m.foot)m.foot.forEach(function(s,i){s.classList.toggle('on',i===t%8||Math.random()<.08)})}
+function idle(m){m.gs.forEach(function(g){g.ls.forEach(function(l){if(Math.random()<.04)l.classList.toggle('on')})});if(m.foot&&Math.random()<.1){var s=m.foot[Math.floor(Math.random()*8)];s.classList.toggle('on')}}
+function day(){var d=new Date(),key=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+  mods.concat([mini]).forEach(function(m,mi){var r=seed(key+'#'+mi);m.gs.forEach(function(g){set(g.ls,function(){return r()<.3})});if(m.foot)m.foot.forEach(function(s,i){s.classList.toggle('on',r()<.2)})})}
+var timer=null;
+function run(){clearInterval(timer);document.getElementById('st').textContent=MODE==='think'?'думает…':MODE==='idle'?'ждёт':'узор дня';
+  if(MODE==='day'){day();return}
+  timer=setInterval(function(){mods.concat([mini]).forEach(function(m){if(MODE==='think'){if(Math.random()<.7)step(m)}else idle(m)})},MODE==='think'?140:220)}
+document.querySelectorAll('#modes button').forEach(function(b){b.onclick=function(){MODE=b.dataset.m;document.querySelectorAll('#modes button').forEach(function(x){x.classList.toggle('on',x===b)});run()}});
+if(matchMedia('(prefers-reduced-motion: reduce)').matches){MODE='day';document.querySelectorAll('#modes button').forEach(function(x){x.classList.toggle('on',x.dataset.m==='day')})}
+mods.concat([mini]).forEach(step);run();
+</script></body></html>
