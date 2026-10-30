@@ -1,42 +1,42 @@
 {
- "generated": "2026-10-30T17:23Z",
+ "generated": "2026-10-30T20:07Z",
  "note": "Автоматическая сверка для анализа, не официальная оценка оправдываемости. хуже = факт хуже прогноза.",
  "summary": {
   "vis": {
    "хуже": 4,
-   "совпало": 30,
+   "совпало": 31,
    "лучше": 2
   },
   "cld": {
-   "хуже": 36,
+   "хуже": 37,
    "совпало": 0,
    "лучше": 0
   },
   "qnh": {
    "хуже": 0,
-   "совпало": 36,
+   "совпало": 37,
    "лучше": 0
   },
   "wx": {
    "BR": {
-    "hit": 30,
+    "hit": 31,
     "miss": 1,
     "false": 5
    },
    "RA": {
-    "hit": 18,
+    "hit": 19,
     "miss": 0,
     "false": 6
    },
    "SH": {
-    "hit": 18,
+    "hit": 19,
     "miss": 0,
     "false": 6
    },
    "CB": {
     "hit": 0,
     "miss": 0,
-    "false": 31
+    "false": 32
    },
    "FG": {
     "hit": 14,
@@ -45,7 +45,7 @@
    },
    "DZ": {
     "hit": 5,
-    "miss": 8,
+    "miss": 9,
     "false": 0
    },
    "FZDZ": {
@@ -54,7 +54,7 @@
     "false": 1
    }
   },
-  "bulletins": 36
+  "bulletins": 37
  },
  "items": [
   {
@@ -2600,6 +2600,85 @@
     "ULMM"
    ],
    "status": "ok"
+  },
+  {
+   "header": "ULLL GAMET VALID 301200/301800 ULMM- ULLL SANKT-PETERBURG FIR/MURMANSK 1-12,1A,4A,5A,6A,9A,10A,10B,12A,13M BLW FL150",
+   "valid_from": "2026-10-30T12:00Z",
+   "valid_to": "2026-10-30T18:00Z",
+   "obs": 99,
+   "vis": {
+    "fc": 2000,
+    "fc_lca": 2000,
+    "obs_min": 2000.0,
+    "obs_station": "22212",
+    "stations": 17,
+    "verdict": "совпало"
+   },
+   "cld": {
+    "fc_min": 250,
+    "obs_min": 43,
+    "obs_station": "22349",
+    "stations": 17,
+    "verdict": "хуже"
+   },
+   "qnh": {
+    "fc": 1014,
+    "obs_min": 1016.9,
+    "obs_station": "22249",
+    "verdict": "совпало"
+   },
+   "wx": {
+    "fc": [
+     "BR",
+     "CB",
+     "RA",
+     "SH"
+    ],
+    "obs": [
+     "BR",
+     "DZ",
+     "RA",
+     "SH"
+    ],
+    "hit": [
+     "BR",
+     "RA",
+     "SH"
+    ],
+    "miss": [
+     "DZ"
+    ],
+    "false": [
+     "CB"
+    ]
+   },
+   "stations": [
+    "22003",
+    "22004",
+    "22028",
+    "22101",
+    "22106",
+    "22113",
+    "22127",
+    "22212",
+    "22213",
+    "22217",
+    "22235",
+    "22249",
+    "22312",
+    "22324",
+    "22334",
+    "22349",
+    "ULMM"
+   ],
+   "status": "ok"
+  },
+  {
+   "header": "ULLL GAMET VALID 301330/301800 ULMM- ULLL SANKT-PETERBURG FIR/15M,16M BLW FL100",
+   "valid_from": "2026-10-30T13:30Z",
+   "valid_to": "2026-10-30T18:00Z",
+   "obs": 71,
+   "status": "нет станций в районах"
   }
  ]
 }
