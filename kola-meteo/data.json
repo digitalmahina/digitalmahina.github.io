@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-01T05:20Z",
+ "generated": "2026-11-01T05:54Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -7,17 +7,17 @@
    "place": "Финляндия",
    "lat": 68.607,
    "lon": 27.405,
-   "cat": "VFR",
-   "wdir": 250,
+   "cat": "MVFR",
+   "wdir": 140,
    "wspd": 1,
    "wgst": null,
    "vis": 9999,
-   "ceil": 99999,
+   "ceil": 1200,
    "temp": 2,
    "dew": 2,
-   "qnh": 1019,
-   "time": "04:50Z",
-   "raw": "METAR EFIV 010450Z AUTO 25002KT 9999 FEW009 SCT040 02/02 Q1019"
+   "qnh": 1018,
+   "time": "05:50Z",
+   "raw": "METAR EFIV 010550Z AUTO 14002KT 9999 OVC012 02/02 Q1018"
   },
   {
    "icao": "EFKS",
@@ -25,17 +25,17 @@
    "place": "Финляндия",
    "lat": 65.992,
    "lon": 29.236,
-   "cat": "IFR",
+   "cat": "LIFR",
    "wdir": 230,
    "wspd": 5,
    "wgst": null,
    "vis": 9999,
-   "ceil": 500,
+   "ceil": 300,
    "temp": 3,
    "dew": 2,
    "qnh": 1022,
-   "time": "04:50Z",
-   "raw": "METAR EFKS 010450Z AUTO 23009KT 9999 OVC005 03/02 Q1022"
+   "time": "05:50Z",
+   "raw": "METAR EFKS 010550Z AUTO 23010KT 9999 OVC003 03/02 Q1022"
   },
   {
    "icao": "ENKR",
@@ -44,16 +44,16 @@
    "lat": 69.725,
    "lon": 29.898,
    "cat": "VFR",
-   "wdir": 270,
-   "wspd": 2,
+   "wdir": 250,
+   "wspd": 4,
    "wgst": null,
    "vis": 9999,
    "ceil": 99999,
    "temp": 3,
    "dew": 1,
    "qnh": 1019,
-   "time": "04:50Z",
-   "raw": "METAR ENKR 010450Z AUTO 27003KT 250V340 9999 NCD 03/01 Q1019 RMK WIND 731FT 26011KT"
+   "time": "05:20Z",
+   "raw": "METAR ENKR 010520Z AUTO 25007KT 9999 NCD 03/01 Q1019 RMK WIND 731FT 25011KT"
   },
   {
    "icao": "ULMM",
@@ -61,17 +61,17 @@
    "place": "Мурмаши",
    "lat": 68.781,
    "lon": 32.749,
-   "cat": "MVFR",
-   "wdir": 0,
-   "wspd": 0,
+   "cat": "VFR",
+   "wdir": 180,
+   "wspd": 1,
    "wgst": null,
-   "vis": 9999,
-   "ceil": 3000,
+   "vis": 9000,
+   "ceil": 3300,
    "temp": 2,
    "dew": 2,
    "qnh": 1020,
-   "time": "05:00Z",
-   "raw": "METAR ULMM 010500Z 00000MPS 9999 SCT006 BKN030 02/02 Q1020 R13/290155 NOSIG RMK OBST OBSC QFE758"
+   "time": "05:30Z",
+   "raw": "METAR ULMM 010530Z 18001MPS 9000 BCFG SCT006 BKN033 02/02 Q1020 R13/290155 NOSIG RMK OBST OBSC QFE758"
   }
  ],
  "synop": [
@@ -301,10 +301,10 @@
   }
  ],
  "taf": {
-  "EFIV": "TAF EFIV 010236Z 0103/0112 25005KT 9999 FEW005 SCT042 TEMPO 0103/0107 7000 -RA BKN005 PROB30 0103/0107 0500 FG BKN001",
-  "EFKS": "TAF EFKS 010236Z 0103/0112 23009KT 9999 OVC004 TEMPO 0103/0106 2500 -DZRA BR BKN005 TEMPO 0106/0112 3000 DZRA BKN005",
-  "ENKR": "TAF AMD ENKR 010335Z 0103/0112 24010KT CAVOK TEMPO 0103/0112 16003KT PROB40 TEMPO 0104/0112 0500 FG VV003",
-  "ULMM": "TAF ULMM 010202Z 0103/0203 24003G08MPS 6000 BKN016CB TEMPO 0103/0112 3000 -SHRA BR BKN011CB"
+  "EFIV": "TAF EFIV 010533Z 0106/0115 20003KT 9999 BKN015 TEMPO 0106/0108 7000 -RA BKN005 PROB30 TEMPO 0106/0107 1500 BCFG BKN001",
+  "EFKS": "TAF EFKS 010533Z 0106/0115 23009KT 9999 OVC004 TEMPO 0106/0115 3000 DZRA BKN006",
+  "ENKR": "TAF ENKR 010500Z 0106/0115 18003KT CAVOK BECMG 0113/0115 24012KT PROB30 TEMPO 0106/0112 0500 FG VV003",
+  "ULMM": "TAF AMD ULMM 010526Z 0106/0206 24003G08MPS 1000 BR BKN006 BKN016CB TEMPO 0106/0110 0300 FG VV002 BECMG 0110/0112 6000 -SHRA BKN016CB TEMPO 0112/0118 BKN011CB"
  },
  "sigmet": []
 }
