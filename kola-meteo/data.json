@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-04T17:22Z",
+ "generated": "2026-11-04T18:51Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -8,16 +8,16 @@
    "lat": 68.607,
    "lon": 27.405,
    "cat": "VFR",
-   "wdir": 250,
-   "wspd": 6,
+   "wdir": 260,
+   "wspd": 7,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
    "temp": 4,
    "dew": -2,
-   "qnh": 999,
-   "time": "17:20Z",
-   "raw": "METAR EFIV 041720Z AUTO 25011KT CAVOK 04/M02 Q0999"
+   "qnh": 998,
+   "time": "18:20Z",
+   "raw": "METAR EFIV 041820Z AUTO 26014KT CAVOK 04/M02 Q0998"
   },
   {
    "icao": "EFKS",
@@ -26,16 +26,16 @@
    "lat": 65.992,
    "lon": 29.236,
    "cat": "VFR",
-   "wdir": 280,
-   "wspd": 5,
+   "wdir": 290,
+   "wspd": 8,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
    "temp": 3,
-   "dew": 1,
-   "qnh": 1005,
-   "time": "16:50Z",
-   "raw": "METAR EFKS 041650Z AUTO 28009KT CAVOK 03/01 Q1005"
+   "dew": 0,
+   "qnh": 1004,
+   "time": "18:20Z",
+   "raw": "METAR EFKS 041820Z AUTO 29015KT 260V320 CAVOK 03/M00 Q1004"
   },
   {
    "icao": "ENKR",
@@ -44,16 +44,16 @@
    "lat": 69.725,
    "lon": 29.898,
    "cat": "VFR",
-   "wdir": 250,
-   "wspd": 8,
+   "wdir": 260,
+   "wspd": 10,
    "wgst": null,
-   "vis": 10000,
+   "vis": 9999,
    "ceil": 99999,
-   "temp": 3,
+   "temp": 4,
    "dew": 0,
-   "qnh": 994,
-   "time": "16:50Z",
-   "raw": "METAR ENKR 041650Z 25015KT CAVOK 03/M00 Q0994 RMK WIND 731FT 26025KT"
+   "qnh": 993,
+   "time": "18:20Z",
+   "raw": "METAR ENKR 041820Z 26020KT 9999 FEW041 04/M00 Q0993 RERA RMK WIND 731FT 26037KT"
   },
   {
    "icao": "ULMM",
@@ -62,16 +62,16 @@
    "lat": 68.781,
    "lon": 32.749,
    "cat": "VFR",
-   "wdir": 270,
+   "wdir": 260,
    "wspd": 4,
    "wgst": null,
    "vis": 9999,
    "ceil": 99999,
    "temp": 3,
-   "dew": 2,
-   "qnh": 997,
-   "time": "17:00Z",
-   "raw": "METAR ULMM 041700Z 27004MPS 230V300 9999 SCT043 03/02 Q0997 R31/290145 NOSIG RMK QFE740"
+   "dew": 1,
+   "qnh": 996,
+   "time": "18:30Z",
+   "raw": "METAR ULMM 041830Z 26004MPS 9999 FEW045 03/01 Q0996 R31/290145 NOSIG RMK QFE739"
   }
  ],
  "synop": [
@@ -80,168 +80,168 @@
    "name": "Вайда-Губа",
    "lat": 69.93,
    "lon": 31.98,
-   "temp": 6.2,
-   "wdir": 230,
-   "wspd": 9,
-   "wgst": 14,
+   "temp": 5.6,
+   "wdir": 240,
+   "wspd": 11,
+   "wgst": 16,
    "vis": 50,
    "cloud": 800,
-   "press": 994.8,
-   "phen": "без явлений · 15Z"
+   "press": 992.6,
+   "phen": "без явлений · 18Z"
   },
   {
    "id": "22004",
    "name": "Никель",
    "lat": 69.4,
    "lon": 30.23,
-   "temp": 4.7,
-   "wdir": 200,
-   "wspd": 4,
-   "wgst": 7,
+   "temp": 4.4,
+   "wdir": 240,
+   "wspd": 6,
+   "wgst": 11,
    "vis": 20,
    "cloud": 1250,
-   "press": 997.2,
-   "phen": "без явлений · 15Z"
+   "press": 995.5,
+   "phen": "без явлений · 18Z"
   },
   {
    "id": "22028",
    "name": "Териберка",
    "lat": 69.2,
    "lon": 35.12,
-   "temp": 3.7,
+   "temp": 3.6,
    "wdir": 240,
    "wspd": 10,
-   "wgst": 13,
+   "wgst": 12,
    "vis": 20,
    "cloud": 800,
-   "press": 996.5,
-   "phen": "без явлений · 15Z"
+   "press": 994.4,
+   "phen": "без явлений · 18Z"
   },
   {
    "id": "22101",
    "name": "Янискоски",
    "lat": 68.97,
    "lon": 28.78,
-   "temp": 4.1,
-   "wdir": 210,
+   "temp": 3.9,
+   "wdir": 230,
    "wspd": 3,
-   "wgst": 4,
+   "wgst": 6,
    "vis": 20,
    "cloud": 800,
-   "press": 999.1,
-   "phen": "без явлений · 15Z"
+   "press": 997.8,
+   "phen": "без явлений · 18Z"
   },
   {
    "id": "22106",
    "name": "Падун",
    "lat": 68.62,
    "lon": 31.78,
-   "temp": 0.4,
+   "temp": 1.6,
    "wdir": 220,
    "wspd": 1,
-   "wgst": 2,
+   "wgst": 3,
    "vis": 20,
    "cloud": 30,
-   "press": 999.8,
-   "phen": "без явлений · 15Z"
+   "press": 997.8,
+   "phen": "без явлений · 18Z"
   },
   {
    "id": "22113",
    "name": "Мурманск",
    "lat": 68.97,
    "lon": 33.05,
-   "temp": 2.6,
-   "wdir": 200,
-   "wspd": 6,
+   "temp": 3.6,
+   "wdir": 220,
+   "wspd": 5,
    "wgst": 9,
    "vis": 20,
-   "cloud": 800,
-   "press": 998.0,
-   "phen": "без явлений · 15Z"
+   "cloud": 2600,
+   "press": 995.6,
+   "phen": "без явлений · 18Z"
   },
   {
    "id": "22127",
    "name": "Ловозеро",
    "lat": 68.0,
    "lon": 35.03,
-   "temp": 1.4,
-   "wdir": 280,
-   "wspd": 3,
-   "wgst": 5,
+   "temp": 1.1,
+   "wdir": 0,
+   "wspd": 0,
+   "wgst": 2,
    "vis": 20,
    "cloud": 800,
-   "press": 999.5,
-   "phen": "без явлений · 15Z"
+   "press": 997.3,
+   "phen": "осадки в последний час · 18Z"
   },
   {
    "id": "22212",
    "name": "Мончегорск",
    "lat": 67.95,
    "lon": 32.92,
-   "temp": 1.4,
-   "wdir": 70,
-   "wspd": 1,
-   "wgst": 2,
+   "temp": 4.3,
+   "wdir": 300,
+   "wspd": 3,
+   "wgst": 9,
    "vis": 10,
-   "cloud": 30,
-   "press": 1000.7,
-   "phen": "без явлений · 15Z"
+   "cloud": 800,
+   "press": 998.5,
+   "phen": "осадки в последний час · 18Z"
   },
   {
    "id": "22213",
    "name": "Апатиты",
    "lat": 67.55,
    "lon": 33.33,
-   "temp": -0.7,
-   "wdir": 290,
-   "wspd": 1,
-   "wgst": 1,
-   "vis": 4.0,
-   "cloud": 250,
-   "press": 1003.2,
-   "phen": "дымка · 15Z"
+   "temp": 1.9,
+   "wdir": 280,
+   "wspd": 2,
+   "wgst": 4,
+   "vis": 20,
+   "cloud": 800,
+   "press": 999.8,
+   "phen": "без явлений · 18Z"
   },
   {
    "id": "22217",
    "name": "Кандалакша",
    "lat": 67.15,
    "lon": 32.35,
-   "temp": -0.5,
+   "temp": -1.0,
    "wdir": 0,
    "wspd": 0,
    "wgst": 1,
-   "vis": 2.0,
-   "cloud": 800,
-   "press": 1003.2,
-   "phen": "дымка · 15Z"
+   "vis": 6,
+   "cloud": 2600,
+   "press": 1001.2,
+   "phen": "дымка · 18Z"
   },
   {
    "id": "22235",
    "name": "Краснощелье",
    "lat": 67.35,
    "lon": 37.05,
-   "temp": 0.1,
-   "wdir": 240,
+   "temp": 0.5,
+   "wdir": 260,
    "wspd": 4,
-   "wgst": 7,
+   "wgst": 5,
    "vis": 20,
    "cloud": 450,
-   "press": 1001.5,
-   "phen": "без явлений · 15Z"
+   "press": 998.7,
+   "phen": "без явлений · 18Z"
   },
   {
    "id": "22249",
    "name": "Каневка",
    "lat": 67.13,
    "lon": 39.67,
-   "temp": -2.8,
-   "wdir": 220,
-   "wspd": 4,
-   "wgst": 7,
-   "vis": 50,
+   "temp": 0.1,
+   "wdir": 250,
+   "wspd": 2,
+   "wgst": 5,
+   "vis": 10,
    "cloud": 450,
-   "press": 1011.4,
-   "phen": "без явлений · 09Z"
+   "press": 998.4,
+   "phen": "ливневый снег · 18Z"
   },
   {
    "id": "22312",
@@ -249,162 +249,64 @@
    "lat": 66.7,
    "lon": 32.87,
    "temp": 1.5,
-   "wdir": 240,
+   "wdir": 290,
    "wspd": 1,
-   "wgst": 3,
+   "wgst": 2,
    "vis": 20,
-   "cloud": 800,
-   "press": 1003.7,
-   "phen": "без явлений · 15Z"
+   "cloud": 2600,
+   "press": 1001.5,
+   "phen": "без явлений · 18Z"
   },
   {
    "id": "22324",
    "name": "Умба",
    "lat": 66.68,
    "lon": 34.35,
-   "temp": 3.0,
-   "wdir": 260,
+   "temp": 3.1,
+   "wdir": 290,
    "wspd": 4,
-   "wgst": 6,
+   "wgst": 7,
    "vis": 20,
    "cloud": 450,
-   "press": 1003.5,
-   "phen": "без явлений · 15Z"
+   "press": 1000.8,
+   "phen": "без явлений · 18Z"
   },
   {
    "id": "22334",
    "name": "Кашкаранцы",
    "lat": 66.35,
    "lon": 36.03,
-   "temp": 3.9,
-   "wdir": 250,
-   "wspd": 11,
-   "wgst": 14,
-   "vis": 18,
+   "temp": 4.4,
+   "wdir": 270,
+   "wspd": 8,
+   "wgst": 10,
+   "vis": 20,
    "cloud": 30,
-   "press": 1003.4,
-   "phen": "без явлений · 15Z"
+   "press": 1000.4,
+   "phen": "без явлений · 18Z"
   },
   {
    "id": "22349",
    "name": "Пялица",
    "lat": 66.18,
    "lon": 39.53,
-   "temp": 1.8,
-   "wdir": 260,
-   "wspd": 9,
-   "wgst": 12,
-   "vis": 4.0,
+   "temp": 2.3,
+   "wdir": 250,
+   "wspd": 5,
+   "wgst": 8,
+   "vis": 10,
    "cloud": 450,
-   "press": 1004.5,
-   "phen": "ливневый дождь · 15Z"
+   "press": 1000.5,
+   "phen": "ливневый дождь · 18Z"
   }
  ],
  "taf": {
-  "EFIV": "TAF EFIV 041434Z 0415/0418 25010KT CAVOK PROB40 0415/0418 25015G25KT",
-  "EFKS": "TAF EFKS 041435Z 0415/0418 28010KT CAVOK",
-  "ENKR": "TAF ENKR 041400Z 0415/0424 25018KT 9999 -SHRA SCT040 TEMPO 0416/0421 27022G32KT",
-  "ULMM": "TAF ULMM 041401Z 0415/0515 25003G08MPS 6000 -SHRASN BKN016CB BECMG 0422/0424 30006G13MPS TEMPO 0512/0515 3200 -SHSNRA"
+  "EFIV": "TAF EFIV 041736Z 0418/0503 23010KT CAVOK TEMPO 0418/0503 30015G28KT",
+  "EFKS": "TAF EFKS 041736Z 0418/0503 27010KT CAVOK TEMPO 0420/0502 28015G25KT",
+  "ENKR": "TAF ENKR 041700Z 0418/0503 25018KT 9999 SCT040 TEMPO 0418/0421 27022G32KT BECMG 0500/0502 31020G30KT",
+  "ULMM": "TAF ULMM 041701Z 0418/0518 25003G08MPS 6000 -SHRASN BKN016CB BECMG 0422/0424 30006G13MPS TEMPO 0512/0518 3200 -SHSNRA"
  },
  "sigmet": [
-  {
-   "fir": "ULLL",
-   "name": "ULLL SANKT-PETERBURG",
-   "hazard": "ICE",
-   "qual": "SEV",
-   "from": 1793804400,
-   "to": 1793815200,
-   "base": 0,
-   "top": 10000,
-   "coords": [
-    [
-     70.533,
-     55.15
-    ],
-    [
-     69.5,
-     56.033
-    ],
-    [
-     69.467,
-     58.583
-    ],
-    [
-     68.483,
-     59.717
-    ],
-    [
-     67.017,
-     58.1
-    ],
-    [
-     66.783,
-     51.883
-    ],
-    [
-     66.15,
-     50.667
-    ],
-    [
-     67.633,
-     48.4
-    ],
-    [
-     68.65,
-     43.25
-    ],
-    [
-     70.5,
-     49.483
-    ],
-    [
-     70.533,
-     55.15
-    ]
-   ],
-   "raw": "WSRS31 RUSP 041405\nULLL SIGMET 13 VALID 041500/041800 ULLI-\nULLL SANKT-PETERBURG FIR SEV ICE (FZRA) FCST WI N7032 E05509 - N6930\nE05602 - N6928 E05835 - N6829 E05943 - N6701 E05806 - N6647 E05153 -\nN6609 E05040 - N6738 E04824 - N6839 E04315 - N7030 E04929 - N7032\nE05509 SFC/FL100 STNR NC="
-  },
-  {
-   "fir": "ULLL",
-   "name": "ULLL SANKT-PETERBURG",
-   "hazard": "ICE",
-   "qual": "SEV",
-   "from": 1793804400,
-   "to": 1793815200,
-   "base": 0,
-   "top": 10000,
-   "coords": [
-    [
-     69.367,
-     35
-    ],
-    [
-     67.617,
-     42.817
-    ],
-    [
-     66.75,
-     42.5
-    ],
-    [
-     66,
-     38.517
-    ],
-    [
-     65.983,
-     36.7
-    ],
-    [
-     66.317,
-     35
-    ],
-    [
-     69.367,
-     35
-    ]
-   ],
-   "raw": "WSRS31 RUSP 041408\nULLL SIGMET 14 VALID 041500/041800 ULLI-\nULLL SANKT-PETERBURG FIR SEV ICE (FZRA) FCST WI N6922 E03500 - N6737\nE04249 - N6645 E04230 - N6600 E03831 - N6559 E03642 - N6619 E03500 -\nN6922 E03500 SFC/FL100 MOV E 20KMH NC="
-  },
   {
    "fir": "ENOR",
    "name": "ENOR POLARIS",
@@ -585,6 +487,79 @@
     ]
    ],
    "raw": "WSNO31 ENMI 041614\nENOR SIGMET M09 VALID 041700/042100 ENMI-\nENOR POLARIS FIR SEV MTW FCST WI N6800 E01305 - N6842 E01410 - N7012\nE01825 - N7103 E02253 - N7113 E02648 - N6953 E02639 - N6856 E02114 -\nN6904 E02034 - N6903 E02034 - N6904 E02033 - N6849 E02025 - N6812\nE02004 - N6730 E01700 - N6728 E01658 - N6728 E01658 - N6811 E01521 -\nN6800 E01305 SFC/FL240 STNR NC="
+  },
+  {
+   "fir": "ULLL",
+   "name": "ULLL SANKT-PETERBURG",
+   "hazard": "ICE",
+   "qual": "SEV",
+   "from": 1793815200,
+   "to": 1793826000,
+   "base": 0,
+   "top": 10000,
+   "coords": [
+    [
+     61.148,
+     56.916
+    ],
+    [
+     61.24,
+     57.18
+    ],
+    [
+     61.325,
+     57.443
+    ],
+    [
+     62.017,
+     59.5
+    ],
+    [
+     64.45,
+     60.033
+    ],
+    [
+     73.917,
+     58
+    ],
+    [
+     72.983,
+     48.567
+    ],
+    [
+     66.733,
+     42.4
+    ],
+    [
+     65.217,
+     35.15
+    ],
+    [
+     62,
+     37.083
+    ],
+    [
+     61.683,
+     42.367
+    ],
+    [
+     62.533,
+     45.967
+    ],
+    [
+     60.017,
+     49.917
+    ],
+    [
+     60.717,
+     55.633
+    ],
+    [
+     61.148,
+     56.916
+    ]
+   ],
+   "raw": "WSRS31 RUSP 041632\nULLL SIGMET 15 VALID 041800/042100 ULLI-\nULLL SANKT-PETERBURG FIR SEV ICE (FZRA) FCST WI N7355 E05800 - N6427\nE06002 - N6201 E05930 - N6043 E05538 - N6001 E04955 - N6232 E04558 -\nN6141 E04222 - N6200 E03705 - N6513 E03509 - N6644 E04224 - N7259\nE04834 - N7355 E05800 SFC/FL100 STNR NC="
   }
  ]
 }
