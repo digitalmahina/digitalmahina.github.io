@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-04T11:21Z",
+ "generated": "2026-11-04T11:32Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -8,16 +8,16 @@
    "lat": 68.607,
    "lon": 27.405,
    "cat": "VFR",
-   "wdir": 240,
-   "wspd": 6,
+   "wdir": 230,
+   "wspd": 5,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
    "temp": 4,
    "dew": 1,
-   "qnh": 1002,
-   "time": "10:50Z",
-   "raw": "METAR EFIV 041050Z AUTO 24012KT CAVOK 04/01 Q1002"
+   "qnh": 1001,
+   "time": "11:20Z",
+   "raw": "METAR EFIV 041120Z AUTO 23010KT CAVOK 04/01 Q1001"
   },
   {
    "icao": "EFKS",
@@ -26,16 +26,16 @@
    "lat": 65.992,
    "lon": 29.236,
    "cat": "LIFR",
-   "wdir": 250,
-   "wspd": 3,
+   "wdir": 260,
+   "wspd": 4,
    "wgst": null,
    "vis": 9999,
-   "ceil": 100,
-   "temp": 1,
-   "dew": 1,
-   "qnh": 1009,
-   "time": "10:50Z",
-   "raw": "METAR EFKS 041050Z AUTO 25006KT 230V290 9999 OVC001 01/01 Q1009"
+   "ceil": 200,
+   "temp": 2,
+   "dew": 2,
+   "qnh": 1008,
+   "time": "11:20Z",
+   "raw": "METAR EFKS 041120Z AUTO 26008KT 230V310 9999 OVC002 02/02 Q1008"
   },
   {
    "icao": "ENKR",
@@ -44,7 +44,7 @@
    "lat": 69.725,
    "lon": 29.898,
    "cat": "VFR",
-   "wdir": 260,
+   "wdir": 250,
    "wspd": 10,
    "wgst": null,
    "vis": 9999,
@@ -52,8 +52,8 @@
    "temp": 4,
    "dew": 1,
    "qnh": 997,
-   "time": "10:50Z",
-   "raw": "METAR ENKR 041050Z 26020KT 9999 FEW036 04/01 Q0997 RMK WIND 731FT 26036KT"
+   "time": "11:20Z",
+   "raw": "METAR ENKR 041120Z 25020KT 9999 FEW040 04/01 Q0997 RMK WIND 731FT 26031KT"
   },
   {
    "icao": "ULMM",
