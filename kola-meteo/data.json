@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-04T23:20Z",
+ "generated": "2026-11-05T00:20Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -8,16 +8,16 @@
    "lat": 68.607,
    "lon": 27.405,
    "cat": "MVFR",
-   "wdir": 300,
+   "wdir": 310,
    "wspd": 6,
    "wgst": null,
    "vis": 9999,
    "ceil": 2700,
    "temp": 4,
    "dew": -1,
-   "qnh": 1000,
-   "time": "22:50Z",
-   "raw": "METAR EFIV 042250Z AUTO 30011KT 9999 BKN027 04/M01 Q1000"
+   "qnh": 1001,
+   "time": "23:50Z",
+   "raw": "METAR EFIV 042350Z AUTO 31012KT 270V340 9999 BKN027 04/M01 Q1001"
   },
   {
    "icao": "EFKS",
@@ -27,15 +27,15 @@
    "lon": 29.236,
    "cat": "VFR",
    "wdir": 290,
-   "wspd": 7,
+   "wspd": 8,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
    "temp": 3,
    "dew": -3,
    "qnh": 1003,
-   "time": "22:50Z",
-   "raw": "METAR EFKS 042250Z AUTO 29014KT CAVOK 03/M03 Q1003"
+   "time": "23:50Z",
+   "raw": "METAR EFKS 042350Z AUTO 29015KT CAVOK 03/M03 Q1003"
   },
   {
    "icao": "ENKR",
@@ -43,17 +43,17 @@
    "place": "Норвегия",
    "lat": 69.725,
    "lon": 29.898,
-   "cat": "VFR",
+   "cat": "MVFR",
    "wdir": 300,
-   "wspd": 10,
-   "wgst": 15,
+   "wspd": 9,
+   "wgst": null,
    "vis": 9999,
-   "ceil": 99999,
-   "temp": 4,
+   "ceil": 2500,
+   "temp": 3,
    "dew": 0,
-   "qnh": 995,
-   "time": "22:50Z",
-   "raw": "METAR ENKR 042250Z 30019G30KT 9999 SCT024 04/00 Q0995 RMK WIND 731FT 29029KT"
+   "qnh": 996,
+   "time": "23:50Z",
+   "raw": "METAR ENKR 042350Z 30018KT 9999 SCT020 BKN025 03/00 Q0996 RMK WIND 731FT 29028KT"
   },
   {
    "icao": "ULMM",
@@ -61,17 +61,17 @@
    "place": "Мурмаши",
    "lat": 68.781,
    "lon": 32.749,
-   "cat": "MVFR",
-   "wdir": 290,
+   "cat": "VFR",
+   "wdir": 280,
    "wspd": 6,
    "wgst": null,
    "vis": 9999,
-   "ceil": 1700,
+   "ceil": 99999,
    "temp": 3,
    "dew": 1,
-   "qnh": 994,
-   "time": "23:00Z",
-   "raw": "METAR ULMM 042300Z 29006MPS 9999 -SHRA BKN017CB 03/01 Q0994 R31/290150 NOSIG RMK QFE738"
+   "qnh": 995,
+   "time": "00:00Z",
+   "raw": "METAR ULMM 050000Z 28006MPS 9999 SCT033 03/01 Q0995 R31/290150 NOSIG RMK QFE739"
   }
  ],
  "synop": [
@@ -301,84 +301,10 @@
   }
  ],
  "taf": {
-  "EFIV": "TAF EFIV 042027Z 0421/0506 26013KT 9999 SCT030 TEMPO 0421/0503 30015G28KT PROB30 0503/0506 5000 -RASN",
-  "EFKS": "TAF EFKS 042027Z 0421/0506 29015KT CAVOK TEMPO 0421/0424 28015G25KT",
-  "ENKR": "TAF AMD ENKR 042112Z 0421/0506 25018KT 9999 -SHRA SCT040 TEMPO 0421/0424 BKN014 TEMPO 0421/0506 FEW020TCU BECMG 0500/0502 31020G30KT",
-  "ULMM": "TAF ULMM 042002Z 0421/0521 26005G10MPS 6000 -SHRASN BKN016CB BECMG 0423/0424 30006G14MPS TEMPO 0500/0517 3200 -SHSNRA BKN011CB TEMPO 0517/0521 1000 SHSNRA BKN011CB"
+  "EFIV": "TAF EFIV 042334Z 0500/0506 31013KT 9999 BKN030 TEMPO 0500/0503 30015G28KT PROB30 0503/0506 5000 -RASN",
+  "EFKS": "TAF EFKS 042334Z 0500/0506 28012KT CAVOK",
+  "ENKR": "TAF ENKR 042300Z 0500/0509 30015KT 9999 -SHRA SCT040 TEMPO 0500/0502 32020G30KT TEMPO 0500/0509 BKN020 FEW025CB",
+  "ULMM": "TAF ULMM 042302Z 0500/0524 29006G14MPS 9999 SCT016CB TEMPO 0500/0517 3500 -SHSNRA BKN011 BKN016CB TEMPO 0517/0524 1000 SHSNRA BKN011 BKN016CB"
  },
- "sigmet": [
-  {
-   "fir": "ULLL",
-   "name": "ULLL SANKT-PETERBURG",
-   "hazard": "ICE",
-   "qual": "SEV",
-   "from": 1793826000,
-   "to": 1793836800,
-   "base": 0,
-   "top": 10000,
-   "coords": [
-    [
-     61.148,
-     56.916
-    ],
-    [
-     61.24,
-     57.18
-    ],
-    [
-     61.325,
-     57.443
-    ],
-    [
-     62.017,
-     59.5
-    ],
-    [
-     64.45,
-     60.033
-    ],
-    [
-     73.917,
-     58
-    ],
-    [
-     72.983,
-     48.567
-    ],
-    [
-     66.733,
-     42.4
-    ],
-    [
-     65.217,
-     35.15
-    ],
-    [
-     62,
-     37.083
-    ],
-    [
-     61.683,
-     42.367
-    ],
-    [
-     62.533,
-     45.967
-    ],
-    [
-     60.017,
-     49.917
-    ],
-    [
-     60.717,
-     55.633
-    ],
-    [
-     61.148,
-     56.916
-    ]
-   ],
-   "raw": "WSRS31 RUSP 042005\nULLL SIGMET 16 VALID 042100/050000 ULLI-\nULLL SANKT-PETERBURG FIR SEV ICE (FZRA) FCST WI N7355 E05800 - N6427\nE06002 - N6201 E05930 - N6043 E05538 - N6001 E04955 - N6232 E04558 -\nN6141 E04222 - N6200 E03705 - N6513 E03509 - N6644 E04224 - N7259\nE04834 - N7355 E05800 SFC/FL100 STNR NC="
-  }
- ]
+ "sigmet": []
 }
