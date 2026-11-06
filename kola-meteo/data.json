@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-06T09:50Z",
+ "generated": "2026-11-06T11:22Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -8,16 +8,16 @@
    "lat": 68.607,
    "lon": 27.405,
    "cat": "VFR",
-   "wdir": 280,
-   "wspd": 6,
+   "wdir": 260,
+   "wspd": 4,
    "wgst": null,
-   "vis": 9999,
-   "ceil": 4700,
-   "temp": 3,
+   "vis": 10000,
+   "ceil": 99999,
+   "temp": 2,
    "dew": -3,
-   "qnh": 1016,
-   "time": "09:20Z",
-   "raw": "METAR EFIV 060920Z AUTO 28011KT 9999 SCT033 OVC047 03/M03 Q1016"
+   "qnh": 1015,
+   "time": "11:20Z",
+   "raw": "METAR EFIV 061120Z AUTO 26008KT CAVOK 02/M03 Q1015"
   },
   {
    "icao": "EFKS",
@@ -27,15 +27,15 @@
    "lon": 29.236,
    "cat": "VFR",
    "wdir": 310,
-   "wspd": 6,
+   "wspd": 3,
    "wgst": null,
    "vis": 9999,
-   "ceil": 3600,
+   "ceil": 3300,
    "temp": 0,
-   "dew": -4,
+   "dew": -3,
    "qnh": 1018,
-   "time": "09:20Z",
-   "raw": "METAR EFKS 060920Z AUTO 31012KT 270V340 9999 OVC036 M00/M04 Q1018"
+   "time": "10:50Z",
+   "raw": "METAR EFKS 061050Z AUTO 31006KT 9999 OVC033 00/M03 Q1018"
   },
   {
    "icao": "ENKR",
@@ -43,17 +43,17 @@
    "place": "Норвегия",
    "lat": 69.725,
    "lon": 29.898,
-   "cat": "MVFR",
+   "cat": "VFR",
    "wdir": 280,
-   "wspd": 7,
+   "wspd": 6,
    "wgst": null,
    "vis": 9999,
-   "ceil": 2500,
+   "ceil": 3300,
    "temp": 2,
-   "dew": -1,
+   "dew": 0,
    "qnh": 1012,
-   "time": "09:20Z",
-   "raw": "METAR ENKR 060920Z 28013KT 9999 BKN025 02/M01 Q1012 RMK WIND 731FT 28022KT"
+   "time": "10:50Z",
+   "raw": "METAR ENKR 061050Z 28011KT 9999 -SHRA SCT028 BKN033 02/M00 Q1012 RMK WIND 731FT 28019KT"
   },
   {
    "icao": "ULMM",
@@ -62,16 +62,16 @@
    "lat": 68.781,
    "lon": 32.749,
    "cat": "MVFR",
-   "wdir": 290,
+   "wdir": 280,
    "wspd": 5,
    "wgst": null,
    "vis": 9999,
-   "ceil": 2600,
-   "temp": 1,
+   "ceil": 2300,
+   "temp": 2,
    "dew": -1,
    "qnh": 1011,
-   "time": "09:30Z",
-   "raw": "METAR ULMM 060930Z 29005MPS 9999 BKN026CB 01/M01 Q1011 R31/690140 NOSIG RMK QFE751"
+   "time": "11:00Z",
+   "raw": "METAR ULMM 061100Z 28005MPS 9999 BKN023CB 02/M01 Q1011 R31/690140 NOSIG RMK QFE751"
   }
  ],
  "synop": [
@@ -303,8 +303,8 @@
  "taf": {
   "EFIV": "TAF EFIV 060838Z 0609/0618 25008KT 9999 BKN045",
   "EFKS": "TAF EFKS 060838Z 0609/0618 32009KT 9999 BKN035",
-  "ENKR": "TAF ENKR 060800Z 0609/0618 29012KT 9999 -RA SCT020 BKN025 PROB40 0609/0612 FEW025TCU BKN016",
-  "ULMM": "TAF ULMM 060803Z 0609/0709 28005G10MPS 6000 BKN016CB TEMPO 0609/0615 1000 SHSN BKN011CB BECMG 0620/0621 25003G08MPS TEMPO 0621/0709 3100 -SHRASN BKN011CB"
+  "ULMM": "TAF ULMM 060803Z 0609/0709 28005G10MPS 6000 BKN016CB TEMPO 0609/0615 1000 SHSN BKN011CB BECMG 0620/0621 25003G08MPS TEMPO 0621/0709 3100 -SHRASN BKN011CB",
+  "ENKR": "TAF ENKR 060800Z 0609/0618 29012KT 9999 -RA SCT020 BKN025 PROB40 0609/0612 FEW025TCU BKN016"
  },
  "sigmet": [
   {
