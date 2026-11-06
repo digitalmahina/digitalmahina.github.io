@@ -1,60 +1,6 @@
 {
- "generated": "2026-11-06T17:21Z",
+ "generated": "2026-11-06T17:26Z",
  "metar": [
-  {
-   "icao": "EFIV",
-   "name": "Ивало",
-   "place": "Финляндия",
-   "lat": 68.607,
-   "lon": 27.405,
-   "cat": "VFR",
-   "wdir": 230,
-   "wspd": 6,
-   "wgst": null,
-   "vis": 9999,
-   "ceil": 4200,
-   "temp": 1,
-   "dew": -1,
-   "qnh": 1011,
-   "time": "16:50Z",
-   "raw": "METAR EFIV 061650Z AUTO 23012KT 9999 -SHRA OVC042 01/M01 Q1011"
-  },
-  {
-   "icao": "EFKS",
-   "name": "Куусамо",
-   "place": "Финляндия",
-   "lat": 65.992,
-   "lon": 29.236,
-   "cat": "VFR",
-   "wdir": 260,
-   "wspd": 2,
-   "wgst": null,
-   "vis": 10000,
-   "ceil": 99999,
-   "temp": -2,
-   "dew": -4,
-   "qnh": 1015,
-   "time": "16:50Z",
-   "raw": "METAR EFKS 061650Z AUTO 26004KT 220V300 CAVOK M02/M04 Q1015"
-  },
-  {
-   "icao": "ENKR",
-   "name": "Киркенес",
-   "place": "Норвегия",
-   "lat": 69.725,
-   "lon": 29.898,
-   "cat": "VFR",
-   "wdir": 260,
-   "wspd": 4,
-   "wgst": null,
-   "vis": 9999,
-   "ceil": 3900,
-   "temp": 2,
-   "dew": 0,
-   "qnh": 1009,
-   "time": "16:50Z",
-   "raw": "METAR ENKR 061650Z 26008KT 9999 SCT012 BKN039 02/M00 Q1009 RMK WIND 731FT 27021KT"
-  },
   {
    "icao": "ULMM",
    "name": "Мурманск",
@@ -72,6 +18,60 @@
    "qnh": 1009,
    "time": "17:00Z",
    "raw": "METAR ULMM 061700Z 28003MPS 9999 BKN030 02/M01 Q1009 R31/690045 NOSIG RMK QFE749"
+  },
+  {
+   "icao": "EFKS",
+   "name": "Куусамо",
+   "place": "Финляндия",
+   "lat": 65.992,
+   "lon": 29.236,
+   "cat": "VFR",
+   "wdir": 260,
+   "wspd": 2,
+   "wgst": null,
+   "vis": 10000,
+   "ceil": 99999,
+   "temp": -2,
+   "dew": -4,
+   "qnh": 1015,
+   "time": "17:20Z",
+   "raw": "METAR EFKS 061720Z AUTO 26003KT 230V300 CAVOK M02/M04 Q1015"
+  },
+  {
+   "icao": "ENKR",
+   "name": "Киркенес",
+   "place": "Норвегия",
+   "lat": 69.725,
+   "lon": 29.898,
+   "cat": "VFR",
+   "wdir": 250,
+   "wspd": 5,
+   "wgst": null,
+   "vis": 9000,
+   "ceil": 3700,
+   "temp": 2,
+   "dew": 0,
+   "qnh": 1009,
+   "time": "17:20Z",
+   "raw": "METAR ENKR 061720Z 25010KT 9000 -DZ SCT013 BKN037 02/M00 Q1009 RMK WIND 731FT 26022KT"
+  },
+  {
+   "icao": "EFIV",
+   "name": "Ивало",
+   "place": "Финляндия",
+   "lat": 68.607,
+   "lon": 27.405,
+   "cat": "VFR",
+   "wdir": 230,
+   "wspd": 7,
+   "wgst": null,
+   "vis": 9999,
+   "ceil": 99999,
+   "temp": 1,
+   "dew": -1,
+   "qnh": 1011,
+   "time": "17:20Z",
+   "raw": "METAR EFIV 061720Z AUTO 23013KT 9999 -SHRA NSC 01/M01 Q1011"
   }
  ],
  "synop": [
@@ -301,10 +301,10 @@
   }
  ],
  "taf": {
-  "EFIV": "TAF EFIV 061432Z 0615/0624 25008KT CAVOK",
   "EFKS": "TAF EFKS 061432Z 0615/0618 28006KT CAVOK",
+  "ENKR": "TAF ENKR 061400Z 0615/0624 26012KT 9999 SCT020 BKN030 PROB40 TEMPO 0618/0624 BKN008",
   "ULMM": "TAF ULMM 061406Z 0615/0715 28005G10MPS 6000 -SHRASN BKN016CB BECMG 0620/0621 25003G08MPS TEMPO 0621/0709 3000 -SHRASN BKN011CB",
-  "ENKR": "TAF ENKR 061400Z 0615/0624 26012KT 9999 SCT020 BKN030 PROB40 TEMPO 0618/0624 BKN008"
+  "EFIV": "TAF EFIV 061432Z 0615/0624 25008KT CAVOK"
  },
  "sigmet": [
   {
