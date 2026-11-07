@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-07T15:54Z",
+ "generated": "2026-11-07T17:21Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -8,16 +8,16 @@
    "lat": 68.607,
    "lon": 27.405,
    "cat": "VFR",
-   "wdir": 270,
-   "wspd": 6,
+   "wdir": 290,
+   "wspd": 4,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
    "temp": 4,
    "dew": -1,
    "qnh": 1000,
-   "time": "15:50Z",
-   "raw": "METAR EFIV 071550Z AUTO 27011KT 240V300 CAVOK 04/M01 Q1000"
+   "time": "16:50Z",
+   "raw": "METAR EFIV 071650Z AUTO 29008KT 260V320 CAVOK 04/M01 Q1000"
   },
   {
    "icao": "EFKS",
@@ -26,16 +26,16 @@
    "lat": 65.992,
    "lon": 29.236,
    "cat": "VFR",
-   "wdir": 270,
+   "wdir": 260,
    "wspd": 3,
    "wgst": null,
-   "vis": 9999,
-   "ceil": 4400,
+   "vis": 10000,
+   "ceil": 99999,
    "temp": 2,
    "dew": 0,
-   "qnh": 1005,
-   "time": "15:50Z",
-   "raw": "METAR EFKS 071550Z AUTO 27005KT 9999 BKN044 02/M00 Q1005"
+   "qnh": 1004,
+   "time": "16:50Z",
+   "raw": "METAR EFKS 071650Z AUTO 26006KT CAVOK 02/M00 Q1004"
   },
   {
    "icao": "ENKR",
@@ -47,13 +47,13 @@
    "wdir": 270,
    "wspd": 7,
    "wgst": null,
-   "vis": 9999,
+   "vis": 10000,
    "ceil": 99999,
-   "temp": 3,
-   "dew": 0,
+   "temp": 2,
+   "dew": -1,
    "qnh": 997,
-   "time": "15:20Z",
-   "raw": "METAR ENKR 071520Z 27014KT 9999 -RA FEW034 03/00 Q0997 RMK WIND 731FT 27029KT"
+   "time": "16:50Z",
+   "raw": "METAR ENKR 071650Z 27014KT CAVOK 02/M01 Q0997 RMK WIND 731FT 27023KT"
   },
   {
    "icao": "ULMM",
@@ -62,16 +62,16 @@
    "lat": 68.781,
    "lon": 32.749,
    "cat": "VFR",
-   "wdir": 280,
-   "wspd": 2,
+   "wdir": 260,
+   "wspd": 4,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
-   "temp": 2,
-   "dew": 2,
+   "temp": 3,
+   "dew": 1,
    "qnh": 998,
-   "time": "15:30Z",
-   "raw": "METAR ULMM 071530Z 28002MPS CAVOK 02/02 Q0998 R31/290150 NOSIG RMK QFE741"
+   "time": "17:00Z",
+   "raw": "METAR ULMM 071700Z 26004MPS CAVOK 03/01 Q0998 R31/290150 NOSIG RMK QFE741"
   }
  ],
  "synop": [
