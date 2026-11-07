@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-07T23:21Z",
+ "generated": "2026-11-07T23:56Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -8,16 +8,16 @@
    "lat": 68.607,
    "lon": 27.405,
    "cat": "VFR",
-   "wdir": 250,
-   "wspd": 3,
+   "wdir": 210,
+   "wspd": 2,
    "wgst": null,
-   "vis": 10000,
+   "vis": 9999,
    "ceil": 99999,
    "temp": 1,
    "dew": -2,
    "qnh": 1002,
-   "time": "22:50Z",
-   "raw": "METAR EFIV 072250Z AUTO 25005KT 190V280 CAVOK 01/M02 Q1002"
+   "time": "23:50Z",
+   "raw": "METAR EFIV 072350Z AUTO 21003KT 170V300 9999 FEW044 01/M02 Q1002"
   },
   {
    "icao": "EFKS",
@@ -27,15 +27,15 @@
    "lon": 29.236,
    "cat": "VFR",
    "wdir": 280,
-   "wspd": 3,
+   "wspd": 4,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
    "temp": 2,
-   "dew": -1,
+   "dew": -2,
    "qnh": 1004,
-   "time": "22:50Z",
-   "raw": "METAR EFKS 072250Z AUTO 28006KT CAVOK 02/M01 Q1004"
+   "time": "23:50Z",
+   "raw": "METAR EFKS 072350Z AUTO 28008KT CAVOK 02/M02 Q1004"
   },
   {
    "icao": "ENKR",
@@ -45,15 +45,15 @@
    "lon": 29.898,
    "cat": "VFR",
    "wdir": 270,
-   "wspd": 9,
+   "wspd": 8,
    "wgst": null,
    "vis": 9999,
    "ceil": 99999,
-   "temp": 1,
+   "temp": 0,
    "dew": -3,
    "qnh": 998,
-   "time": "22:50Z",
-   "raw": "METAR ENKR 072250Z AUTO 27017KT 9999 NCD 01/M03 Q0998 RMK WIND 731FT 27029KT"
+   "time": "23:20Z",
+   "raw": "METAR ENKR 072320Z AUTO 27015KT 9999 FEW028/// 00/M03 Q0998 RMK WIND 731FT 27029KT"
   },
   {
    "icao": "ULMM",
@@ -65,13 +65,13 @@
    "wdir": 260,
    "wspd": 4,
    "wgst": null,
-   "vis": 10000,
+   "vis": 9999,
    "ceil": 99999,
    "temp": 1,
    "dew": -1,
    "qnh": 999,
-   "time": "23:00Z",
-   "raw": "METAR ULMM 072300Z 26004MPS CAVOK 01/M01 Q0999 R31/690045 NOSIG RMK QFE742"
+   "time": "23:30Z",
+   "raw": "METAR ULMM 072330Z 26004MPS 9999 SCT015 01/M01 Q0999 R31/690045 NOSIG RMK QFE742"
   }
  ],
  "synop": [
@@ -303,8 +303,8 @@
  "taf": {
   "EFIV": "TAF EFIV 071729Z 0718/0721 26009KT CAVOK PROB40 0718/0721 7000 -SHRASN FEW030TCU",
   "EFKS": "TAF EFKS 071430Z 0715/0718 28007KT CAVOK",
-  "ENKR": "TAF ENKR 072000Z 0721/0806 27015KT 9999 FEW050",
-  "ULMM": "TAF ULMM 072005Z 0721/0821 25003G10MPS 6000 SCT016CB"
+  "ENKR": "TAF ENKR 072300Z 0800/0809 27015KT 9999 FEW040",
+  "ULMM": "TAF ULMM 072305Z 0800/0824 25003G10MPS 6000 SCT016CB"
  },
  "sigmet": [
   {
