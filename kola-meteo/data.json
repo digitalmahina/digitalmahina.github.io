@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-08T22:27Z",
+ "generated": "2026-11-08T23:22Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -13,11 +13,11 @@
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
-   "temp": 3,
+   "temp": 4,
    "dew": 1,
    "qnh": 998,
-   "time": "22:20Z",
-   "raw": "METAR EFIV 082220Z AUTO VRB02KT CAVOK 03/01 Q0998"
+   "time": "23:20Z",
+   "raw": "METAR EFIV 082320Z AUTO VRB02KT CAVOK 04/01 Q0998"
   },
   {
    "icao": "EFKS",
@@ -26,16 +26,16 @@
    "lat": 65.992,
    "lon": 29.236,
    "cat": "VFR",
-   "wdir": 260,
-   "wspd": 4,
+   "wdir": 280,
+   "wspd": 3,
    "wgst": null,
    "vis": 10000,
    "ceil": 99999,
-   "temp": 3,
+   "temp": 2,
    "dew": 0,
    "qnh": 1005,
-   "time": "22:20Z",
-   "raw": "METAR EFKS 082220Z AUTO 26008KT CAVOK 03/00 Q1005"
+   "time": "22:50Z",
+   "raw": "METAR EFKS 082250Z AUTO 28006KT 240V310 CAVOK 02/00 Q1005"
   },
   {
    "icao": "ENKR",
@@ -43,17 +43,17 @@
    "place": "Норвегия",
    "lat": 69.725,
    "lon": 29.898,
-   "cat": "VFR",
-   "wdir": 190,
+   "cat": "MVFR",
+   "wdir": 170,
    "wspd": 3,
    "wgst": null,
    "vis": 9999,
-   "ceil": 4700,
+   "ceil": 2400,
    "temp": 0,
    "dew": -1,
-   "qnh": 997,
-   "time": "22:20Z",
-   "raw": "METAR ENKR 082220Z 19006KT 9999 -SHRA BKN047 00/M01 Q0997 RMK WIND 731FT 24012KT"
+   "qnh": 996,
+   "time": "22:50Z",
+   "raw": "METAR ENKR 082250Z 17005KT 9999 SCT018 BKN024 00/M01 Q0996 RESN RMK WIND 731FT 22010KT"
   },
   {
    "icao": "ULMM",
@@ -62,16 +62,16 @@
    "lat": 68.781,
    "lon": 32.749,
    "cat": "VFR",
-   "wdir": 260,
-   "wspd": 2,
+   "wdir": 190,
+   "wspd": 1,
    "wgst": null,
    "vis": 9999,
    "ceil": 99999,
-   "temp": 1,
+   "temp": 0,
    "dew": 0,
-   "qnh": 1000,
-   "time": "22:00Z",
-   "raw": "METAR ULMM 082200Z 26002MPS 210V300 9999 FEW008 01/00 Q1000 R31/690050 NOSIG RMK OBST OBSC QFE743"
+   "qnh": 999,
+   "time": "23:00Z",
+   "raw": "METAR ULMM 082300Z 19001MPS 9999 FEW008 00/M00 Q0999 R31/690050 NOSIG RMK OBST OBSC QFE742"
   }
  ],
  "synop": [
