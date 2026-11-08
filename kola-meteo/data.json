@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-08T05:21Z",
+ "generated": "2026-11-08T05:53Z",
  "metar": [
   {
    "icao": "EFIV",
@@ -8,16 +8,34 @@
    "lat": 68.607,
    "lon": 27.405,
    "cat": "VFR",
-   "wdir": 230,
-   "wspd": 5,
+   "wdir": 220,
+   "wspd": 4,
    "wgst": null,
    "vis": 9999,
    "ceil": 99999,
    "temp": 0,
-   "dew": -3,
+   "dew": -2,
    "qnh": 1003,
-   "time": "04:50Z",
-   "raw": "METAR EFIV 080450Z AUTO 23009KT 9999 FEW044 M00/M03 Q1003"
+   "time": "05:50Z",
+   "raw": "METAR EFIV 080550Z AUTO 22007KT 9999 FEW044 M00/M02 Q1003"
+  },
+  {
+   "icao": "EFKS",
+   "name": "Куусамо",
+   "place": "Финляндия",
+   "lat": 65.992,
+   "lon": 29.236,
+   "cat": "VFR",
+   "wdir": 290,
+   "wspd": 3,
+   "wgst": null,
+   "vis": 10000,
+   "ceil": 99999,
+   "temp": 1,
+   "dew": -2,
+   "qnh": 1006,
+   "time": "05:20Z",
+   "raw": "METAR EFKS 080520Z AUTO 29006KT CAVOK 01/M02 Q1006"
   },
   {
    "icao": "ENKR",
@@ -31,11 +49,11 @@
    "wgst": null,
    "vis": 9999,
    "ceil": 99999,
-   "temp": 1,
+   "temp": 0,
    "dew": -3,
    "qnh": 999,
-   "time": "04:50Z",
-   "raw": "METAR ENKR 080450Z AUTO 26017KT 9999 FEW046/// 01/M03 Q0999 RMK WIND 731FT 27029KT"
+   "time": "05:20Z",
+   "raw": "METAR ENKR 080520Z AUTO 26017KT 9999 FEW037/// 00/M03 Q0999 RMK WIND 731FT 26027KT"
   },
   {
    "icao": "ULMM",
@@ -44,7 +62,7 @@
    "lat": 68.781,
    "lon": 32.749,
    "cat": "VFR",
-   "wdir": 270,
+   "wdir": 260,
    "wspd": 4,
    "wgst": null,
    "vis": 10000,
@@ -52,26 +70,8 @@
    "temp": 0,
    "dew": -3,
    "qnh": 1000,
-   "time": "05:00Z",
-   "raw": "METAR ULMM 080500Z 27004MPS CAVOK M00/M03 Q1000 R31/690045 NOSIG RMK QFE743"
-  },
-  {
-   "icao": "EFKS",
-   "name": "Куусамо",
-   "place": "Финляндия",
-   "lat": 65.992,
-   "lon": 29.236,
-   "cat": "VFR",
-   "wdir": 290,
-   "wspd": 4,
-   "wgst": null,
-   "vis": 10000,
-   "ceil": 99999,
-   "temp": 1,
-   "dew": -2,
-   "qnh": 1006,
-   "time": "04:50Z",
-   "raw": "METAR EFKS 080450Z AUTO 29007KT CAVOK 01/M02 Q1006"
+   "time": "05:30Z",
+   "raw": "METAR ULMM 080530Z 26004MPS CAVOK M00/M03 Q1000 R31/690050 NOSIG RMK QFE743"
   }
  ],
  "synop": [
@@ -301,10 +301,10 @@
   }
  ],
  "taf": {
-  "EFIV": "TAF EFIV 071729Z 0718/0721 26009KT CAVOK PROB40 0718/0721 7000 -SHRASN FEW030TCU",
-  "EFKS": "TAF EFKS 080229Z 0803/0812 29007KT CAVOK PROB30 0811/0812 7000 -RA BKN009",
-  "ENKR": "TAF ENKR 080200Z 0803/0812 27015KT 9999 SCT040",
-  "ULMM": "TAF ULMM 080207Z 0803/0903 25003G10MPS 6000 SCT020 BECMG 0810/0812 BKN016CB TEMPO 0821/0903 3000 -SHRASN"
+  "EFIV": "TAF EFIV 080535Z 0806/0815 20008KT 9999 -RASN BKN045",
+  "EFKS": "TAF EFKS 080535Z 0806/0815 28007KT CAVOK PROB30 0812/0815 7000 -RA BKN009",
+  "ENKR": "TAF ENKR 080500Z 0806/0815 26015KT 9999 SCT040",
+  "ULMM": "TAF ULMM 080507Z 0806/0906 25005G10MPS 9999 SCT020 BECMG 0810/0812 BKN016CB TEMPO 0821/0906 3000 -SHRASN"
  },
  "sigmet": [
   {
